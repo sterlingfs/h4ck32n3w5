@@ -1,0 +1,21 @@
+body {
+  margin: 0;
+  font-family: system-ui, "operator mono", Menlo, Monaco, Consolas;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --app-bar-height: 64px;
+  --modal-index: 10;
+
+  /* Monokai theme */
+}
+
+a {
+  font-weight: 500;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}

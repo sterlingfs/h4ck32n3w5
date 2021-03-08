@@ -1,0 +1,11 @@
+.Menu {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+
+  min-width: 144px;
+
+  transform-origin: top right;
+  background: white;
+  z-index: 1;
+}

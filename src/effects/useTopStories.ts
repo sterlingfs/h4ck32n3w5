@@ -1,0 +1,36 @@
+import firebase from "firebase/app";
+import "firebase/database";
+
+import { useEffect, useReducer } from "react";
+import { Snap, Story } from "../types";
+import { useSetLocalStorage } from "./useSetLocalStorage";
+import { useTopStoryIds } from "./useTopStoryIds";
+
+type StoryMap = { [id: string]: Story };
+
+export function useTopStories(ids: number[]): StoryMap {
+  const [topStories, setTopStories] = useReducer((a: StoryMap, c: StoryMap) => {
+    return { ...a, ...c };
+  }, {});
+
+  useEffect(() => {
+    const database = firebase.database();
+    const itemRef = (id: number) => database.ref(`/v0/item/${id}`);
+
+    const unsub = ids.slice(0, 99).map((id) => {
+      const ref = itemRef(id);
+      const callback = (snap: Snap) => setTopStories({ [id]: snap.val() });
+      ref.on("value", callback);
+      return { ref, callback };
+    });
+
+    return () =>
+      unsub.forEach(({ ref, callback }) => {
+        ref.off("value", callback);
+      });
+  }, [ids, setTopStories]);
+
+  useSetLocalStorage({ topStories });
+
+  return topStories;
+}

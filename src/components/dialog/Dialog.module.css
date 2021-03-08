@@ -1,0 +1,11 @@
+.Dialog {
+  width: 100%;
+  max-width: 384px;
+
+  background: white;
+
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 8px 32px;
+
+  z-index: 1;
+}

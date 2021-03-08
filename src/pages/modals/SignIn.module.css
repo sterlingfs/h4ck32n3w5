@@ -1,0 +1,41 @@
+.SignIn {
+  --SignIn-gutters: 24px;
+
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+  height: min-content;
+
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.container {
+  /* display: grid; */
+  /* grid-template-rows: repeat(2, min-content); */
+  /* gap: 16px; */
+
+  display: flex;
+
+  height: 100%;
+  padding: 24px 0;
+  box-sizing: border-box;
+}
+
+.header,
+.content {
+  padding: 0 var(--SignIn-gutters);
+  width: 100%;
+}
+
+.header {
+  /* display: flex; */
+  /* align-items: center; */
+  /* height: 48px; */
+  /* padding: 24px; */
+  /* box-sizing: border-box; */
+}
+
+.content {
+}
