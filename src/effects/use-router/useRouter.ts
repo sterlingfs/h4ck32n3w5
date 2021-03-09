@@ -1,10 +1,11 @@
-import { useReducer } from "react";
+import { useReducer, useRef } from "react";
 import { useEffect } from "react";
 import { RouteConfig, NewRoute, Route } from "./types";
 import { findRouteByPath } from "./findRouteByPath";
 import { findRouteByName } from "./findRouteByName";
 
 enum ActionType {
+  pushState = "pushState",
   pushPathname = "pushPathname",
   setRoute = "setRoute",
 }
@@ -12,6 +13,7 @@ enum ActionType {
 type State = {
   routeTree: RouteConfig[];
   route?: Route;
+  history: Route[];
 };
 
 type Action = {
@@ -20,13 +22,13 @@ type Action = {
 };
 
 type MutationOptions = { state: State; payload: any };
-type ActionOptions = { dispatch: React.Dispatch<Action>; state: State };
+// type ActionOptions = { dispatch: React.Dispatch<Action>; state: State };
 
 export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
   const [state, dispatch] = useReducer(
     (state: State, { type, payload }: Action) =>
       mutations[type]({ state, payload }),
-    { routeTree } as any
+    { routeTree, history: [] } as any
   );
 
   useEffect(() => {
@@ -35,36 +37,28 @@ export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
     dispatch({ type: ActionType.pushPathname, payload: route });
   }, [initPathname, state.routeTree]);
 
-  return {
-    route: state.route,
-    [ActionType.setRoute]: (newRoute: NewRoute) =>
-      actions[ActionType.setRoute]({ dispatch, state }, newRoute),
-  };
-}
+  useEffect(() => {
+    state.route &&
+      dispatch({ type: ActionType.pushState, payload: state.route });
+  }, [state.route]);
 
-const actions = {
-  [ActionType.pushPathname]: (
-    { dispatch }: ActionOptions,
-    payload: { initPathname: string }
-  ) => {
-    dispatch({
-      type: ActionType.pushPathname,
-      payload,
-    });
-  },
-  [ActionType.setRoute]: (
-    { dispatch, state }: ActionOptions,
-    payload: NewRoute
-  ) => {
-    console.log(">>> Dispatch Route");
-    const route = findRouteByName(payload, state.routeTree);
-
+  useEffect(() => {
+    const [route] = state.history || [];
     route?.pathname &&
       window.history.pushState([], "history push title", route.pathname);
+  }, [state.history]);
 
-    dispatch({ type: ActionType.setRoute, payload: route });
-  },
-};
+  return {
+    route: state.route,
+    setRoute: (newRoute: NewRoute) => {
+      const route = findRouteByName(newRoute, state.routeTree);
+      dispatch({ type: ActionType.setRoute, payload: route });
+    },
+
+    // [ActionType.pushPathname]: (pathname: string) =>
+    //   actions[ActionType.pushPathname]({ dispatch, state }, { pathname }),
+  };
+}
 
 const mutations = {
   [ActionType.pushPathname]({ state, payload }: MutationOptions): State {
@@ -73,5 +67,9 @@ const mutations = {
 
   [ActionType.setRoute]({ state, payload }: MutationOptions): State {
     return { ...state, route: payload };
+  },
+
+  [ActionType.pushState]({ state, payload }: MutationOptions): State {
+    return { ...state, history: [...state.history, payload] };
   },
 };

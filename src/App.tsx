@@ -7,7 +7,7 @@ import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
 
 import { useRouter } from "./effects/use-router/useRouter";
-import { Action, State } from "./types";
+import { Action, RouteName, State } from "./types";
 
 type LazyComp = typeof Stories | typeof Replies;
 
@@ -19,8 +19,6 @@ const initState: State = {
   app: { init: true },
   user: undefined,
   modal: { position: "closed" },
-  
-
 };
 
 function App() {
@@ -35,20 +33,16 @@ function App() {
   const pathname = window.location.pathname;
   const { route, setRoute } = useRouter(pathname, [
     {
-      name: "page1",
-      path: "/page-one",
-    },
-    {
-      name: "root",
+      name: RouteName.root,
       path: "/",
     },
     {
-      name: "page3",
-      path: "/page-two/:pageId/sub-page/:uid/:token",
+      name: RouteName.stories,
+      path: "/stories",
     },
     {
-      name: "page2",
-      path: "/page-two/:pageId",
+      name: RouteName.replies,
+      path: "/replies",
     },
   ]);
 
@@ -58,21 +52,18 @@ function App() {
     );
   }, []);
 
-  const matchPathname = (pathname: string): LazyComp => {
-    switch (pathname) {
-      case "/":
+  const matchPathname = (routeName: RouteName): LazyComp => {
+    switch (routeName) {
+      case RouteName.root:
         return Stories;
-      case "/stories":
+      case RouteName.stories:
         return Stories;
-      case "/replies":
+      case RouteName.replies:
         return Replies;
-      default: {
-        return matchPathname("/");
-      }
     }
   };
 
-  const RouterOutlet = matchPathname(window.location.pathname);
+  const RouterOutlet = matchPathname(route?.name || RouteName.root);
 
   console.log("render...");
 

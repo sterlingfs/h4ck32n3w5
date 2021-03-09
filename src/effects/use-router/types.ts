@@ -2,6 +2,8 @@
  * Raw route pathname may contain /segment/:vars
  */
 
+import { RouteName } from "../../types";
+
 export type ParamMap = { [param: string]: string };
 
 export type Segment = {
@@ -11,7 +13,7 @@ export type Segment = {
 };
 
 export type RouteConfig = {
-  name: string;
+  name: RouteName;
   path: string;
   redirect?: boolean;
   hooks?: {
@@ -21,7 +23,7 @@ export type RouteConfig = {
 };
 
 export type NewRoute = {
-  name: string;
+  name: RouteName;
   params?: ParamMap;
 };
 
