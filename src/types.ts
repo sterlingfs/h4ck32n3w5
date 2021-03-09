@@ -10,15 +10,16 @@ export enum DBPath {
 }
 
 export enum ActionType {
-  app = "app",
-  user = "user",
-  modal = "modal",
+  initApp = "app",
+  setModal = "modal",
+  getUser = "getUser",
 }
 
 export enum RouteName {
   root = "root",
   stories = "stories",
   replies = "replies",
+  comments = "comments",
 }
 
 export type Modal = {
@@ -30,10 +31,11 @@ export type State = {
   app: { init: boolean };
   modal: Modal;
   user?: User;
-  topStories?: ItemMap<Story>;
-  topStoryIds?: number[];
-  topStoriesOrderedList?: Story[];
-  commentStream?: [key: string, val: Comment][];
+
+  // topStories?: ItemMap<Story>;
+  // topStoryIds?: number[];
+  // topStoriesOrderedList?: Story[];
+  // commentStream?: Comment[];
 };
 
 // export enum DBCollection {
@@ -46,9 +48,9 @@ export type Item = Story | Comment;
 
 export type ItemMap<T> = { [key: string]: T };
 
-export type Action = {
+export type Action<T = any> = {
   type: ActionType;
-  payload: unknown;
+  payload: T;
 };
 
 export type Store = {
@@ -87,4 +89,8 @@ export type User = {
   karma: number;
   about: string;
   submitted: number[];
+};
+
+export type Options = {
+  eventType: EventType;
 };

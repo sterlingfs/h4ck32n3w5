@@ -24,7 +24,7 @@ export default function AppBar(props: AppBarProps) {
           icon={AccountSVG}
           onClick={() => {
             dispatch({
-              type: ActionType.modal,
+              type: ActionType.setModal,
               payload: {
                 position: "open",
                 name: "signin",

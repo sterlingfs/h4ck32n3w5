@@ -1,4 +1,4 @@
-import { useReducer, useRef } from "react";
+import { useReducer } from "react";
 import { useEffect } from "react";
 import { RouteConfig, NewRoute, Route } from "./types";
 import { findRouteByPath } from "./findRouteByPath";
@@ -42,17 +42,14 @@ export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
       dispatch({ type: ActionType.pushState, payload: state.route });
   }, [state.route]);
 
-  useEffect(() => {
-    const [route] = state.history || [];
-    route?.pathname &&
-      window.history.pushState([], "history push title", route.pathname);
-  }, [state.history]);
-
   return {
     route: state.route,
     setRoute: (newRoute: NewRoute) => {
       const route = findRouteByName(newRoute, state.routeTree);
       dispatch({ type: ActionType.setRoute, payload: route });
+
+      route?.pathname &&
+        window.history.pushState([], "history push title", route.pathname);
     },
 
     // [ActionType.pushPathname]: (pathname: string) =>

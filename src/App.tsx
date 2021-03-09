@@ -8,43 +8,36 @@ import BottomNav from "./components/bottom-nav/BottomNav";
 
 import { useRouter } from "./effects/use-router/useRouter";
 import { Action, RouteName, State } from "./types";
+import { reducer } from "./reducer";
+import { routeTree } from "./routeTree";
 
 type LazyComp = typeof Stories | typeof Replies;
 
 const Stories = React.lazy(() => import("./pages/Stories"));
 const Replies = React.lazy(() => import("./pages/Replies"));
+const Comments = React.lazy(() => import("./pages/Comments"));
+
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
 const initState: State = {
-  app: { init: true },
+  app: { init: false },
   user: undefined,
   modal: { position: "closed" },
 };
 
 function App() {
   const [state, dispatch] = useReducer(
-    (a: State, { type, payload }: Action) => {
+    (state: State, { type, payload }: Action) => {
+      console.log(">>> Dispatch", type, payload);
+
       localForage.setItem(type, payload);
-      return { ...a, [type]: payload } as State;
+      return reducer(state, { type, payload });
     },
     initState
   );
 
   const pathname = window.location.pathname;
-  const { route, setRoute } = useRouter(pathname, [
-    {
-      name: RouteName.root,
-      path: "/",
-    },
-    {
-      name: RouteName.stories,
-      path: "/stories",
-    },
-    {
-      name: RouteName.replies,
-      path: "/replies",
-    },
-  ]);
+  const { route, setRoute } = useRouter(pathname, routeTree);
 
   useEffect(() => {
     localForage.iterate((value, key) =>
@@ -60,6 +53,8 @@ function App() {
         return Stories;
       case RouteName.replies:
         return Replies;
+      case RouteName.comments:
+        return Comments;
     }
   };
 

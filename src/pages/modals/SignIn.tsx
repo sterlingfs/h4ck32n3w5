@@ -1,18 +1,27 @@
 import React, { useState } from "react";
 import Style from "./SignIn.module.css";
 
+import { getItem } from "../../firebase";
+
 import Dialog from "../../components/dialog/Dialog";
 import TextInput from "../../components/text-input/TextInput";
-import { ActionType, BaseProps } from "../../types";
-import { useWatchUser } from "../../effects/useWatchUser";
+import { ActionType, BaseProps, DBPath } from "../../types";
 
 export type SignInProps = BaseProps;
 
 export default function SignIn(props: SignInProps) {
   const { store } = props;
+  const user = store.state.user;
 
   const [username, setUsername] = useState(store.state.user?.id ?? "");
-  const user = useWatchUser(username);
+
+  const getUser = async (id: string) => {
+    const userSnap = await getItem(id, DBPath.user);
+    store.dispatch({
+      type: ActionType.getUser,
+      payload: userSnap.val(),
+    });
+  };
 
   return (
     <div className={Style.SignIn}>
@@ -29,22 +38,16 @@ export default function SignIn(props: SignInProps) {
                   onChange={(ev) => {
                     setUsername(ev.target.value);
                   }}
-                  onKeyDown={(ev) =>
-                    ev.key === "Enter" &&
-                    store.dispatch({
-                      type: ActionType.user,
-                      payload: { id: username },
-                    })
-                  }
-                  placeholder={"hN username"}
+                  onKeyDown={(ev) => ev.key === "Enter" && getUser(username)}
+                  placeholder={"hn username"}
                 />
               </section>
 
               <section>
                 <div>USER PROFILE</div>
                 <div>
-                  <div>{user?.val()?.id}</div>
-                  <div>{user?.val()?.karma}</div>
+                  <div>{user?.id}</div>
+                  <div>{user?.karma}</div>
                 </div>
               </section>
 

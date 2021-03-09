@@ -1,6 +1,6 @@
 import { useTopStoryIds } from "../effects/useTopStoryIds";
 import { useTopStories } from "../effects/useTopStories";
-import { useSetLocalStorage } from "./useSetLocalStorage";
+// import { useSetLocalStorage } from "./useSetLocalStorage";
 
 export function useTopStoriesOrderedList() {
   const topStoryIds = useTopStoryIds();
@@ -11,7 +11,7 @@ export function useTopStoriesOrderedList() {
     .map((id) => topStories[id])
     .filter((story) => story !== undefined);
 
-  useSetLocalStorage({ topStoriesOrderedList });
+  // useSetLocalStorage({ topStoriesOrderedList });
 
   return topStoriesOrderedList;
 }
