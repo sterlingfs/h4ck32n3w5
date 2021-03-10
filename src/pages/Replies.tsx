@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Style from "./Replies.module.css";
 import Layout from "../components/Layout.module.css";
 
-import CommentItem from "../components/comment-item/CommentItem";
-import { useUserReplies } from "../effects/useUserReplies";
-import { BaseProps } from "../types";
+import firebase from "firebase/app";
+import "firebase/database";
+
+import ReplyItem from "../components/reply-item/ReplyItem";
+import { BaseProps, Comment } from "../types";
+import useComments from "../effects/useComments";
+import useCommentReplies from "../effects/useCommentReplies";
 
 export type RepliesProps = BaseProps;
 
@@ -13,8 +17,13 @@ export default function Replies(props: RepliesProps) {
   const { state } = store;
 
   const user = state?.user;
-  const userReplies = useUserReplies(user);
 
+  const comments = useComments(user?.submitted || []);
+  const replies = useCommentReplies(comments);
+
+  const stream = [...comments, ...replies].sort((a, b) =>
+    a.time > b.time ? -1 : 1
+  );
   // TODO Descendants qty
   // TODO link open comment in hn
 
@@ -22,8 +31,8 @@ export default function Replies(props: RepliesProps) {
     <div className={Layout.container}>
       <div>Replies</div>
       <div className={Style.list}>
-        {userReplies.map((comment, i) => (
-          <CommentItem key={i} comment={comment} />
+        {stream.map((comment, i) => (
+          <ReplyItem key={i} comment={comment} />
         ))}
       </div>
     </div>

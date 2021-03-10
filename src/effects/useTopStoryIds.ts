@@ -12,7 +12,7 @@ export function useTopStoryIds() {
     const ref = database.ref("/v0/topstories");
     const cb = (snap: Snap) => setTopStoryIds(snap.val());
     ref.on("value", cb);
-    return () => ref.off("value", cb);
+    return () => ref.off();
   }, []);
 
   return topStoryIds;

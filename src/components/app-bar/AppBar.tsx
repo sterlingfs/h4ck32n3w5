@@ -1,7 +1,7 @@
 import React from "react";
 import Style from "./AppBar.module.css";
 
-import { styles } from "../../utils";
+import { styles } from "../../pages/utils";
 import { BaseProps, ActionType } from "../../types";
 
 import { ReactComponent as AccountSVG } from "../../svg/account_circle-24px.svg";

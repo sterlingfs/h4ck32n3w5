@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/database";
+import { NewRoute, Route } from "./effects/use-router/types";
 
 export type EventType = firebase.database.EventType;
 export type Snap = firebase.database.DataSnapshot;
@@ -38,12 +39,6 @@ export type State = {
   // commentStream?: Comment[];
 };
 
-// export enum DBCollection {
-//   topstories = "topstories",
-//   newstories = "newstories",
-//   beststories = "beststories",
-// }
-
 export type Item = Story | Comment;
 
 export type ItemMap<T> = { [key: string]: T };
@@ -60,6 +55,7 @@ export type Store = {
 
 export type BaseProps = {
   store: Store;
+  router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
 };
 
 export type BaseItem = {
@@ -92,5 +88,5 @@ export type User = {
 };
 
 export type Options = {
-  eventType: EventType;
+  eventType?: EventType;
 };

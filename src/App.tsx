@@ -70,8 +70,8 @@ function App() {
       {route && route.path}
 
       <Suspense fallback={<div>Loading...</div>}>
-        <RouterOutlet store={store} />
-        <Modal store={store} />
+        <RouterOutlet store={store} router={{ route, setRoute }} />
+        <Modal store={store} router={{ route, setRoute }} />
       </Suspense>
 
       <BottomNav setRoute={setRoute} />

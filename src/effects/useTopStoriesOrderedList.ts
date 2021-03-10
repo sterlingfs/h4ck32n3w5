@@ -7,7 +7,7 @@ export function useTopStoriesOrderedList() {
   const topStories = useTopStories(topStoryIds);
 
   const topStoriesOrderedList = topStoryIds
-    .slice(0, 99)
+    .slice(0, 30)
     .map((id) => topStories[id])
     .filter((story) => story !== undefined);
 

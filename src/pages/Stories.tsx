@@ -1,7 +1,7 @@
 import Layout from "../components/Layout.module.css";
 import { useTopStoriesOrderedList } from "../effects/useTopStoriesOrderedList";
 import StoryItem from "../components/story-item/StoryItem";
-import { BaseProps } from "../types";
+import { BaseProps, RouteName } from "../types";
 
 export type StoriesProps = BaseProps;
 
@@ -10,9 +10,21 @@ export default function Stories(props: StoriesProps) {
 
   return (
     <div className={Layout.container}>
-      {listItems.map((story, i) => (
-        <StoryItem key={i} story={story} shouldPushComments={() => {}} />
-      ))}
+      <div>Stories</div>
+      <div>
+        {listItems.map((story, i) => (
+          <StoryItem
+            key={i}
+            story={story}
+            shouldPushComments={() => {
+              props.router.setRoute({
+                name: RouteName.comments,
+                params: { storyId: story.id },
+              });
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }

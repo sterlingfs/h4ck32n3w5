@@ -4,7 +4,7 @@
 
 import { RouteName } from "../../types";
 
-export type ParamMap = { [param: string]: string };
+export type ParamMap = Record<string, string | number>;
 
 export type Segment = {
   type: "variable" | "static";

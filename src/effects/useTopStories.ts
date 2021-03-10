@@ -19,12 +19,12 @@ export function useTopStories(ids: number[]): StoryMap {
       const ref = itemRef(id);
       const callback = (snap: Snap) => setTopStories({ [id]: snap.val() });
       ref.on("value", callback);
-      return { ref, callback };
+      return ref;
     });
 
     return () =>
-      unsub.forEach(({ ref, callback }) => {
-        ref.off("value", callback);
+      unsub.forEach(({ ref }) => {
+        ref.off();
       });
   }, [ids, setTopStories]);
 

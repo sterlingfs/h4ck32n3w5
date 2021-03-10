@@ -2,7 +2,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import Style from "./Modal.module.css";
 
 import { ActionType, BaseProps } from "../../types";
-import { styles } from "../../utils";
+import { styles } from "../utils";
 
 export type ModalProps = BaseProps & {};
 
