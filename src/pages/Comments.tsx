@@ -1,23 +1,44 @@
-import Style from "./Comments.module.css";
+import firebase from "firebase/app";
+
 import Layout from "../components/Layout.module.css";
 import useComments from "../effects/useComments";
-import { useObserver } from "../effects/useObserver";
-import { BaseProps, DBPath, Story } from "../types";
+import { useEffect, useState } from "react";
+import { getItem } from "../firebase";
+import { BaseProps, DBPath, Story, Comment } from "../types";
+import CommentItem from "../components/comment-item/CommentItem";
 
 export type CommentsProps = BaseProps;
+
+const database = firebase.database();
 
 export default function Comments(props: CommentsProps) {
   const storyId = props.router.route?.params?.storyId;
 
-  const snap = useObserver(storyId, DBPath.item);
+  const [story, setStory] = useState<Story>();
 
-  // console.log("sanp", snap);
+  const [comments, setComments] = useState<Comment[]>([]);
 
-  // const story: Story | undefined = snap?.val();
-  // const children = story?.kids || [];
-  const comments = useComments(snap?.val().kids || []);
+  useEffect(() => {
+    storyId &&
+      getItem(storyId, DBPath.item).then((snap) => setStory(snap.val()));
+  }, [storyId]);
 
-  // console.log("story", snap?.val().kids);
+  useEffect(() => {
+    const docRefs = story?.kids
+      .slice(0, 30)
+      .map((id) => database.ref(`/v0/item/${id}`));
+
+    const requests = docRefs?.map((doc) => doc.get());
+
+    requests &&
+      Promise.all(requests).then((results) =>
+        setComments(results.map((snap) => snap.val()))
+      );
+
+    return () => {
+      docRefs && docRefs.forEach((doc) => doc.off());
+    };
+  }, [story]);
 
   return (
     <div className={Layout.container}>
@@ -27,7 +48,7 @@ export default function Comments(props: CommentsProps) {
         {comments.map((comment, i) => (
           // TODO Replace with ReplyItem
 
-          <div key={i}>{comment.by}</div>
+          <CommentItem key={i} comment={comment} isOwner={false} />
         ))}
       </div>
     </div>

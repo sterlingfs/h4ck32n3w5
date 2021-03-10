@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
 import { useState, useEffect } from "react";
 import { DBPath, Options, Snap } from "../types";
 
@@ -14,7 +14,7 @@ export function useObserver(
     const database = firebase.database();
     const ref = database.ref(`/v0/${path}/${id}`);
     ref.on(eventType || "value", setItem);
-    return () => ref.off(eventType, setItem);
+    return ref.off;
   }, [id, path, opts]);
   return item;
 }

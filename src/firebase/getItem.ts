@@ -3,7 +3,7 @@ import "firebase/database";
 import { DBPath } from "../types";
 
 export function getItem(
-  id: string,
+  id: string | number,
   path: DBPath
 ): Promise<firebase.database.DataSnapshot> {
   const database = firebase.database();
