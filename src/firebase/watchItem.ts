@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/database";
-import { Options, DBPath } from "../types";
+import { Options } from "../types";
+import { DBPath } from "./enums/DBPath";
 
 export function watchItem(id: string, path: DBPath, options: Options) {
   const database = firebase.database();

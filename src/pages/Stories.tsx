@@ -1,7 +1,8 @@
 import Layout from "../components/Layout.module.css";
 import { useTopStoriesOrderedList } from "../effects/useTopStoriesOrderedList";
 import StoryItem from "../components/story-item/StoryItem";
-import { BaseProps, RouteName } from "../types";
+import { BaseProps } from "../types";
+import { RouteName } from "../effects/use-router/RouteName";
 
 export type StoriesProps = BaseProps;
 

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useReducer } from "react";
+import React, { Suspense, useEffect } from "react";
 import "./App.css";
 
 import * as localForage from "localforage";
@@ -7,34 +7,23 @@ import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
 
 import { useRouter } from "./effects/use-router/useRouter";
-import { Action, RouteName, State } from "./types";
-import { reducer } from "./reducer";
 import { routeTree } from "./routeTree";
-
-type LazyComp = typeof Stories | typeof Replies;
-
-const Stories = React.lazy(() => import("./pages/Stories"));
-const Replies = React.lazy(() => import("./pages/Replies"));
-const Comments = React.lazy(() => import("./pages/Comments"));
+import { useStore, Action } from "./effects/store/useStore";
+import { appReducer } from "./reducers/appReducer";
+import { RouteName } from "./effects/use-router/RouteName";
+import { State } from "./types";
+import { matchPathname } from "./effects/use-router/matchPathname";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
-const initState: State = {
-  app: { init: false },
-  user: undefined,
-  modal: { position: "closed" },
-};
-
 function App() {
-  const [state, dispatch] = useReducer(
-    (state: State, { type, payload }: Action) => {
-      console.log(">>> Dispatch", type, payload);
+  const initState: State = {
+    app: { init: false },
+    user: undefined,
+    modal: { position: "closed" },
+  };
 
-      localForage.setItem(type, payload);
-      return reducer(state, { type, payload });
-    },
-    initState
-  );
+  const { state, dispatch } = useStore<State>(appReducer, initState);
 
   const pathname = window.location.pathname;
   const { route, setRoute } = useRouter(pathname, routeTree);
@@ -43,20 +32,7 @@ function App() {
     localForage.iterate((value, key) =>
       dispatch({ type: key, payload: value } as Action)
     );
-  }, []);
-
-  const matchPathname = (routeName: RouteName): LazyComp => {
-    switch (routeName) {
-      case RouteName.root:
-        return Stories;
-      case RouteName.stories:
-        return Stories;
-      case RouteName.replies:
-        return Replies;
-      case RouteName.comments:
-        return Comments;
-    }
-  };
+  }, [dispatch]);
 
   const RouterOutlet = matchPathname(route?.name || RouteName.root);
 

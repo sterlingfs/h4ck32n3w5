@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import { useState, useEffect } from "react";
-import { Snap, Comment } from "../types";
+import { Snap } from "../firebase";
+import { Comment } from "../types";
 import { allSettled } from "./utils";
 
 export default function useCommentReplies(comments: Comment[]) {

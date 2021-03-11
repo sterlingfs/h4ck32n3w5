@@ -1,4 +1,4 @@
-import { RouteName } from "./types";
+import { RouteName } from "./effects/use-router/RouteName";
 
 export const routeTree = [
   {

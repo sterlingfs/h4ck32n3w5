@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteName } from "../../types";
+import { RouteName } from "../../effects/use-router/RouteName";
 import Button from "../button/Button";
 import Style from "./BottomNav.module.css";
 

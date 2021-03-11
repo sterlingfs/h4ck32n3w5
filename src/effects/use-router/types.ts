@@ -2,7 +2,7 @@
  * Raw route pathname may contain /segment/:vars
  */
 
-import { RouteName } from "../../types";
+import { RouteName } from "./RouteName";
 
 export type ParamMap = Record<string, string | number>;
 

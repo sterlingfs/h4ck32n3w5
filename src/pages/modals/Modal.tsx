@@ -1,8 +1,9 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Style from "./Modal.module.css";
 
-import { ActionType, BaseProps } from "../../types";
+import { BaseProps } from "../../types";
 import { styles } from "../utils";
+import { ActionType } from "../../enums/ActionType";
 
 export type ModalProps = BaseProps & {};
 
@@ -40,7 +41,7 @@ export default function Modal(props: ModalProps) {
     }
   }, [state, cache, setCache]);
 
-  const modal = state.modal;
+  const modal = state?.modal;
   const position = modal?.position ?? "closed";
   const RouterOutlet = modal?.name ? cache[modal?.name] : undefined;
 

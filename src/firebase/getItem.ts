@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/database";
-import { DBPath } from "../types";
+import { DBPath } from "./enums/DBPath";
 
 export function getItem(
   id: string | number,

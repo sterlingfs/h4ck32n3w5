@@ -1,6 +1,8 @@
 import firebase from "firebase/app";
 import { useState, useEffect } from "react";
-import { DBPath, Options, Snap } from "../types";
+import { Snap } from "../firebase";
+import { DBPath } from "../firebase/enums/DBPath";
+import { Options } from "../types";
 
 export function useObserver(
   id: string | number | undefined,

@@ -2,7 +2,8 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 import { useEffect, useReducer } from "react";
-import { Snap, Story } from "../types";
+import { Snap } from "../firebase";
+import { Story } from "../types";
 
 type StoryMap = Record<string, Story>;
 

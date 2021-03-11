@@ -5,7 +5,9 @@ import { getItem } from "../../firebase";
 
 import Dialog from "../../components/dialog/Dialog";
 import TextInput from "../../components/text-input/TextInput";
-import { ActionType, BaseProps, DBPath } from "../../types";
+import { BaseProps } from "../../types";
+import { ActionType } from "../../enums/ActionType";
+import { DBPath } from "../../firebase/enums/DBPath";
 
 export type SignInProps = BaseProps;
 

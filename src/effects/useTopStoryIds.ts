@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/database";
 
 import { useState, useEffect } from "react";
-import { Snap } from "../types";
+import { Snap } from "../firebase";
 
 export function useTopStoryIds() {
   const [topStoryIds, setTopStoryIds] = useState<number[]>([]);

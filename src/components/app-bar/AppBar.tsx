@@ -2,10 +2,11 @@ import React from "react";
 import Style from "./AppBar.module.css";
 
 import { styles } from "../../pages/utils";
-import { BaseProps, ActionType } from "../../types";
+import { BaseProps } from "../../types";
 
 import { ReactComponent as AccountSVG } from "../../svg/account_circle-24px.svg";
 import IconButton from "../icon-button/IconButton";
+import { ActionType } from "../../enums/ActionType";
 
 export type AppBarProps = Pick<BaseProps, "store">;
 

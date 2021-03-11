@@ -1,27 +1,6 @@
-import firebase from "firebase/app";
-import "firebase/database";
+import { Store } from "./effects/store/useStore";
 import { NewRoute, Route } from "./effects/use-router/types";
-
-export type EventType = firebase.database.EventType;
-export type Snap = firebase.database.DataSnapshot;
-
-export enum DBPath {
-  item = "item",
-  user = "user",
-}
-
-export enum ActionType {
-  initApp = "app",
-  setModal = "modal",
-  getUser = "getUser",
-}
-
-export enum RouteName {
-  root = "root",
-  stories = "stories",
-  replies = "replies",
-  comments = "comments",
-}
+import { EventType } from "./firebase";
 
 export type Modal = {
   position: "open" | "closed";
@@ -43,18 +22,8 @@ export type Item = Story | Comment;
 
 export type ItemMap<T> = { [key: string]: T };
 
-export type Action<T = any> = {
-  type: ActionType;
-  payload: T;
-};
-
-export type Store = {
-  state: State;
-  dispatch: React.Dispatch<Action>;
-};
-
 export type BaseProps = {
-  store: Store;
+  store: Store<State>;
   router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
 };
 

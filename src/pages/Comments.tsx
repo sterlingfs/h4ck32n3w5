@@ -1,11 +1,11 @@
 import firebase from "firebase/app";
 
 import Layout from "../components/Layout.module.css";
-import useComments from "../effects/useComments";
 import { useEffect, useState } from "react";
 import { getItem } from "../firebase";
-import { BaseProps, DBPath, Story, Comment } from "../types";
+import { BaseProps, Story, Comment } from "../types";
 import CommentItem from "../components/comment-item/CommentItem";
+import { DBPath } from "../firebase/enums/DBPath";
 
 export type CommentsProps = BaseProps;
 
