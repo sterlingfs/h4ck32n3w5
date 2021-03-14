@@ -23,7 +23,11 @@ function App() {
     modal: { position: "closed" },
   };
 
-  const { state, dispatch } = useStore<State>(appReducer, initState);
+  const { state, dispatch } = useStore<State>({
+    initState,
+    actions: {},
+    mutations: {},
+  });
 
   const pathname = window.location.pathname;
   const { route, setRoute } = useRouter(pathname, routeTree);
@@ -34,6 +38,7 @@ function App() {
     );
   }, [dispatch]);
 
+  // TODO Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);
 
   console.log("render...");

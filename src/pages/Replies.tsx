@@ -4,6 +4,9 @@ import Layout from "../components/Layout.module.css";
 import "firebase/database";
 
 import { BaseProps } from "../types";
+import { useEffect } from "react";
+import { ActionType } from "../enums/ActionType";
+import { Action } from "../effects/store/useStore";
 
 export type RepliesProps = BaseProps;
 
@@ -21,6 +24,10 @@ export default function Replies(props: RepliesProps) {
   // const stream = [...comments, ...replies].sort((a, b) =>
   //   a.time > b.time ? -1 : 1
   // );
+
+  useEffect(() => {
+    dispatch({ type: ActionType.didMount });
+  }, [dispatch]);
 
   return (
     <div className={Layout.container}>
