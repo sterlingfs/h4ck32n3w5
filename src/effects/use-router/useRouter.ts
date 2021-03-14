@@ -8,6 +8,7 @@ enum ActionType {
   pushState = "pushState",
   pushPathname = "pushPathname",
   setRoute = "setRoute",
+  popState = "popState",
 }
 
 type State = {
@@ -30,6 +31,12 @@ export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
       mutations[type]({ state, payload }),
     { routeTree, history: [] } as any
   );
+
+  useEffect(() => {
+    window.onpopstate = (event: PopStateEvent) => {
+      console.log("should pop state");
+    };
+  }, []);
 
   useEffect(() => {
     const pathname = initPathname;
@@ -67,6 +74,10 @@ const mutations = {
   },
 
   [ActionType.pushState]({ state, payload }: MutationOptions): State {
+    return { ...state, history: [...state.history, payload] };
+  },
+
+  [ActionType.popState]({ state, payload }: MutationOptions): State {
     return { ...state, history: [...state.history, payload] };
   },
 };
