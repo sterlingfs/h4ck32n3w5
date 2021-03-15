@@ -8,9 +8,7 @@ import { ReactComponent as AccountSVG } from "../../svg/account_circle-24px.svg"
 import IconButton from "../icon-button/IconButton";
 import { ActionType } from "../../enums/ActionType";
 
-export type AppBarProps = Pick<BaseProps, "store">;
-
-export default function AppBar(props: AppBarProps) {
+export default function AppBar(props: BaseProps) {
   const { store } = props;
   const { dispatch } = store;
 

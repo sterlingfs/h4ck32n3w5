@@ -1,49 +1,41 @@
 import React, { useReducer } from "react";
 import * as localForage from "localforage";
+import { ActionFunction, MutationFunction, Store, Action } from "./types";
 
-export type Action = {
-  type: string;
-  payload?: any;
-};
-
-export type Store<State> = {
-  state: State;
-  dispatch: (action: Action) => void;
-};
-
-export type ActionOptions<State> = {
-  state: State;
-  commit: React.Dispatch<Action>;
-};
-
-export type ActionFunction<State> = (
-  options: ActionOptions<State>,
-  payload: any
-) => void;
-
-export type MutationFunction<State> = (state: State, action: Action) => State;
-
-export function useStore<State>(options: {
+export function useStore<State, Keys extends string>(options: {
   initState: State;
-  actions: Record<string, ActionFunction<State>>;
-  mutations: Record<string, MutationFunction<State>>;
-}): Store<State> {
+  actions: Record<Keys, ActionFunction<State, Keys>>;
+  mutations: Record<Keys, MutationFunction<State, Keys>>;
+  getters?: {};
+}): Store<State, Keys> {
   const [state, commit] = useReducer(
-    (state: State, { type, payload }: Action) => {
+    (state: State, { type, payload }: Action<Keys>) => {
       console.log(">>> Dispatch", type, payload);
+      // Cache to idb
       localForage.setItem(type, payload);
-
-      return options.mutations[type](state, { type, payload });
+      // Return state
+      const mutationFunction = options.mutations[type];
+      if (mutationFunction) {
+        return mutationFunction(state, { type, payload });
+      } else {
+        throw new Error(`Mutation function not found: ${type}`);
+      }
     },
     options.initState
   );
 
-  const dispatch = async (action: Action) => async (state: State) => {
+  // Public api wrapper around useReducer.dispatch
+  const dispatchWrapper = (
+    state: State,
+    commit: React.Dispatch<Action<Keys>>
+  ) => async (action: Action<Keys>): Promise<any> => {
     const actionFunction = options.actions[action.type];
-    return actionFunction({ state, commit }, action.payload);
+    if (actionFunction) {
+      return actionFunction({ state, commit }, action.payload);
+    } else {
+      throw new Error(`Function for action type not found: ${action.type}`);
+    }
   };
 
-  // pass args to the action function
-
-  return { state, dispatch };
+  return { state, dispatch: dispatchWrapper(state, commit) };
 }

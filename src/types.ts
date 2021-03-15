@@ -1,5 +1,6 @@
-import { Store } from "./effects/store/useStore";
+import { Store } from "./effects/store/types";
 import { NewRoute, Route } from "./effects/use-router/types";
+import { ActionType } from "./enums/ActionType";
 import { EventType } from "./firebase";
 
 export type Modal = {
@@ -23,7 +24,7 @@ export type Item = Story | Comment;
 export type ItemMap<T> = { [key: string]: T };
 
 export type BaseProps = {
-  store: Store<State>;
+  store: Store<State, keyof typeof ActionType>;
   router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
 };
 

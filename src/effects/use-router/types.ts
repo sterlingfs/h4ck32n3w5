@@ -4,6 +4,8 @@
 
 import { RouteName } from "./RouteName";
 
+export type Router = { route?: Route; setRoute: (newRoute: NewRoute) => void };
+
 export type ParamMap = Record<string, string | number>;
 
 export type Segment = {

@@ -6,7 +6,6 @@ import "firebase/database";
 import { BaseProps } from "../types";
 import { useEffect } from "react";
 import { ActionType } from "../enums/ActionType";
-import { Action } from "../effects/store/useStore";
 
 export type RepliesProps = BaseProps;
 
