@@ -9,6 +9,8 @@ export type StoriesProps = BaseProps;
 export default function Stories(props: StoriesProps) {
   const listItems = useTopStoriesOrderedList();
 
+  // How cache the list items
+
   return (
     <div className={Layout.container}>
       <div>Stories</div>

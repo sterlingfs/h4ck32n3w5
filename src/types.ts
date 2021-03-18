@@ -3,15 +3,16 @@ import { NewRoute, Route } from "./effects/use-router/types";
 import { ActionType } from "./enums/ActionType";
 import { EventType } from "./firebase";
 
-export type Modal = {
-  position: "open" | "closed";
-  name?: string;
-};
-
 export type State = {
   app: { init: boolean };
-  modal: Modal;
+  // mount: {},
+  modal: {
+    position: "open" | "closed";
+    name?: string;
+  };
   user?: User;
+
+  itemRecord: Record<string, Item>;
 
   // topStories?: ItemMap<Story>;
   // topStoryIds?: number[];
@@ -32,12 +33,12 @@ export type BaseItem = {
   id: number;
   by: string;
   time: number;
+  kids: number[];
   type: "story" | "comment" | "job" | "poll";
 };
 
 export type Story = BaseItem & {
   descendants: number;
-  kids: number[];
   score: number;
   title: string;
   url: string;
@@ -45,7 +46,6 @@ export type Story = BaseItem & {
 
 export type Comment = BaseItem & {
   text: string;
-  kids: number[];
   parent: number;
 };
 

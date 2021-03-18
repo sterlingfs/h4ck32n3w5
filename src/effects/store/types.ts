@@ -11,6 +11,7 @@ export type Action<Keys extends string> = {
 export type ActionOptions<State, Keys extends string> = {
   state: State;
   commit: React.Dispatch<Action<Keys>>;
+  dispatch: React.Dispatch<Action<Keys>>;
 };
 
 export type ActionFunction<State, Keys extends string> = (
@@ -18,7 +19,4 @@ export type ActionFunction<State, Keys extends string> = (
   payload: any
 ) => Promise<any>;
 
-export type MutationFunction<State, Keys extends string> = (
-  state: State,
-  action: Action<Keys>
-) => State;
+export type MutationFunction<State> = (state: State, payload: any) => State;

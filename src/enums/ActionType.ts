@@ -1,6 +1,7 @@
 export enum ActionType {
   initApp = "initApp",
+  // didMount = "didMount",
   setModal = "setModal",
   getUser = "getUser",
-  didMount = "didMount",
+  setState = "setState",
 }

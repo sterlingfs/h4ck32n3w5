@@ -24,9 +24,9 @@ export default function Replies(props: RepliesProps) {
   //   a.time > b.time ? -1 : 1
   // );
 
-  useEffect(() => {
-    dispatch({ type: ActionType.didMount });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch({ type: ActionType.didMount });
+  // }, [dispatch]);
 
   return (
     <div className={Layout.container}>

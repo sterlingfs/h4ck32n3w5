@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from "react";
 import "./App.css";
 
-// import * as localForage from "localforage";
+import * as localForage from "localforage";
 
 import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
@@ -10,7 +10,7 @@ import { useRouter } from "./effects/use-router/useRouter";
 import { routeTree } from "./routeTree";
 import { useStore } from "./effects/store/useStore";
 import { RouteName } from "./effects/use-router/RouteName";
-import { State } from "./types";
+import { State, User } from "./types";
 import { matchPathname } from "./effects/use-router/matchPathname";
 import { ActionType } from "./enums/ActionType";
 
@@ -18,8 +18,10 @@ const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
 const initState: State = {
   app: { init: false },
+  // mount: {},
   user: undefined,
   modal: { position: "closed" },
+  itemRecord: {},
 };
 
 function App() {
@@ -30,37 +32,57 @@ function App() {
   // Store
   const { state, dispatch } = useStore<State, keyof typeof ActionType>({
     initState,
+    initializer: (state) => state,
     actions: {
-      didMount: async () => {},
-      getUser: async () => {},
-      initApp: async () => {},
-      setModal: async () => {},
+      initApp: async ({ commit, dispatch }) => {
+        localForage
+          .iterate((value, key) => {
+            dispatch({ type: ActionType.setState, payload: { [key]: value } });
+          })
+          .finally(() => {
+            commit({ type: ActionType.initApp, payload: { init: true } });
+          });
+      },
+      setState: async ({ commit }, payload) => {
+        commit({ type: ActionType.setState, payload });
+      },
+      // didMount: async ({ commit }, payload: { init: boolean }) => {
+      //   commit({ type: ActionType.didMount, payload });
+      // },
+      getUser: async ({ commit }, payload: { id: string }) => {
+        commit({ type: ActionType.getUser, payload });
+      },
+      setModal: async ({ commit }, payload: Pick<State, "modal">) => {
+        commit({ type: ActionType.setModal, payload });
+      },
     },
     mutations: {
-      didMount: () => {
-        return {} as State;
+      initApp: (state, payload: State["app"]) => {
+        localForage.setItem("app", payload);
+        return { ...state, ...payload };
       },
-      getUser: () => {
-        return {} as State;
+      setState: (state, payload: Partial<State>) => {
+        return { ...state, ...payload };
       },
-      initApp: () => {
-        return {} as State;
+      // didMount: (state, payload: State["mount"]) => {
+      //   localForage.setItem("mount", payload);
+      //   return { ...state, didMount: payload };
+      // },
+      getUser: (state, payload: User) => {
+        localForage.setItem("user", payload);
+        return { ...state, user: payload };
       },
-      setModal: () => {
-        return {} as State;
+      setModal: (state, payload: State["modal"]) => {
+        localForage.setItem("modal", payload);
+        return { ...state, modal: payload };
       },
     },
   });
 
-  // Load storage into memory
   useEffect(() => {
-    // TODO Lift this to component did mount
-    // localForage.iterate((value, key) =>
-    //   dispatch({ type: key, payload: value })
-    // );
-
-    dispatch({ type: ActionType.didMount, payload: { module: "unknown" } });
-  }, [dispatch]);
+    dispatch({ type: ActionType.initApp });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // TODO Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

@@ -1,41 +1,54 @@
 import React, { useReducer } from "react";
-import * as localForage from "localforage";
 import { ActionFunction, MutationFunction, Store, Action } from "./types";
 
-export function useStore<State, Keys extends string>(options: {
+export type Options<State, Keys extends string> = {
   initState: State;
+  initializer: (state: State) => State;
   actions: Record<Keys, ActionFunction<State, Keys>>;
-  mutations: Record<Keys, MutationFunction<State, Keys>>;
+  mutations: Record<Keys, MutationFunction<State>>;
   getters?: {};
-}): Store<State, Keys> {
+};
+
+export function useStore<State, Keys extends string>(
+  options: Options<State, Keys>
+): Store<State, Keys> {
   const [state, commit] = useReducer(
     (state: State, { type, payload }: Action<Keys>) => {
-      console.log(">>> Dispatch", type, payload);
-      // Cache to idb
-      localForage.setItem(type, payload);
-      // Return state
       const mutationFunction = options.mutations[type];
       if (mutationFunction) {
-        return mutationFunction(state, { type, payload });
+        const newState = mutationFunction(state, payload);
+        console.group(">>> Dispatch:", type);
+        console.log("payload:", "   ", payload);
+        console.log("state:", "     ", state);
+        console.log("new state:", " ", newState);
+        console.groupEnd();
+        return newState;
       } else {
         throw new Error(`Mutation function not found: ${type}`);
       }
     },
-    options.initState
+    options.initState,
+    (state) => {
+      return state;
+    }
   );
 
-  // Public api wrapper around useReducer.dispatch
-  const dispatchWrapper = (
-    state: State,
-    commit: React.Dispatch<Action<Keys>>
-  ) => async (action: Action<Keys>): Promise<any> => {
-    const actionFunction = options.actions[action.type];
-    if (actionFunction) {
-      return actionFunction({ state, commit }, action.payload);
-    } else {
-      throw new Error(`Function for action type not found: ${action.type}`);
-    }
-  };
-
-  return { state, dispatch: dispatchWrapper(state, commit) };
+  return { state, dispatch: dispatchWrapper(options, state, commit) };
 }
+
+// Public api wrapper around useReducer.dispatch
+const dispatchWrapper = <State, Keys extends string>(
+  options: Options<State, Keys>,
+  state: State,
+  commit: React.Dispatch<Action<Keys>>
+) => async (action: Action<Keys>): Promise<any> => {
+  const actionFunction = options.actions[action.type];
+  if (actionFunction) {
+    return actionFunction(
+      { state, commit, dispatch: dispatchWrapper(options, state, commit) },
+      action.payload
+    );
+  } else {
+    throw new Error(`Function for action type not found: ${action.type}`);
+  }
+};
