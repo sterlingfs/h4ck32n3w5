@@ -3,38 +3,42 @@ import Layout from "../components/Layout.module.css";
 
 import "firebase/database";
 
-import { BaseProps } from "../types";
-import { useEffect } from "react";
-import { ActionType } from "../enums/ActionType";
+import { State } from "../state";
+import { ComponentBaseProps, HNComment } from "../types";
 
-export type RepliesProps = BaseProps;
+import ReplyItem from "../components/reply-item/ReplyItem";
+
+export type RepliesProps = ComponentBaseProps<State>;
 
 export default function Replies(props: RepliesProps) {
   const { store } = props;
   const { state, dispatch } = store;
 
-  // TODO Page breaks if no user
+  // TODO What to download on init??
+
   // TODO Descendants qty
   // TODO link open comment in hn
 
-  // const comments = useComments(user?.submitted || [], () => dispatch());
-  // const replies = useCommentReplies(comments);
+  const submissions = state.submissionRecord;
 
-  // const stream = [...comments, ...replies].sort((a, b) =>
-  //   a.time > b.time ? -1 : 1
-  // );
-
-  // useEffect(() => {
-  //   dispatch({ type: ActionType.didMount });
-  // }, [dispatch]);
+  const replies = Object.values(state.replyRecord).sort((a, b) => {
+    return a.time < b.time ? 1 : -1;
+  });
 
   return (
     <div className={Layout.container}>
       <div>Replies</div>
+
+      <p>What was replied to??</p>
+
       <div className={Style.list}>
-        {/* {stream.map((comment, i) => (
-          <ReplyItem key={i} comment={comment} />
-        ))} */}
+        {replies.map((comment, i) => (
+          <ReplyItem
+            key={i}
+            comment={comment as any}
+            parent={submissions[comment.parent]}
+          />
+        ))}
       </div>
     </div>
   );

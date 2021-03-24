@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import firebase from "firebase/app";
-import { Comment } from "../types";
+import { HNComment } from "../types";
 
 const database = firebase.database();
 
 export default function useComments(
   ids: number[],
-  callback: (comments: Comment[]) => void,
+  callback: (comments: HNComment[]) => void,
   range: [number, number] = [0, 100]
 ) {
   useEffect(() => {

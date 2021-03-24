@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from "react";
-import { Story } from "../types";
+import { HNStory } from "../types";
 
-export function useStoryComments(story: Story) {
+export function useStoryComments(story: HNStory) {
   const [comments, dispatchComment] = useReducer(
     (comments: Comment[], comment: Comment) => [...comments, comment],
     []

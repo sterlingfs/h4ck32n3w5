@@ -1,14 +1,14 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import { Comment, User } from "../types";
+import { HNComment, HNUser } from "../types";
 import { useState, useEffect } from "react";
 
 export function useUserReplies(
-  user?: User,
+  user?: HNUser,
   options = { start: 0, end: 100 }
-): Comment[] {
-  const [comments, setComments] = useState<Comment[]>([]);
+): HNComment[] {
+  const [comments, setComments] = useState<HNComment[]>([]);
 
   useEffect(() => {
     if (user) {

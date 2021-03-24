@@ -3,9 +3,9 @@ import "firebase/database";
 
 import { useEffect, useReducer } from "react";
 import { Snap } from "../firebase";
-import { Story } from "../types";
+import { HNStory } from "../types";
 
-type StoryMap = Record<string, Story>;
+type StoryMap = Record<string, HNStory>;
 
 export function useTopStories(ids: number[]): StoryMap {
   const [topStories, setTopStories] = useReducer((a: StoryMap, c: StoryMap) => {
@@ -25,6 +25,7 @@ export function useTopStories(ids: number[]): StoryMap {
 
     return () =>
       unsub.forEach(({ ref }) => {
+        console.log("dealloc");
         ref.off();
       });
   }, [ids, setTopStories]);

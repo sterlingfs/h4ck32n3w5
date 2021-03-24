@@ -1,15 +1,25 @@
 import React from "react";
 import Style from "./ReplyItem.module.css";
-import { Comment } from "../../types";
+import { HNComment, HNStory } from "../../types";
 import { dateString } from "../../pages/utils";
 
-export type ReplyItemProps = { comment: Comment; isOwner?: boolean };
+export type ReplyItemProps = {
+  comment: HNComment;
+  parent: HNStory | HNComment;
+  isOwner?: boolean;
+};
 
 export default function ReplyItem(props: ReplyItemProps) {
-  const { comment, isOwner } = props;
+  const { comment, parent, isOwner } = props;
+
+  const parentTitle = parent.type === "comment" ? parent.text : parent.title;
+
+  console.log("tupeof", typeof parent);
 
   return (
     <div className={Style.ReplyItem}>
+      <div>@{parentTitle}</div>
+
       <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
         <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
           {comment.by}

@@ -3,53 +3,36 @@ import { NewRoute, Route } from "./effects/use-router/types";
 import { ActionType } from "./enums/ActionType";
 import { EventType } from "./firebase";
 
-export type State = {
-  app: { init: boolean };
-  // mount: {},
-  modal: {
-    position: "open" | "closed";
-    name?: string;
-  };
-  user?: User;
-
-  itemRecord: Record<string, Item>;
-
-  // topStories?: ItemMap<Story>;
-  // topStoryIds?: number[];
-  // topStoriesOrderedList?: Story[];
-  // commentStream?: Comment[];
-};
-
-export type Item = Story | Comment;
-
-export type ItemMap<T> = { [key: string]: T };
-
-export type BaseProps = {
+export type ComponentBaseProps<State> = {
   store: Store<State, keyof typeof ActionType>;
   router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
 };
 
-export type BaseItem = {
+export type HNStory = {
   id: number;
   by: string;
   time: number;
   kids: number[];
-  type: "story" | "comment" | "job" | "poll";
-};
 
-export type Story = BaseItem & {
   descendants: number;
   score: number;
   title: string;
   url: string;
+  type: "story";
 };
 
-export type Comment = BaseItem & {
+export type HNComment = {
   text: string;
   parent: number;
+  type: "comment";
+  time: number;
+
+  id: number;
+  by: string;
+  kids: number[];
 };
 
-export type User = {
+export type HNUser = {
   id: string;
   created: number;
   karma: number;

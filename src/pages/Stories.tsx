@@ -1,23 +1,27 @@
 import Layout from "../components/Layout.module.css";
-import { useTopStoriesOrderedList } from "../effects/useTopStoriesOrderedList";
 import StoryItem from "../components/story-item/StoryItem";
-import { BaseProps } from "../types";
+import { ComponentBaseProps, HNStory } from "../types";
 import { RouteName } from "../effects/use-router/RouteName";
+import { State } from "../state";
 
-export type StoriesProps = BaseProps;
+export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
-  const listItems = useTopStoriesOrderedList();
-
-  // How cache the list items
+  const listItems = props.store.state.topStoryRecord;
+  const listItemLength = Object.keys(listItems).length;
+  const topStoryIds = props.store.state.topStoryIds || [];
+  const topStoriesOrderedList = topStoryIds
+    .slice(0, listItemLength)
+    .map((id) => listItems[id]) as HNStory[];
 
   return (
     <div className={Layout.container}>
       <div>Stories</div>
       <div>
-        {listItems.map((story, i) => (
+        {topStoriesOrderedList.map((story, i) => (
           <StoryItem
             key={i}
+            index={i}
             story={story}
             shouldPushComments={() => {
               props.router.setRoute({

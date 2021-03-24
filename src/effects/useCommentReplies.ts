@@ -1,10 +1,10 @@
 import firebase from "firebase/app";
 import { useState, useEffect } from "react";
 import { Snap } from "../firebase";
-import { Comment } from "../types";
+import { HNComment } from "../types";
 import { allSettled } from "./utils";
 
-export default function useCommentReplies(comments: Comment[]) {
+export default function useCommentReplies(comments: HNComment[]) {
   const [replies, setReplies] = useState<Snap[]>([]);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export default function useCommentReplies(comments: Comment[]) {
     const getRef = (id: number) => database.ref(`/v0/item/${id}`);
 
     const commentRefs = comments
-      .filter((item: Comment) => item.type === "comment" && item.kids)
+      .filter((item: HNComment) => item.type === "comment" && item.kids)
       .map((comment) => comment.kids)
       .map((kids: number[]) => kids?.map(getRef))
       .flat();

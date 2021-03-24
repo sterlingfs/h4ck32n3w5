@@ -1,11 +1,12 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Style from "./Modal.module.css";
 
-import { BaseProps } from "../../types";
+import { ComponentBaseProps } from "../../types";
 import { styles } from "../utils";
 import { ActionType } from "../../enums/ActionType";
+import { State } from "../../state";
 
-export type ModalProps = BaseProps & {};
+export type ModalProps = ComponentBaseProps<State> & {};
 
 // type LazyComponent =
 //   | React.LazyExoticComponent<(props: BaseProps) => JSX.Element>

@@ -5,11 +5,12 @@ import { getItem } from "../../firebase";
 
 import Dialog from "../../components/dialog/Dialog";
 import TextInput from "../../components/text-input/TextInput";
-import { BaseProps } from "../../types";
+import { ComponentBaseProps } from "../../types";
 import { ActionType } from "../../enums/ActionType";
 import { DBPath } from "../../firebase/enums/DBPath";
+import { State } from "../../state";
 
-export type SignInProps = BaseProps;
+export type SignInProps = ComponentBaseProps<State>;
 
 export default function SignIn(props: SignInProps) {
   const { store } = props;

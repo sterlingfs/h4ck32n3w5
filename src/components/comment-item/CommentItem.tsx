@@ -1,9 +1,9 @@
 import React from "react";
 import Style from "./CommentItem.module.css";
-import { Comment } from "../../types";
+import { HNComment } from "../../types";
 import { dateString } from "../../pages/utils";
 
-export type CommentItemProps = { comment: Comment; isOwner?: boolean };
+export type CommentItemProps = { comment: HNComment; isOwner?: boolean };
 
 export default function CommentItem(props: CommentItemProps) {
   const { comment, isOwner } = props;

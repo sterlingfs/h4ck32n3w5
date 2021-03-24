@@ -3,20 +3,21 @@ import firebase from "firebase/app";
 import Layout from "../components/Layout.module.css";
 import { useEffect, useState } from "react";
 import { getItem } from "../firebase";
-import { BaseProps, Story, Comment } from "../types";
+import { ComponentBaseProps, HNStory, HNComment } from "../types";
 import CommentItem from "../components/comment-item/CommentItem";
 import { DBPath } from "../firebase/enums/DBPath";
+import { State } from "../state";
 
-export type CommentsProps = BaseProps;
+export type CommentsProps = ComponentBaseProps<State>;
 
 const database = firebase.database();
 
 export default function Comments(props: CommentsProps) {
   const storyId = props.router.route?.params?.storyId;
 
-  const [story, setStory] = useState<Story>();
+  const [story, setStory] = useState<HNStory>();
 
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<HNComment[]>([]);
 
   useEffect(() => {
     storyId &&
