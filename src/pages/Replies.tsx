@@ -27,10 +27,6 @@ export default function Replies(props: RepliesProps) {
 
   return (
     <div className={Layout.container}>
-      <div>Replies</div>
-
-      <p>What was replied to??</p>
-
       <div className={Style.list}>
         {replies.map((comment, i) => (
           <ReplyItem

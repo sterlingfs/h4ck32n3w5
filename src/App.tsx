@@ -97,10 +97,15 @@ function App() {
   }, [state.topStoryIds]);
 
   useEffect(() => {
-    const submitted = state.user?.submitted;
-    if (submitted) {
+    const submitted = state.user?.submitted.slice(0, 30);
+
+    const newItems = submitted?.filter((itemId) => {
+      return state.submissionRecord[itemId] ? false : true;
+    });
+
+    if (newItems) {
       const db = firebase.database();
-      submitted.forEach(async (id) => {
+      newItems.forEach(async (id) => {
         // FIXME Check if submitted is in memory
 
         // Fetch the submitted item
@@ -120,7 +125,7 @@ function App() {
         });
       });
     }
-  }, [state.user?.submitted]);
+  }, [state.user?.submitted, state.submissionRecord]);
 
   // TODO Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

@@ -16,7 +16,6 @@ export default function Stories(props: StoriesProps) {
 
   return (
     <div className={Layout.container}>
-      <div>Stories</div>
       <div>
         {topStoriesOrderedList.map((story, i) => (
           <StoryItem

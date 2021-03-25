@@ -14,25 +14,35 @@ export default function ReplyItem(props: ReplyItemProps) {
 
   const parentTitle = parent.type === "comment" ? parent.text : parent.title;
 
-  console.log("tupeof", typeof parent);
-
   return (
     <div className={Style.ReplyItem}>
-      <div>@{parentTitle}</div>
+      <div className={Style.replyContainer}>
+        <div className={`${Style.usernameContainer}`}>
+          <a
+            className={`${Style.username}`}
+            href={`https://news.ycombinator.com/user?id=${comment.by}`}
+          >
+            {comment.by}
+          </a>
+          <span> on {dateString(comment.time)}</span>
+        </div>
 
-      <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
-        <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
-          {comment.by}
-        </a>
+        <div
+          className={Style.htmlComment}
+          dangerouslySetInnerHTML={{
+            __html: comment.text,
+          }}
+        />
       </div>
-      <div>{dateString(comment.time)}</div>
 
-      <div
-        className={Style.htmlComment}
-        dangerouslySetInnerHTML={{
-          __html: comment.text,
-        }}
-      />
+      <div className={Style.sourceContainer}>
+        <div>In reply to</div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: parentTitle,
+          }}
+        ></div>
+      </div>
     </div>
   );
 }

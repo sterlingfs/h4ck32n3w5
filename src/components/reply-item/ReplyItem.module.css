@@ -1,14 +1,35 @@
 .ReplyItem {
+  margin: 8px 0;
+}
+
+.ReplyItem::after {
+  content: " ";
+  display: block;
+
+  margin-top: 24px;
+  height: 1px;
+  background: lightgray;
+  width: 100%;
+}
+
+.sourceContainer {
   padding: 12px 16px;
-  box-sizing: border-box;
+  margin: 20px 16px;
+  border: 1px solid lightblue;
+
+  background: lightgray;
+}
+
+.replyContainer {
+  padding: 0 16px;
+}
+
+.usernameContainer {
+  padding: 12px 0;
 }
 
 .username {
   font-weight: bold;
-}
-
-.username.isOwner {
-  color: red;
 }
 
 .topbar {
