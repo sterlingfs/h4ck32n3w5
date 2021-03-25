@@ -47,8 +47,6 @@ export default function Comments(props: CommentsProps) {
 
       <div>
         {comments.map((comment, i) => (
-          // TODO Replace with ReplyItem
-
           <CommentItem key={i} comment={comment} isOwner={false} />
         ))}
       </div>
