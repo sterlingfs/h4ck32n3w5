@@ -4,13 +4,13 @@ import { HNComment, HNStory } from "../../types";
 import { dateString } from "../../pages/utils";
 
 export type ReplyItemProps = {
+  userId: string;
   comment: HNComment;
   parent: HNStory | HNComment;
-  isOwner?: boolean;
 };
 
 export default function ReplyItem(props: ReplyItemProps) {
-  const { comment, parent, isOwner } = props;
+  const { userId, comment, parent } = props;
 
   const parentTitle = parent.type === "comment" ? parent.text : parent.title;
 
@@ -36,7 +36,10 @@ export default function ReplyItem(props: ReplyItemProps) {
       </div>
 
       <div className={Style.sourceContainer}>
-        <div>In reply to</div>
+        <div className={Style.sourceTitle}>
+          <span>In reply to </span>
+          <span className={Style.sourceTitleUser}>{parent.by === userId ? "me" : parent.by}</span>
+        </div>
         <div
           dangerouslySetInnerHTML={{
             __html: parentTitle,

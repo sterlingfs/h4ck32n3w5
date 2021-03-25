@@ -28,13 +28,15 @@ export default function Replies(props: RepliesProps) {
   return (
     <div className={Layout.container}>
       <div className={Style.list}>
-        {replies.map((comment, i) => (
-          <ReplyItem
-            key={i}
-            comment={comment as any}
-            parent={submissions[comment.parent]}
-          />
-        ))}
+        {state.user?.id &&
+          replies.map((comment, i) => (
+            <ReplyItem
+              key={i}
+              userId={state.user!.id}
+              comment={comment as any}
+              parent={submissions[comment.parent]}
+            />
+          ))}
       </div>
     </div>
   );

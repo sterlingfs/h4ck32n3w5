@@ -13,11 +13,19 @@
 }
 
 .sourceContainer {
-  padding: 12px 16px;
+  padding: 16px;
   margin: 20px 16px;
   border: 1px solid lightblue;
 
   background: lightgray;
+}
+
+.sourceTitle {
+  margin-bottom: 8px;
+}
+
+.sourceTitleUser {
+  font-weight: bold;
 }
 
 .replyContainer {
