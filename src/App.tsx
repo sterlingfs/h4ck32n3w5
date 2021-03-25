@@ -50,7 +50,6 @@ function App() {
     return { ...newState, actionHistory } as State;
   }, initState);
 
-  // TODO Lift firebase functions
   useEffect(() => {
     console.log(">>> INIT");
 
@@ -75,9 +74,9 @@ function App() {
   }, [state.modal]);
 
   useEffect(() => {
-    // FIXME Add deps and protect agains loop by only updating state if no watcher
+    // FIXME #1 Add deps and protect agains loop by only updating state if no watcher
     const db = firebase.database();
-    // TODO Indicate start of fetch
+    // TODO #2 Indicate start of fetch
     const refs = state.topStoryIds.map((id) => {
       if (state.topStoryRecord[id] === undefined) {
         const ref = db.ref(`/v0/item/${id}`);
@@ -91,7 +90,7 @@ function App() {
       }
       return undefined;
     });
-    // TODO Indicate end of fetch
+    // TODO #2 Indicate end of fetch
 
     return () => refs.forEach((ref) => ref?.off());
   }, [state.topStoryIds]);
@@ -106,8 +105,6 @@ function App() {
     if (newItems) {
       const db = firebase.database();
       newItems.forEach(async (id) => {
-        // FIXME Check if submitted is in memory
-
         // Fetch the submitted item
         const ref = db.ref(`/v0/item/${id}`);
         const item = (await ref.get().then((snap) => snap.val())) as
@@ -115,19 +112,23 @@ function App() {
           | HNComment;
 
         dispatch({ type: ActionType.emitSubmission, payload: { [id]: item } });
-        // console.log("submitted", item);
+
+        // TODO #3 Indicate beginning and end of fetch
         // Fetch the item's comments
-        item.kids?.forEach(async (id) => {
+        item.kids?.forEach((id) => {
           const ref = db.ref(`/v0/item/${id}`);
-          const reply = await ref.get().then((snap) => snap.val());
-          // console.log("reply", reply);
-          dispatch({ type: ActionType.emitReply, payload: { [id]: reply } });
+          ref.get().then((snap) => {
+            dispatch({
+              type: ActionType.emitReply,
+              payload: { [id]: snap.val() },
+            });
+          });
         });
       });
     }
   }, [state.user?.submitted, state.submissionRecord]);
 
-  // TODO Lift router outlet to a component
+  // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);
 
   const store = { state, dispatch };

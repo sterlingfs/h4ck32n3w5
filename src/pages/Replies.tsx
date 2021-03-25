@@ -14,13 +14,9 @@ export default function Replies(props: RepliesProps) {
   const { store } = props;
   const { state, dispatch } = store;
 
-  // TODO What to download on init??
-
-  // TODO Descendants qty
-  // TODO link open comment in hn
-
   const submissions = state.submissionRecord;
 
+  // TODO #5 Cache to store
   const replies = Object.values(state.replyRecord).sort((a, b) => {
     return a.time < b.time ? 1 : -1;
   });
