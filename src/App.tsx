@@ -77,7 +77,9 @@ function App() {
     // FIXME #1 Add deps and protect agains loop by only updating state if no watcher
     const db = firebase.database();
     // TODO #2 Indicate start of fetch
-    const refs = state.topStoryIds.map((id) => {
+
+    // TODO #8 Diff the changes from emitTopStory to determine if children are tracking
+    state.topStoryIds.forEach((id) => {
       if (state.topStoryRecord[id] === undefined) {
         const ref = db.ref(`/v0/item/${id}`);
         ref.on("value", (snap: Snap) =>
@@ -86,14 +88,34 @@ function App() {
             payload: { [snap.key!]: snap.val() },
           })
         );
-        return ref;
       }
-      return undefined;
     });
     // TODO #2 Indicate end of fetch
+  }, [state.topStoryIds, state.topStoryRecord]);
 
-    return () => refs.forEach((ref) => ref?.off());
-  }, [state.topStoryIds]);
+  // useEffect(() => {
+  //   // FIXME #1 Add deps and protect agains loop by only updating state if no watcher
+  //   const db = firebase.database();
+  //   // TODO #2 Indicate start of fetch
+  //   const refs = state.topStoryIds.map((id) => {
+  //     const ref = db.ref(`/v0/item/${id}`);
+  //     ref.on("value", (snap: Snap) =>
+  //       dispatch({
+  //         type: ActionType.emitTopStory,
+  //         payload: { [snap.key!]: snap.val() },
+  //       })
+  //     );
+  //     return ref;
+  //   });
+  //   // TODO #2 Indicate end of fetch
+
+  //   return () => refs.forEach((ref) => ref?.off());
+  // }, [state.topStoryIds]);
+
+  useEffect(() => {
+    console.log(">>> TOP_STORY_RECORD_CHANGE");
+    // TODO #7 When topStoryRecord changes fetch the topCommnet if not in cache
+  }, [state.topStoryRecord]);
 
   useEffect(() => {
     const submitted = state.user?.submitted.slice(0, 30);
