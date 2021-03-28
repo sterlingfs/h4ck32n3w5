@@ -33,6 +33,11 @@ export function reducer(state: State, action: Action<Keys>): State {
       return { ...state, topStoryIds };
     }
 
+    case ActionType.watchTopStoryIds: {
+      const topStory = payload as State["network"]["topStory"];
+      return { ...state, network: { ...state.network, topStory } };
+    }
+
     case ActionType.emitTopStory: {
       const storyRecord = payload as Record<string, HNStory>;
       return {

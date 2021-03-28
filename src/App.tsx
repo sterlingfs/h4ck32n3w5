@@ -24,6 +24,7 @@ const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
 const initState: State = {
   actionHistory: [],
+  network: {},
   app: { init: false },
   mount: {},
   user: undefined,
@@ -50,6 +51,9 @@ function App() {
     return { ...newState, actionHistory } as State;
   }, initState);
 
+  /**
+   * Watch topStories and emit id list
+   */
   useEffect(() => {
     console.log(">>> INIT");
 
@@ -65,6 +69,9 @@ function App() {
     return ref.off;
   }, []);
 
+  /**
+   * Cache to storage
+   */
   useEffect(() => {
     state.user && localForage.setItem("user", state.user);
   }, [state.user]);
@@ -73,71 +80,50 @@ function App() {
     localForage.setItem("modal", state.modal);
   }, [state.modal]);
 
+  /**
+   * Emit story for each top story id
+   */
   useEffect(() => {
-    // FIXME #1 Add deps and protect agains loop by only updating state if no watcher
     const db = firebase.database();
-    // TODO #2 Indicate start of fetch
-
-    // TODO #8 Diff the changes from emitTopStory to determine if children are tracking
-    state.topStoryIds.forEach((id) => {
-      if (state.topStoryRecord[id] === undefined) {
-        const ref = db.ref(`/v0/item/${id}`);
-        ref.on("value", (snap: Snap) =>
-          dispatch({
-            type: ActionType.emitTopStory,
-            payload: { [snap.key!]: snap.val() },
-          })
-        );
-      }
+    const refs = state.topStoryIds.slice(0, 99).map((id, i) => {
+      const ref = db.ref(`/v0/item/${id}`);
+      ref.on("value", (snap: Snap) => {
+        console.log(">>> EMIT_TOP_STORY", i);
+        dispatch({
+          type: ActionType.emitTopStory,
+          payload: { [snap.key!]: snap.val() },
+        });
+      });
+      return ref;
     });
-    // TODO #2 Indicate end of fetch
-  }, [state.topStoryIds, state.topStoryRecord]);
+    return () => refs.forEach((ref) => ref?.off());
+  }, [state.topStoryIds]);
 
-  // useEffect(() => {
-  //   // FIXME #1 Add deps and protect agains loop by only updating state if no watcher
-  //   const db = firebase.database();
-  //   // TODO #2 Indicate start of fetch
-  //   const refs = state.topStoryIds.map((id) => {
-  //     const ref = db.ref(`/v0/item/${id}`);
-  //     ref.on("value", (snap: Snap) =>
-  //       dispatch({
-  //         type: ActionType.emitTopStory,
-  //         payload: { [snap.key!]: snap.val() },
-  //       })
-  //     );
-  //     return ref;
-  //   });
-  //   // TODO #2 Indicate end of fetch
-
-  //   return () => refs.forEach((ref) => ref?.off());
-  // }, [state.topStoryIds]);
-
+  /**
+   * Fetch top comment
+   */
   useEffect(() => {
     console.log(">>> TOP_STORY_RECORD_CHANGE");
     // TODO #7 When topStoryRecord changes fetch the topCommnet if not in cache
   }, [state.topStoryRecord]);
 
+  /**
+   * Watch user's submitted items and emit replies
+   */
   useEffect(() => {
     const submitted = state.user?.submitted.slice(0, 30);
-
-    const newItems = submitted?.filter((itemId) => {
-      return state.submissionRecord[itemId] ? false : true;
-    });
-
-    if (newItems) {
+    if (submitted) {
       const db = firebase.database();
-      newItems.forEach(async (id) => {
-        // Fetch the submitted item
-        const ref = db.ref(`/v0/item/${id}`);
-        const item = (await ref.get().then((snap) => snap.val())) as
-          | HNStory
-          | HNComment;
+      submitted.forEach(async (id, i) => {
+        console.log(">>> EMIT_SUBMISSION", i);
 
+        const ref = db.ref(`/v0/item/${id}`);
+        const itemSnaps = await ref.get();
+        const item: HNStory | HNComment = itemSnaps?.val();
         dispatch({ type: ActionType.emitSubmission, payload: { [id]: item } });
 
-        // TODO #3 Indicate beginning and end of fetch
-        // Fetch the item's comments
-        item.kids?.forEach((id) => {
+        item.kids?.forEach((id, i) => {
+          console.log(">>> EMIT_REPLY", i);
           const ref = db.ref(`/v0/item/${id}`);
           ref.get().then((snap) => {
             dispatch({
@@ -148,7 +134,7 @@ function App() {
         });
       });
     }
-  }, [state.user?.submitted, state.submissionRecord]);
+  }, [state.user?.submitted]);
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

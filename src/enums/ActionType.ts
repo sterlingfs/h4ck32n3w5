@@ -6,6 +6,7 @@ export enum ActionType {
   setState = "setState",
 
   emitTopStoryIds = "emitTopStoryIds",
+  watchTopStoryIds = "watchTopStoryIds",
   emitTopStory = "emitTopStory",
 
   emitReply = "emitReply",
