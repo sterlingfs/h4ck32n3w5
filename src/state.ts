@@ -7,6 +7,10 @@ export type State = {
   app: { init: boolean };
   mount: Record<string, { active: boolean }>;
 
+  network: {
+    topStory?: { status: "init" | "awaiting" | "resolved" | "rejected" };
+  };
+
   modal: {
     position: "open" | "closed";
     name?: string;

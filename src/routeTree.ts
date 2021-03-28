@@ -10,6 +10,10 @@ export const routeTree = [
     path: "/stories",
   },
   {
+    name: RouteName.stories,
+    path: "/stories",
+  },
+  {
     name: RouteName.comments,
     path: "/comments/:storyId",
   },
