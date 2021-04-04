@@ -28,7 +28,7 @@ const initState: State = {
   network: {},
   app: { init: false },
   mount: {},
-  auth: {},
+  auth: { status: "unsubscribed" },
   modal: { position: "closed" },
   storyRecord: {},
   newStoryIds: [],
@@ -49,7 +49,7 @@ function App() {
   // Store
   const [state, dispatch] = useReducer((state: State, action: Action<Keys>) => {
     const newState = reducer(state, action);
-    console.log(">>> EMIT_ACTION", action.type, action.payload);
+    // console.log(">>> EMIT_ACTION", action.type, action.payload);
     const mutationHistory = [
       ...state.mutationHistory,
       { action, state: newState },
@@ -92,23 +92,20 @@ function App() {
    * Watch user
    */
   useEffect(() => {
-    const auth = state.auth ?? {};
-    auth && localForage.setItem("auth", auth);
+    const auth = state.auth ?? { status: "unsubscribed" };
+    localForage.setItem("auth", auth).then(() => {
+      if (auth.status === "init" && auth.uid) {
+        dispatch({ type: ActionType.watchUid });
 
-    if (auth.uid) {
-      const db = firebase.database();
-      const ref = db.ref(`/v0/user/${auth.uid}`);
-      ref.on("value", (snap) =>
-        dispatch({ type: ActionType.emitUser, payload: snap.val() })
-      );
-      return ref.off;
-    }
+        const db = firebase.database();
+        const ref = db.ref(`/v0/user/${auth.uid}`);
+        ref.on("value", (snap) =>
+          dispatch({ type: ActionType.emitUser, payload: snap.val() })
+        );
+        return ref.off;
+      }
+    });
   }, [state.auth]);
-
-  /**
-   * Cache to storage
-   */
-  useEffect(() => {}, [state.auth]);
 
   useEffect(() => {
     localForage.setItem("modal", state.modal);
@@ -129,6 +126,8 @@ function App() {
     // }
   }, [state.mutationHistory]);
 
+  // TODO Combine the effects of newStoryIds and topStoryIds
+
   /**
    * How cache these items to avoid repeated on/off
    * Put the ref in the store
@@ -140,7 +139,7 @@ function App() {
   /**
    * Emit story for each top story id
    */
-  // TODO Combine the effects of newStoryIds and topStoryIds
+
   useEffect(() => {
     const db = firebase.database();
 
@@ -153,7 +152,6 @@ function App() {
 
         const ref = db.ref(`/v0/item/${id}`);
         ref.on("value", (snap: Snap) => {
-          // console.log(">>> EMIT_NEW_STORY", i);
           dispatch({
             type: ActionType.emitNewStory,
             payload: { [id]: snap.val() },
@@ -168,17 +166,19 @@ function App() {
 
     const refs = state.topStoryIds.slice(0, 10).map((id, i) => {
       const ref = db.ref(`/v0/item/${id}`);
-
       ref.on("value", (snap: Snap) => {
-        // console.log(">>> EMIT_TOP_STORY", i);
-        // dispatch({
-        //   type: ActionType.emitTopStory,
-        //   payload: { [snap.key!]: snap.val() },
-        // });
+        dispatch({
+          type: ActionType.emitTopStory,
+          payload: { [snap.key!]: snap.val() },
+        });
       });
       return ref;
     });
-    return () => refs.forEach((ref) => ref?.off());
+    return () =>
+      refs.forEach((ref) => {
+        console.log("dealoc", ref.key);
+        ref?.off();
+      });
   }, [state.topStoryIds]);
 
   /**

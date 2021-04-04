@@ -22,12 +22,23 @@ export function reducer(state: State, action: Action<Keys>): State {
       return { ...state, modal };
     }
 
+    case ActionType.initWatchUid: {
+      return { ...state, auth: { ...payload, status: "init" } };
+    }
+
     case ActionType.watchUid: {
-      return { ...state, auth: { ...payload } };
+      return { ...state, auth: { ...state.auth, status: "awaiting" } };
     }
 
     case ActionType.emitUser: {
-      return { ...state, auth: { ...state.auth, user: payload } };
+      return {
+        ...state,
+        auth: { ...state.auth, status: "emitting", user: payload },
+      };
+    }
+
+    case ActionType.signOut: {
+      return { ...state, auth: { status: "unsubscribed" } };
     }
 
     case ActionType.emitNewStoryIds: {

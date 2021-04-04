@@ -5,6 +5,7 @@ export enum ActionType {
   didMount = "didMount",
   setModal = "setModal",
 
+  initWatchUid = "initWatchUid",
   watchUid = "watchUid",
   emitUser = "emitUser",
   signOut = "signOut",

@@ -6,6 +6,7 @@ export type State = {
   };
 
   auth: {
+    status: "init" | "awaiting" | "emitting" | "unsubscribed";
     uid?: string;
     user?: HNUser;
   };
