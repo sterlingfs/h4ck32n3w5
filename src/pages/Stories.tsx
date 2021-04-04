@@ -7,7 +7,7 @@ import { State } from "../state";
 export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
-  const listItems = props.store.state.topStoryRecord;
+  const listItems = props.store.state.storyRecord;
   const listItemLength = Object.keys(listItems).length;
   const topStoryIds = props.store.state.topStoryIds || [];
   const topStoriesOrderedList = topStoryIds

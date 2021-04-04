@@ -1,7 +1,6 @@
 import { State } from "./state";
-import { Action } from "./effects/store/types";
 import { ActionType } from "./enums/ActionType";
-import { HNComment, HNStory, HNUser } from "./types";
+import { Action, HNComment, HNStory, HNUser } from "./types";
 
 type Keys = keyof typeof ActionType;
 
@@ -11,21 +10,29 @@ export function reducer(state: State, action: Action<Keys>): State {
   const { type, payload } = action;
 
   switch (type) {
-    case ActionType.didMount:
-      return { ...state, mount: payload };
-
     case ActionType.initApp: {
       return { ...state, app: payload };
     }
 
-    case ActionType.getUser: {
-      const user = payload as HNUser;
-      return { ...state, user };
-    }
+    case ActionType.didMount:
+      return { ...state, mount: payload };
 
     case ActionType.setModal: {
       const modal = payload as State["modal"];
       return { ...state, modal };
+    }
+
+    case ActionType.watchUid: {
+      return { ...state, auth: { ...payload } };
+    }
+
+    case ActionType.emitUser: {
+      return { ...state, auth: { ...state.auth, user: payload } };
+    }
+
+    case ActionType.emitNewStoryIds: {
+      const newStoryIds = payload as State["newStoryIds"];
+      return { ...state, newStoryIds };
     }
 
     case ActionType.emitTopStoryIds: {
@@ -33,32 +40,31 @@ export function reducer(state: State, action: Action<Keys>): State {
       return { ...state, topStoryIds };
     }
 
-    case ActionType.watchTopStoryIds: {
-      const topStory = payload as State["network"]["topStory"];
-      return { ...state, network: { ...state.network, topStory } };
+    case ActionType.emitNewStory: {
+      return {
+        ...state,
+        storyRecord: { ...state.storyRecord, ...payload },
+      };
     }
 
     case ActionType.emitTopStory: {
-      const storyRecord = payload as Record<string, HNStory>;
       return {
         ...state,
-        topStoryRecord: { ...state.topStoryRecord, ...storyRecord },
+        storyRecord: { ...state.storyRecord, ...payload },
       };
     }
 
     case ActionType.emitSubmission: {
-      const submissionRecord = payload as Record<string, HNStory>;
       return {
         ...state,
-        submissionRecord: { ...state.submissionRecord, ...submissionRecord },
+        submissionRecord: { ...state.submissionRecord, ...payload },
       };
     }
 
     case ActionType.emitReply: {
-      const replyRecord = payload as Record<string, HNComment>;
       return {
         ...state,
-        replyRecord: { ...state.replyRecord, ...replyRecord },
+        replyRecord: { ...state.replyRecord, ...payload },
       };
     }
 

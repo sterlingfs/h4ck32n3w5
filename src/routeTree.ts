@@ -6,11 +6,11 @@ export const routeTree = [
     path: "/",
   },
   {
-    name: RouteName.stories,
-    path: "/stories",
+    name: RouteName.lastest,
+    path: "/latest",
   },
   {
-    name: RouteName.stories,
+    name: RouteName.topStories,
     path: "/stories",
   },
   {

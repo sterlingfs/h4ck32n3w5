@@ -1,10 +1,15 @@
-import { Action } from "./effects/store/types";
-import { ActionType } from "./enums/ActionType";
-import { HNUser, HNComment, HNStory } from "./types";
+import { HNUser, HNComment, HNStory, StateMutation } from "./types";
 
 export type State = {
-  actionHistory: { action: Action<keyof typeof ActionType>; state: State }[];
-  app: { init: boolean };
+  app: {
+    init: boolean;
+  };
+
+  auth: {
+    uid?: string;
+    user?: HNUser;
+  };
+
   mount: Record<string, { active: boolean }>;
 
   network: {
@@ -15,17 +20,17 @@ export type State = {
     position: "open" | "closed";
     name?: string;
   };
-  user?: HNUser;
+
+  newStoryIds: number[];
+  newStoryList: HNStory[];
 
   topStoryIds: number[];
-  topStoryOrderedList: any[];
-  topStoryRecord: Record<string, HNStory>;
+  topStoryList: HNStory[];
+
+  storyRecord: Record<string, HNStory>;
 
   submissionRecord: Record<string, HNStory | HNComment>;
   replyRecord: Record<string, HNComment>;
 
-  // topStories?: ItemMap<Story>;
-  // topStoryIds?: number[];
-  // topStoriesOrderedList?: Story[];
-  // commentStream?: Comment[];
+  mutationHistory: StateMutation[];
 };

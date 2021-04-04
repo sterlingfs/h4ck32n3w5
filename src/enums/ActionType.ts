@@ -1,13 +1,19 @@
 export enum ActionType {
   initApp = "initApp",
-  didMount = "didMount",
-  setModal = "setModal",
-  getUser = "getUser",
   setState = "setState",
 
+  didMount = "didMount",
+  setModal = "setModal",
+
+  watchUid = "watchUid",
+  emitUser = "emitUser",
+  signOut = "signOut",
+
   emitTopStoryIds = "emitTopStoryIds",
-  watchTopStoryIds = "watchTopStoryIds",
   emitTopStory = "emitTopStory",
+
+  emitNewStoryIds = "emitNewStoryIds",
+  emitNewStory = "emitNewStory",
 
   emitReply = "emitReply",
   emitSubmission = "emitSubmission",

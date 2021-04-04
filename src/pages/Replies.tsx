@@ -17,19 +17,23 @@ export default function Replies(props: RepliesProps) {
   const submissions = state.submissionRecord;
 
   // TODO #5 Cache to store
-  const replies = Object.values(state.replyRecord).sort((a, b) => {
-    return a.time < b.time ? 1 : -1;
-  });
+  const replies = Object.values(state.replyRecord)
+    .filter((reply) => reply.id)
+    .sort((a, b) => {
+      return a.time < b.time ? 1 : -1;
+    });
+
+  const id = state.auth.user?.id;
 
   return (
     <div className={Layout.container}>
       <div className={Style.list}>
-        {state.user?.id &&
+        {id &&
           replies.map((comment, i) => (
             <ReplyItem
               key={i}
-              userId={state.user!.id}
-              comment={comment as any}
+              userId={id}
+              comment={comment}
               parent={submissions[comment.parent]}
             />
           ))}
