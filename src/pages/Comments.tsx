@@ -20,11 +20,6 @@ export default function Comments(props: CommentsProps) {
   const [comments, setComments] = useState<HNComment[]>([]);
 
   useEffect(() => {
-    storyId &&
-      getItem(storyId, DBPath.item).then((snap) => setStory(snap.val()));
-  }, [storyId]);
-
-  useEffect(() => {
     const docRefs = story?.kids
       .slice(0, 30)
       .map((id) => database.ref(`/v0/item/${id}`));

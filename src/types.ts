@@ -3,6 +3,8 @@ import { ActionType } from "./enums/ActionType";
 import { EventType } from "./firebase";
 import { State } from "./state";
 
+export type Dispatch = React.Dispatch<Action<ActionType>>;
+
 export type Store<State, Keys extends string> = {
   state: State;
   dispatch: (action: Action<Keys>) => void;

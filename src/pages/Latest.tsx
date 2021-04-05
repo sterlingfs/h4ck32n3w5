@@ -9,27 +9,30 @@ import { RouteName } from "../effects/use-router/RouteName";
 export type LatestProps = ComponentBaseProps<State>;
 
 export default function Latest(props: LatestProps) {
-  const newStoryList = props.store.state.newStoryList;
+  // const newStoryList = props.store.state.newStoryList;
+
+  const listItems = props.store.state.storyRecord;
+  const newStoryIds = props.store.state.newStoryIds.slice(0, 20) || [];
+  const topStoriesOrderedList = newStoryIds
+    .map((id) => listItems[id])
+    .sort((a, b) => (a?.time < b?.time ? 1 : -1)) as HNStory[];
 
   return (
     <div className={Layout.container}>
       <div>
-        {newStoryList
-          .sort((a, b) => (a.time < b.time ? 1 : -1))
-          .slice(0, 200)
-          .map((story, i) => (
-            <StoryItem
-              key={i}
-              index={i}
-              story={story}
-              shouldPushComments={() => {
-                props.router.setRoute({
-                  name: RouteName.comments,
-                  params: { storyId: story.id },
-                });
-              }}
-            />
-          ))}
+        {topStoriesOrderedList.map((story, i) => (
+          <StoryItem
+            key={i}
+            index={i}
+            story={story}
+            shouldPushComments={() => {
+              props.router.setRoute({
+                name: RouteName.comments,
+                params: { storyId: story.id },
+              });
+            }}
+          />
+        ))}
       </div>
     </div>
   );

@@ -5,16 +5,16 @@ export enum ActionType {
   didMount = "didMount",
   setModal = "setModal",
 
-  initWatchUid = "initWatchUid",
   watchUid = "watchUid",
+  awaitingUser = "awaitingUser",
   emitUser = "emitUser",
-  signOut = "signOut",
+  releaseUid = "releaseUid",
 
-  emitTopStoryIds = "emitTopStoryIds",
+  emitStory = "emitStory",
   emitTopStory = "emitTopStory",
-
-  emitNewStoryIds = "emitNewStoryIds",
   emitNewStory = "emitNewStory",
+  emitTopStoryIds = "emitTopStoryIds",
+  emitNewStoryIds = "emitNewStoryIds",
 
   emitReply = "emitReply",
   emitSubmission = "emitSubmission",

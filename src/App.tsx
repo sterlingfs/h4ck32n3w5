@@ -4,8 +4,6 @@ import "./App.css";
 import firebase from "firebase/app";
 import "firebase/database";
 
-import * as localForage from "localforage";
-
 import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
 
@@ -17,9 +15,14 @@ import { ActionType } from "./enums/ActionType";
 
 import { reducer } from "./reducer";
 
-import { Snap } from "./firebase";
+import { getItem, Snap } from "./firebase";
 import { State } from "./state";
 import { Action, HNComment, HNStory } from "./types";
+import { useAppInit } from "./effects/useAppInit";
+import { useWatchUid } from "./effects/useWatchUid";
+import { stat } from "fs";
+import { DBPath } from "./firebase/enums/DBPath";
+import { useWatchList } from "./effects/useWatchList";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -57,59 +60,13 @@ function App() {
     return { ...newState, mutationHistory } as State;
   }, initState);
 
-  useEffect(() => {
-    localForage
-      .iterate((value, key) => {
-        dispatch({ type: ActionType.setState, payload: { [key]: value } });
-      })
-      .then(() => {
-        const db = firebase.database();
+  useAppInit(dispatch);
 
-        /**
-         * Watch topStories and emit id list
-         */
-        const topStoriesRef = db.ref("/v0/topstories");
-        topStoriesRef.on("value", (snap) =>
-          dispatch({ type: ActionType.emitTopStoryIds, payload: snap.val() })
-        );
+  useWatchUid({ uid: state.auth.uid, status: state.auth.status }, dispatch);
 
-        /**
-         * Watch new story ids and emit id list
-         */
-        const newStoriesRef = db.ref("/v0/newstories");
-        newStoriesRef.on("value", (snap) =>
-          dispatch({ type: ActionType.emitNewStoryIds, payload: snap.val() })
-        );
+  useWatchList(state.newStoryIds, dispatch);
 
-        return () => {
-          newStoriesRef.off();
-          topStoriesRef.off();
-        };
-      });
-  }, []);
-
-  /**
-   * Watch user
-   */
-  useEffect(() => {
-    const auth = state.auth ?? { status: "unsubscribed" };
-    localForage.setItem("auth", auth).then(() => {
-      if (auth.status === "init" && auth.uid) {
-        dispatch({ type: ActionType.watchUid });
-
-        const db = firebase.database();
-        const ref = db.ref(`/v0/user/${auth.uid}`);
-        ref.on("value", (snap) =>
-          dispatch({ type: ActionType.emitUser, payload: snap.val() })
-        );
-        return ref.off;
-      }
-    });
-  }, [state.auth]);
-
-  useEffect(() => {
-    localForage.setItem("modal", state.modal);
-  }, [state.modal]);
+  useWatchList(state.topStoryIds, dispatch);
 
   /**
    * ActionType watcher
@@ -125,61 +82,6 @@ function App() {
     //   }
     // }
   }, [state.mutationHistory]);
-
-  // TODO Combine the effects of newStoryIds and topStoryIds
-
-  /**
-   * How cache these items to avoid repeated on/off
-   * Put the ref in the store
-   *
-   * Combined cache
-   * Build list by sorting list ids and reference record id
-   */
-
-  /**
-   * Emit story for each top story id
-   */
-
-  useEffect(() => {
-    const db = firebase.database();
-
-    state.newStoryIds.slice(0, 10).forEach((id, i) => {
-      if (state.storyRecord[id] === undefined) {
-        dispatch({
-          type: ActionType.emitNewStory,
-          payload: { [id]: {} },
-        });
-
-        const ref = db.ref(`/v0/item/${id}`);
-        ref.on("value", (snap: Snap) => {
-          dispatch({
-            type: ActionType.emitNewStory,
-            payload: { [id]: snap.val() },
-          });
-        });
-      }
-    });
-  }, [state.newStoryIds, state.storyRecord]);
-
-  useEffect(() => {
-    const db = firebase.database();
-
-    const refs = state.topStoryIds.slice(0, 10).map((id, i) => {
-      const ref = db.ref(`/v0/item/${id}`);
-      ref.on("value", (snap: Snap) => {
-        dispatch({
-          type: ActionType.emitTopStory,
-          payload: { [snap.key!]: snap.val() },
-        });
-      });
-      return ref;
-    });
-    return () =>
-      refs.forEach((ref) => {
-        console.log("dealoc", ref.key);
-        ref?.off();
-      });
-  }, [state.topStoryIds]);
 
   /**
    * Fetch top commentnewStoryList

@@ -22,11 +22,11 @@ export function reducer(state: State, action: Action<Keys>): State {
       return { ...state, modal };
     }
 
-    case ActionType.initWatchUid: {
+    case ActionType.watchUid: {
       return { ...state, auth: { ...payload, status: "init" } };
     }
 
-    case ActionType.watchUid: {
+    case ActionType.awaitingUser: {
       return { ...state, auth: { ...state.auth, status: "awaiting" } };
     }
 
@@ -37,7 +37,7 @@ export function reducer(state: State, action: Action<Keys>): State {
       };
     }
 
-    case ActionType.signOut: {
+    case ActionType.releaseUid: {
       return { ...state, auth: { status: "unsubscribed" } };
     }
 
@@ -49,6 +49,14 @@ export function reducer(state: State, action: Action<Keys>): State {
     case ActionType.emitTopStoryIds: {
       const topStoryIds = payload as State["topStoryIds"];
       return { ...state, topStoryIds };
+    }
+
+    case ActionType.emitStory: {
+      return {
+        ...state,
+        // TODO Add db.ref to record
+        storyRecord: { ...state.storyRecord, [payload.key]: payload.val() },
+      };
     }
 
     case ActionType.emitNewStory: {
