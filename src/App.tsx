@@ -62,7 +62,7 @@ function App() {
 
   useAppInit(dispatch);
 
-  useWatchUid({ uid: state.auth.uid, status: state.auth.status }, dispatch);
+  useWatchUid(state.auth, dispatch);
 
   useWatchList(state.newStoryIds, dispatch);
 
