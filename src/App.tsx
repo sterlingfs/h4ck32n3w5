@@ -1,9 +1,6 @@
 import React, { Suspense, useEffect, useReducer } from "react";
 import "./App.css";
 
-import firebase from "firebase/app";
-import "firebase/database";
-
 import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
 
@@ -15,14 +12,12 @@ import { ActionType } from "./enums/ActionType";
 
 import { reducer } from "./reducer";
 
-import { getItem, Snap } from "./firebase";
 import { State } from "./state";
-import { Action, HNComment, HNStory } from "./types";
+import { Action } from "./types";
 import { useAppInit } from "./effects/useAppInit";
 import { useWatchUid } from "./effects/useWatchUid";
-import { stat } from "fs";
-import { DBPath } from "./firebase/enums/DBPath";
-import { useWatchList } from "./effects/useWatchList";
+import useWatchNewStories from "./effects/useWatchNewStories";
+import useWatchTopStories from "./effects/useWatchTopStories";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -33,13 +28,16 @@ const initState: State = {
   mount: {},
   auth: { status: "unsubscribed" },
   modal: { position: "closed" },
-  storyRecord: {},
+
+  newStoryRecord: {},
+  topStoryRecord: {},
+
   newStoryIds: [],
   newStoryList: [],
   topStoryIds: [],
   topStoryList: [],
   submissionRecord: {},
-  replyRecord: {},
+  commentRecord: {},
 };
 
 type Keys = keyof typeof ActionType;
@@ -62,26 +60,11 @@ function App() {
 
   useAppInit(dispatch);
 
-  useWatchUid(state.auth, dispatch);
+  useWatchUid(state.auth.uid, dispatch);
 
-  useWatchList(state.newStoryIds, dispatch);
+  useWatchNewStories(state.newStoryIds, dispatch);
 
-  useWatchList(state.topStoryIds, dispatch);
-
-  /**
-   * ActionType watcher
-   */
-  useEffect(() => {
-    // const [mutation] = state.mutationHistory;
-    // if (mutation) {
-    //   const { action } = mutation;
-    //   const { type, payload } = action;
-    //   switch (type) {
-    //     default:
-    //       return;
-    //   }
-    // }
-  }, [state.mutationHistory]);
+  useWatchTopStories(state.topStoryIds, dispatch);
 
   /**
    * Fetch top commentnewStoryList
@@ -89,53 +72,57 @@ function App() {
   useEffect(() => {
     // console.log(">>> TOP_STORY_RECORD_CHANGE");
     // TODO #7 When topStoryRecord changes fetch the topCommnet if not in cache
-  }, [state.storyRecord]);
+    //
+  }, []);
 
   /**
    * Watch user's submitted items and emit replies
    */
-  useEffect(() => {
-    // FIXME Destory these listeners when the user changes accounts
-    const submitted = state.auth.user?.submitted.slice(0, 50);
-    if (submitted) {
-      const db = firebase.database();
-      submitted.forEach(async (id) => {
-        if (state.submissionRecord[id] === undefined) {
-          dispatch({
-            type: ActionType.emitSubmission,
-            payload: { [id]: {} },
-          });
+  // useEffect(() => {
 
-          db.ref(`/v0/item/${id}`).on("value", (submissionSnap) => {
-            const submission: HNStory | HNComment = submissionSnap?.val();
+  //   NEXT
 
-            dispatch({
-              type: ActionType.emitSubmission,
-              payload: { [id]: submissionSnap.val() },
-            });
+  //   // FIXME Destory these listeners when the user changes accounts
+  //   const submitted = state.auth.user?.submitted.slice(0, 50);
+  //   if (submitted) {
+  //     const db = firebase.database();
+  //     submitted.forEach(async (id) => {
+  //       if (state.submissionRecord[id] === undefined) {
+  //         dispatch({
+  //           type: ActionType.emitSubmission,
+  //           payload: { [id]: {} },
+  //         });
 
-            // FIXME Hold reply refs until needs to dealoc
-            const replyRefs = submission.kids?.map((id) => {
-              if (state.replyRecord[id] === undefined) {
-                dispatch({
-                  type: ActionType.emitReply,
-                  payload: { [id]: {} },
-                });
-                return db.ref(`/v0/item/${id}`).on("value", (replySnap) => {
-                  dispatch({
-                    type: ActionType.emitReply,
-                    payload: { [id]: replySnap.val() },
-                  });
-                });
-              } else {
-                return undefined;
-              }
-            });
-          });
-        }
-      });
-    }
-  }, [state.auth.user?.submitted, state.submissionRecord, state.replyRecord]);
+  //         db.ref(`/v0/item/${id}`).on("value", (submissionSnap) => {
+  //           const submission: HNStory | HNComment = submissionSnap?.val();
+
+  //           dispatch({
+  //             type: ActionType.emitSubmission,
+  //             payload: { [id]: submissionSnap.val() },
+  //           });
+
+  //           // FIXME Hold reply refs until needs to dealoc
+  //           const replyRefs = submission.kids?.map((id) => {
+  //             if (state.replyRecord[id] === undefined) {
+  //               dispatch({
+  //                 type: ActionType.emitReply,
+  //                 payload: { [id]: {} },
+  //               });
+  //               return db.ref(`/v0/item/${id}`).on("value", (replySnap) => {
+  //                 dispatch({
+  //                   type: ActionType.emitReply,
+  //                   payload: { [id]: replySnap.val() },
+  //                 });
+  //               });
+  //             } else {
+  //               return undefined;
+  //             }
+  //           });
+  //         });
+  //       }
+  //     });
+  //   }
+  // }, [state.auth.user?.submitted, state.submissionRecord, state.replyRecord]);
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

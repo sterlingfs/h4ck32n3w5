@@ -8,15 +8,19 @@ export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
   const listItems = props.store.state.storyRecord;
-  const topStoryIds = props.store.state.topStoryIds.slice(0, 20) || [];
-  const topStoriesOrderedList = topStoryIds.map(
-    (id) => listItems[id]
-  ) as HNStory[];
+  const topStoryIds = props.store.state.topStoryIds || [];
+  const topStoriesOrderedList = topStoryIds.reduce(
+    (stories: HNStory[], id: number) => {
+      const listItem = listItems[id];
+      return listItem ? [...stories, listItem] : stories;
+    },
+    [] as HNStory[]
+  );
 
   return (
     <div className={Layout.container}>
       <div>
-        {topStoriesOrderedList.map((story, i) => (
+        {topStoriesOrderedList.slice(0, 100).map((story, i) => (
           <StoryItem
             key={i}
             index={i}

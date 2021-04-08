@@ -10,11 +10,11 @@ export enum ActionType {
   emitUser = "emitUser",
   releaseUid = "releaseUid",
 
-  emitStory = "emitStory",
-  emitTopStory = "emitTopStory",
-  emitNewStory = "emitNewStory",
   emitTopStoryIds = "emitTopStoryIds",
   emitNewStoryIds = "emitNewStoryIds",
+
+  emitTopStory = "emitTopStory",
+  emitNewStory = "emitNewStory",
 
   emitReply = "emitReply",
   emitSubmission = "emitSubmission",

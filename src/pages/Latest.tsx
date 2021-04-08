@@ -11,10 +11,29 @@ export type LatestProps = ComponentBaseProps<State>;
 export default function Latest(props: LatestProps) {
   // const newStoryList = props.store.state.newStoryList;
 
+  // const listItems = props.store.state.storyRecord;
+  // const newStoryIds = props.store.state.newStoryIds.slice(0, 20) || [];
+  // const topStoriesOrderedList = newStoryIds
+  //   .map((id) => listItems[id])
+  //   .sort((a, b) => (a?.time < b?.time ? 1 : -1)) as HNStory[];
+
+  // const listItems = props.store.state.storyRecord;
+  // const topStoryIds = props.store.state.topStoryIds || [];
+  // const topStoriesOrderedList = topStoryIds.reduce(
+  //   (stories: HNStory[], id: number) => {
+  //     const listItem = listItems[id];
+  //     return listItem ? [...stories, listItem] : stories;
+  //   },
+  //   [] as HNStory[]
+  // );
+
   const listItems = props.store.state.storyRecord;
-  const newStoryIds = props.store.state.newStoryIds.slice(0, 20) || [];
+  const newStoryIds = props.store.state.newStoryIds.slice(0, 500) || [];
   const topStoriesOrderedList = newStoryIds
-    .map((id) => listItems[id])
+    .reduce((stories: HNStory[], id: number) => {
+      const listItem = listItems[id];
+      return listItem ? [...stories, listItem] : stories;
+    }, [] as HNStory[])
     .sort((a, b) => (a?.time < b?.time ? 1 : -1)) as HNStory[];
 
   return (

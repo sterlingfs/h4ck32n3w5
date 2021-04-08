@@ -17,7 +17,7 @@ export default function Replies(props: RepliesProps) {
   const submissions = state.submissionRecord;
 
   // TODO #5 Cache to store
-  const replies = Object.values(state.replyRecord)
+  const replies = Object.values(state.commentRecord)
     .filter((reply) => reply.id)
     .sort((a, b) => {
       return a.time < b.time ? 1 : -1;

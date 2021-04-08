@@ -33,7 +33,7 @@ export function reducer(state: State, action: Action<Keys>): State {
     case ActionType.emitUser: {
       return {
         ...state,
-        auth: { ...state.auth, status: "emitting", user: payload },
+        auth: { status: "emitting", ...payload },
       };
     }
 
@@ -54,7 +54,6 @@ export function reducer(state: State, action: Action<Keys>): State {
     case ActionType.emitStory: {
       return {
         ...state,
-        // TODO Add db.ref to record
         storyRecord: { ...state.storyRecord, [payload.key]: payload.val() },
       };
     }
@@ -83,7 +82,7 @@ export function reducer(state: State, action: Action<Keys>): State {
     case ActionType.emitReply: {
       return {
         ...state,
-        replyRecord: { ...state.replyRecord, ...payload },
+        commentRecord: { ...state.commentRecord, ...payload },
       };
     }
 

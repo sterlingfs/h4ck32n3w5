@@ -14,12 +14,12 @@ export default function BottomBar(props: BottomBarProps) {
     <div className={Style.BottomNav}>
       <div className={Style.container}>
         <Button
-          title={"lasest"}
-          onClick={() => setRoute({ name: RouteName.lastest })}
-        />
-        <Button
           title={"top stories"}
           onClick={() => setRoute({ name: RouteName.topStories })}
+        />
+        <Button
+          title={"latest"}
+          onClick={() => setRoute({ name: RouteName.lastest })}
         />
         <Button
           title={"replies"}

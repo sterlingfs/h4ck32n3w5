@@ -1,4 +1,4 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
 import React, { useEffect } from "react";
 import * as localForage from "localforage";
 import { ActionType } from "../enums/ActionType";
