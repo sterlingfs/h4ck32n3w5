@@ -51,24 +51,17 @@ export function reducer(state: State, action: Action<Keys>): State {
       return { ...state, topStoryIds };
     }
 
-    case ActionType.emitStory: {
-      return {
-        ...state,
-        storyRecord: { ...state.storyRecord, [payload.key]: payload.val() },
-      };
-    }
-
     case ActionType.emitNewStory: {
       return {
         ...state,
-        storyRecord: { ...state.storyRecord, ...payload },
+        // storyRecord: { ...state.storyRecord, ...payload },
       };
     }
 
     case ActionType.emitTopStory: {
       return {
         ...state,
-        storyRecord: { ...state.storyRecord, ...payload },
+        // storyRecord: { ...state.storyRecord, ...payload },
       };
     }
 

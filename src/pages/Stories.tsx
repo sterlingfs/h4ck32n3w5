@@ -7,15 +7,17 @@ import { State } from "../state";
 export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
-  const listItems = props.store.state.storyRecord;
-  const topStoryIds = props.store.state.topStoryIds || [];
-  const topStoriesOrderedList = topStoryIds.reduce(
-    (stories: HNStory[], id: number) => {
-      const listItem = listItems[id];
-      return listItem ? [...stories, listItem] : stories;
-    },
-    [] as HNStory[]
-  );
+  // const listItems = props.store.state.storyRecord;
+  // const topStoryIds = props.store.state.topStoryIds || [];
+  // const topStoriesOrderedList = topStoryIds.reduce(
+  //   (stories: HNStory[], id: number) => {
+  //     const listItem = listItems[id];
+  //     return listItem ? [...stories, listItem] : stories;
+  //   },
+  //   [] as HNStory[]
+  // );
+
+  const topStoriesOrderedList = [] as HNStory[];
 
   return (
     <div className={Layout.container}>
