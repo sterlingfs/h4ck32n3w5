@@ -19,6 +19,7 @@ export default function Stories(props: StoriesProps) {
 
   return (
     <div className={Layout.container}>
+      <h2 style={{ paddingLeft: "16px" }}>Top Stories</h2>
       <div>
         {topStoriesOrderedList.slice(0, 100).map((story, i) => (
           <StoryItem

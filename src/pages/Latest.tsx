@@ -20,6 +20,7 @@ export default function Latest(props: LatestProps) {
 
   return (
     <div className={Layout.container}>
+      <h2 style={{ paddingLeft: "16px" }}>Latest</h2>
       <div>
         {topStoriesOrderedList.map((story, i) => (
           <StoryItem

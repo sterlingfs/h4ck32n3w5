@@ -19,7 +19,7 @@ type State = {
 
 type Action = {
   type: ActionType;
-  payload: any;
+  payload?: any;
 };
 
 type MutationOptions = { state: State; payload: any };
@@ -33,10 +33,17 @@ export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
   );
 
   useEffect(() => {
-    window.onpopstate = (event: PopStateEvent) => {
-      console.log("should pop state");
+    const callback = (event: PopStateEvent) => {
+      console.log("EVETN", event);
+
+      const [route] = state.history;
+      dispatch({ type: ActionType.setRoute, payload: route });
     };
-  }, []);
+
+    window.onpopstate = callback;
+
+    return () => window.removeEventListener("popstate", callback);
+  }, [state.history]);
 
   useEffect(() => {
     const pathname = initPathname;
