@@ -9,16 +9,14 @@ import { RouteName } from "../effects/use-router/RouteName";
 export type LatestProps = ComponentBaseProps<State>;
 
 export default function Latest(props: LatestProps) {
-  // const listItems = props.store.state.storyRecord;
-  // const newStoryIds = props.store.state.newStoryIds.slice(0, 500) || [];
-  // const topStoriesOrderedList = newStoryIds
-  //   .reduce((stories: HNStory[], id: number) => {
-  //     const listItem = listItems[id];
-  //     return listItem ? [...stories, listItem] : stories;
-  //   }, [] as HNStory[])
-  //   .sort((a, b) => (a?.time < b?.time ? 1 : -1)) as HNStory[];
-
-  const topStoriesOrderedList = [] as HNStory[];
+  const listItems = props.store.state.newStoryRecord;
+  const newStoryIds = props.store.state.newStoryIds.slice(0, 500) || [];
+  const topStoriesOrderedList = newStoryIds
+    .reduce((stories: HNStory[], id: number) => {
+      const listItem = listItems[id];
+      return listItem ? [...stories, listItem] : stories;
+    }, [] as HNStory[])
+    .sort((a, b) => (a?.time < b?.time ? 1 : -1)) as HNStory[];
 
   return (
     <div className={Layout.container}>

@@ -13,6 +13,9 @@ export enum ActionType {
   emitTopStoryIds = "emitTopStoryIds",
   emitNewStoryIds = "emitNewStoryIds",
 
+  setNewStoryRecord = "setNewStoryRecord",
+  setTopStoryRecord = "setTopStoryRecord",
+
   emitTopStory = "emitTopStory",
   emitNewStory = "emitNewStory",
 

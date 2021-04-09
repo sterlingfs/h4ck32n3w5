@@ -52,7 +52,7 @@ function App() {
     const newState = reducer(state, action);
     // console.log(">>> EMIT_ACTION", action.type, action.payload);
     const mutationHistory = [
-      ...state.mutationHistory,
+      ...state.mutationHistory.slice(0, 50),
       { action, state: newState },
     ];
     return { ...newState, mutationHistory } as State;

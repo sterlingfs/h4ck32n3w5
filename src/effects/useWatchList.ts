@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { ActionType } from "../enums/ActionType";
+import { Snap } from "../firebase";
 import { DBPath } from "../firebase/enums/DBPath";
 import { getItem } from "../firebase/getItem";
-import { Dispatch } from "../types";
+import { State } from "../state";
+import { Dispatch, HNStory } from "../types";
 
 /**
  * Args
@@ -11,19 +13,26 @@ import { Dispatch } from "../types";
  * -
  */
 export function useWatchList(
-  args: { ids: number[]; type: ActionType },
+  { ids, type }: { ids: number[]; type: ActionType },
   dispatch: Dispatch
 ) {
   useEffect(() => {
-    const snaps = args.ids.map((id) => {
-      return getItem({ id, path: DBPath.item }, (snap) => {
-        dispatch({
-          type: args.type,
-          payload: snap,
-        });
+    if (ids && type) {
+      const snapsReq = ids.map((id) => {
+        return new Promise<Snap>((r) => getItem({ id, path: DBPath.item }, r));
       });
-    });
 
-    return () => snaps.forEach((snap) => snap.ref.off());
-  }, [args, dispatch]);
+      Promise.allSettled(snapsReq).then((res) => {
+        const vals = res
+          .map((req: any) => req.value.val())
+          .filter((el) => el !== undefined);
+
+        if (vals) {
+          const entries = vals.map((story) => [story?.id, story]);
+          const record = Object.fromEntries(entries);
+          dispatch({ type, payload: record });
+        }
+      });
+    }
+  }, [ids, type, dispatch]);
 }

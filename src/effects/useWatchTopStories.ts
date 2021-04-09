@@ -3,5 +3,5 @@ import { Dispatch } from "../types";
 import { useWatchList } from "./useWatchList";
 
 export default function useWatchTopStories(ids: number[], dispatch: Dispatch) {
-  return useWatchList({ ids, type: ActionType.emitNewStory }, dispatch);
+  return useWatchList({ ids, type: ActionType.setTopStoryRecord }, dispatch);
 }
