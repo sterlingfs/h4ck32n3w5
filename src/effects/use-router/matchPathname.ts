@@ -11,11 +11,11 @@ const Comments = React.lazy(() => import("../../pages/Comments"));
 export const matchPathname = (routeName: RouteName): LazyComp => {
   switch (routeName) {
     case RouteName.root:
-      return Latest;
-    case RouteName.lastest:
-      return Latest;
+      return Stories;
     case RouteName.topStories:
       return Stories;
+    case RouteName.lastest:
+      return Latest;
     case RouteName.replies:
       return Replies;
     case RouteName.comments:
