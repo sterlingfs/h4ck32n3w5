@@ -33,19 +33,6 @@ export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
   );
 
   useEffect(() => {
-    const callback = (event: PopStateEvent) => {
-      console.log("EVETN", event);
-
-      const [route] = state.history;
-      dispatch({ type: ActionType.setRoute, payload: route });
-    };
-
-    window.onpopstate = callback;
-
-    return () => window.removeEventListener("popstate", callback);
-  }, [state.history]);
-
-  useEffect(() => {
     const pathname = initPathname;
     const route = findRouteByPath(pathname, state.routeTree);
     dispatch({ type: ActionType.pushPathname, payload: route });
@@ -62,8 +49,9 @@ export function useRouter(initPathname: string, routeTree: RouteConfig[]) {
       const route = findRouteByName(newRoute, state.routeTree);
       dispatch({ type: ActionType.setRoute, payload: route });
 
-      route?.pathname &&
-        window.history.pushState([], "history push title", route.pathname);
+      if (route?.pathname) {
+        window.location.pathname = route.pathname;
+      }
     },
 
     // [ActionType.pushPathname]: (pathname: string) =>

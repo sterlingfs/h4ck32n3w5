@@ -16,8 +16,6 @@ import { State } from "./state";
 import { Action } from "./types";
 import { useAppInit } from "./effects/useAppInit";
 import { useWatchUid } from "./effects/useWatchUid";
-import useWatchNewStories from "./effects/useWatchNewStories";
-import useWatchTopStories from "./effects/useWatchTopStories";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -62,9 +60,7 @@ function App() {
 
   useWatchUid(state.auth.uid, dispatch);
 
-  useWatchNewStories(state.newStoryIds, dispatch);
-
-  useWatchTopStories(state.topStoryIds, dispatch);
+  // useWatchTopStories(state.topStoryIds, dispatch);
 
   /**
    * Fetch top commentnewStoryList

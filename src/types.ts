@@ -57,6 +57,8 @@ export type HNComment = {
   kids: number[];
 };
 
+export type HNItem = HNStory | HNComment;
+
 export type HNUser = {
   id: string;
   created: number;
