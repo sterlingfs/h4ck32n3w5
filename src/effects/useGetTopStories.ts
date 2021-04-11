@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { useGetList } from "./useGetList";
 
 export default function useGetTopStories(ids: number[]) {
-  const dataList = useGetList(ids).map((data) => data.item);
+  const dataList = useGetList(ids)
+    .sort((a, b) => (a.index > b.index ? 1 : -1))
+    .map((data) => data.item);
 
   useEffect(() => {
-    localforage.setItem("topStoryList", dataList);
+    dataList.length > 0 && localforage.setItem("topStoryList", dataList);
   }, [dataList]);
 
   return dataList;

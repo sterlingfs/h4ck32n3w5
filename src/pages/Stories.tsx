@@ -8,15 +8,19 @@ import useGetTopStories from "../effects/useGetTopStories";
 export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
+  const cache = props.store.state.topStoryList;
+
   const topStoryIds = props.store.state.topStoryIds || [];
-  const topStoryList = props.store.state.topStoryList || [];
-  const topStoriesOrderedList = useGetTopStories(topStoryIds) ?? topStoryList;
+  const topStoriesOrderedList = useGetTopStories(topStoryIds);
+
+  const list =
+    topStoriesOrderedList.length === 0 ? cache : topStoriesOrderedList;
 
   return (
     <div className={Layout.container}>
       <h2 style={{ paddingLeft: "16px" }}>Top Stories</h2>
       <div>
-        {topStoriesOrderedList.slice(0, 100).map((item, i) => (
+        {list.slice(0, 100).map((item, i) => (
           <StoryItem
             key={i}
             index={i}

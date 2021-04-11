@@ -9,14 +9,11 @@ export type LatestProps = ComponentBaseProps<State>;
 
 export default function Latest(props: LatestProps) {
   const newStoryIds = props.store.state.newStoryIds || [];
-  const newStoryList = props.store.state.newStoryList || [];
-  const newStoriesOrderedList = useGetNewStories(newStoryIds) ?? newStoryList;
-
-  // .sort((a, b) => (a?.time < b?.time ? 1 : -1)) as HNStory[];
+  const newStoriesOrderedList = useGetNewStories(newStoryIds);
 
   return (
     <div className={Layout.container}>
-      <h2 style={{ paddingLeft: "16px" }}>Latest</h2>
+      <h2 style={{ paddingLeft: "16px" }}>Latest News</h2>
       <div>
         {newStoriesOrderedList.map((item, i) => (
           <StoryItem

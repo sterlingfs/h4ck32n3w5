@@ -18,7 +18,7 @@ export default function BottomBar(props: BottomBarProps) {
           onClick={() => setRoute({ name: RouteName.topStories })}
         />
         <Button
-          title={"latest"}
+          title={"latest news"}
           onClick={() => setRoute({ name: RouteName.lastest })}
         />
         <Button
