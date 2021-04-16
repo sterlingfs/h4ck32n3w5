@@ -4,6 +4,27 @@
 
 import { RouteName } from "./RouteName";
 
+export type Dispatch = React.Dispatch<Action>;
+export type MutationOptions = { state: State; payload: any };
+
+export enum ActionType {
+  pushState = "pushState",
+  pushPathname = "pushPathname",
+  setRoute = "setRoute",
+  popState = "popState",
+}
+
+export type State = {
+  routeTree: RouteConfig[];
+  route?: Route;
+  history: Route[];
+};
+
+export type Action = {
+  type: ActionType;
+  payload?: any;
+};
+
 export type Router = { route?: Route; setRoute: (newRoute: NewRoute) => void };
 
 export type ParamMap = Record<string, string | number>;

@@ -31,6 +31,8 @@ export type MutationFunction<State> = (state: State, payload: any) => State;
 export type ComponentBaseProps<State> = {
   store: Store<State, keyof typeof ActionType>;
   router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
+
+  [key: string]: any;
 };
 
 export type HNStory = {

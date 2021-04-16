@@ -1,9 +1,9 @@
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
+import useGetTopStories from "../effects/useGetTopStories";
 import { ComponentBaseProps, HNStory } from "../types";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
-import useGetTopStories from "../effects/useGetTopStories";
 
 export type StoriesProps = ComponentBaseProps<State>;
 
@@ -13,8 +13,10 @@ export default function Stories(props: StoriesProps) {
   const topStoryIds = props.store.state.topStoryIds || [];
   const topStoriesOrderedList = useGetTopStories(topStoryIds);
 
-  const list =
-    topStoriesOrderedList.length === 0 ? cache : topStoriesOrderedList;
+  // const list =
+  //   topStoriesOrderedList.length === 0 ? cache : topStoriesOrderedList;
+
+  const list = topStoriesOrderedList;
 
   return (
     <div className={Layout.container}>

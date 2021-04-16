@@ -48,7 +48,6 @@ function App() {
   // Store
   const [state, dispatch] = useReducer((state: State, action: Action<Keys>) => {
     const newState = reducer(state, action);
-    // console.log(">>> EMIT_ACTION", action.type, action.payload);
     const mutationHistory = [
       ...state.mutationHistory.slice(0, 50),
       { action, state: newState },
