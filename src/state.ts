@@ -1,4 +1,10 @@
-import { HNUser, HNComment, HNStory, StateMutation } from "./types";
+import {
+  HNUser,
+  HNComment,
+  HNStory,
+  StateMutation,
+  StoryListItem,
+} from "./types";
 
 export type State = {
   app: {
@@ -24,7 +30,7 @@ export type State = {
 
   newStoryIds: number[];
   newStoryRecord: Record<string, HNStory>;
-  newStoryList: HNStory[];
+  newStoryList: StoryListItem[];
 
   topStoryIds: number[];
   topStoryRecord: Record<string, HNStory>;

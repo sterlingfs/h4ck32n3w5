@@ -4,25 +4,19 @@ import useGetTopStories from "../effects/useGetTopStories";
 import { ComponentBaseProps, HNStory } from "../types";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
+import { useGetList } from "../effects/useGetList";
 
 export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
-  const cache = props.store.state.topStoryList;
-
-  const topStoryIds = props.store.state.topStoryIds || [];
-  const topStoriesOrderedList = useGetTopStories(topStoryIds);
-
-  // const list =
-  //   topStoriesOrderedList.length === 0 ? cache : topStoriesOrderedList;
-
-  const list = topStoriesOrderedList;
+  const { state, dispatch } = props.store;
+  useGetTopStories(state.topStoryIds, dispatch);
 
   return (
     <div className={Layout.container}>
       <h2 style={{ paddingLeft: "16px" }}>Top Stories</h2>
       <div>
-        {list.slice(0, 100).map((item, i) => (
+        {state.topStoryList.slice(0, 100).map((item, i) => (
           <StoryItem
             key={i}
             index={i}

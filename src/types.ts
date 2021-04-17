@@ -73,6 +73,12 @@ export type StateMutation = {
   action: Action<keyof typeof ActionType>;
   state: State;
 };
+
 export type Options = {
   eventType?: EventType;
+};
+
+export type StoryListItem = {
+  story: HNStory;
+  index: number;
 };

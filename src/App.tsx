@@ -26,12 +26,10 @@ const initState: State = {
   mount: {},
   auth: { status: "unsubscribed" },
   modal: { position: "closed" },
-
-  newStoryRecord: {},
-  topStoryRecord: {},
-
   newStoryIds: [],
+  newStoryRecord: {},
   newStoryList: [],
+  topStoryRecord: {},
   topStoryIds: [],
   topStoryList: [],
   submissionRecord: {},
@@ -42,8 +40,7 @@ type Keys = keyof typeof ActionType;
 
 function App() {
   // Router
-  const pathname = window.location.pathname;
-  const { route, setRoute } = useRouter(pathname, routeTree);
+  const { route, setRoute } = useRouter(window.location.pathname, routeTree);
 
   // Store
   const [state, dispatch] = useReducer((state: State, action: Action<Keys>) => {
