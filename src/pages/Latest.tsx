@@ -8,14 +8,14 @@ import useGetNewStories from "../effects/useGetNewStories";
 export type LatestProps = ComponentBaseProps<State>;
 
 export default function Latest(props: LatestProps) {
-  const newStoryIds = props.store.state.newStoryIds || [];
-  const newStoriesOrderedList = useGetNewStories(newStoryIds);
+  const { state, dispatch } = props.store;
+  useGetNewStories(state.newStoryIds, dispatch);
 
   return (
     <div className={Layout.container}>
       <h2 style={{ paddingLeft: "16px" }}>Latest News</h2>
       <div>
-        {newStoriesOrderedList.map((item, i) => (
+        {state.newStoryList.map((item, i) => (
           <StoryItem
             key={i}
             index={i}
