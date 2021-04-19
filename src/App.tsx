@@ -16,6 +16,7 @@ import { State } from "./state";
 import { Action } from "./types";
 import { useAppInit } from "./effects/useAppInit";
 import { useWatchUid } from "./effects/useWatchUid";
+import { useStore } from "./effects/use-store/useStore";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -36,43 +37,17 @@ const initState: State = {
   commentRecord: {},
 };
 
-type Keys = keyof typeof ActionType;
-
 function App() {
   // Router
   const { route, setRoute } = useRouter(window.location.pathname, routeTree);
 
   // Store
-  const [state, dispatch] = useReducer((state: State, action: Action<Keys>) => {
-    const newState = reducer(state, action);
-    const mutationHistory = [
-      ...state.mutationHistory.slice(0, 50),
-      { action, state: newState },
-    ];
-    return { ...newState, mutationHistory } as State;
-  }, initState);
+  const [state, dispatch] = useStore(reducer, initState);
 
+  // Init
   useAppInit(dispatch);
 
   useWatchUid(state.auth.uid, dispatch);
-
-  // useWatchTopStories(state.topStoryIds, dispatch);
-
-  /**
-   * Fetch top commentnewStoryList
-   */
-  useEffect(() => {
-    // console.log(">>> TOP_STORY_RECORD_CHANGE");
-    // TODO #7 When topStoryRecord changes fetch the topCommnet if not in cache
-    //
-  }, []);
-
-  /**
-   * Watch user's submitted items and emit replies
-   */
-  // useEffect(() => {
-
-  //   NEXT
 
   //   // FIXME Destory these listeners when the user changes accounts
   //   const submitted = state.auth.user?.submitted.slice(0, 50);

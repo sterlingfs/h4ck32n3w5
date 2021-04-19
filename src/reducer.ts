@@ -4,6 +4,8 @@ import { Action, HNComment, HNStory, HNUser } from "./types";
 
 type Keys = keyof typeof ActionType;
 
+export type Reducer = typeof reducer;
+
 export function reducer(state: State, action: Action<Keys>): State {
   const { type, payload } = action;
 

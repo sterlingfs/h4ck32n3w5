@@ -3,6 +3,8 @@ import { ActionType } from "./enums/ActionType";
 import { EventType } from "./firebase";
 import { State } from "./state";
 
+export type Data<S = HNItem> = { index: number; item: S };
+
 export type Dispatch = React.Dispatch<Action<ActionType>>;
 
 export type Store<State, Keys extends string> = {
@@ -29,13 +31,15 @@ export type ActionFunction<State, Keys extends string> = (
 export type MutationFunction<State> = (state: State, payload: any) => State;
 
 export type ComponentBaseProps<State> = {
-  store: Store<State, keyof typeof ActionType>;
+  store: Store<State, ActionType>;
   router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
 
   [key: string]: any;
 };
 
 export type HNStory = {
+  index: number;
+
   id: number;
   by: string;
   time: number;
@@ -59,6 +63,9 @@ export type HNComment = {
   kids: number[];
 };
 
+type HNBase = {
+  firstComment: HNComment;
+};
 export type HNItem = HNStory | HNComment;
 
 export type HNUser = {
@@ -70,7 +77,7 @@ export type HNUser = {
 };
 
 export type StateMutation = {
-  action: Action<keyof typeof ActionType>;
+  action: Action<ActionType>;
   state: State;
 };
 
