@@ -5,11 +5,19 @@ import { getItems } from "../firebase/getItems";
 import { State } from "../state";
 import { Dispatch, HNComment, HNItem, HNStory } from "../types";
 import { useGetList } from "./useGetList";
+import { appendComments, replaceItemAtIndex } from "./utils";
 
 export default function useGetTopStories(ids: number[], dispatch: Dispatch) {
   const [stories, setStories] = useState<HNStory[]>([]);
   const [comments, setComments] = useState<HNComment[]>([]);
   const [topStoryList, setTopStoryList] = useState<HNStory[]>([]);
+
+  function getTopCommentIds(stories: HNStory[]) {
+    return stories
+      .slice(0, 20)
+      .map(({ kids }) => (kids?.length > 0 ? kids[0] : -1))
+      .filter((id) => id > 0);
+  }
 
   useEffect(() => {
     getItems<HNStory>(ids).then((stories) => {
@@ -23,9 +31,11 @@ export default function useGetTopStories(ids: number[], dispatch: Dispatch) {
   }, [stories]);
 
   useEffect(() => {
-    console.log("comments", comments);
-
-    setTopStoryList(stories);
+    if (comments.length > 0 && stories.length > 0) {
+      const topComments = comments.slice(0, 10);
+      const storyList = appendComments(stories, topComments);
+      setTopStoryList(storyList);
+    }
   }, [stories, comments]);
 
   useEffect(() => {
@@ -36,13 +46,4 @@ export default function useGetTopStories(ids: number[], dispatch: Dispatch) {
       });
     }
   }, [topStoryList, dispatch]);
-
-  return [];
-}
-
-function getTopCommentIds(stories: HNStory[]) {
-  return stories
-    .slice(0, 20)
-    .map(({ kids }) => (kids?.length > 0 ? kids[0] : -1))
-    .filter((id) => id > 0);
 }

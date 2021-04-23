@@ -38,41 +38,37 @@ export type ComponentBaseProps<State> = {
 };
 
 export type HNStory = {
-  index: number;
-
-  id: number;
   by: string;
-  time: number;
-  kids: number[];
-
   descendants: number;
+  firstComment: HNComment;
+  id: number;
+  index: number;
+  kids: number[];
   score: number;
+  time: number;
   title: string;
-  url: string;
   type: "story";
+  url: string;
 };
 
 export type HNComment = {
-  text: string;
-  parent: number;
-  type: "comment";
-  time: number;
-
-  id: number;
   by: string;
+  firstComment: HNComment;
+  id: number;
   kids: number[];
+  parent: number;
+  text: string;
+  time: number;
+  type: "comment";
 };
 
-type HNBase = {
-  firstComment: HNComment;
-};
 export type HNItem = HNStory | HNComment;
 
 export type HNUser = {
-  id: string;
-  created: number;
-  karma: number;
   about: string;
+  created: number;
+  id: string;
+  karma: number;
   submitted: number[];
 };
 

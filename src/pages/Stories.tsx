@@ -4,7 +4,6 @@ import useGetTopStories from "../effects/useGetTopStories";
 import { ComponentBaseProps, HNStory } from "../types";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
-import { useGetList } from "../effects/useGetList";
 
 export type StoriesProps = ComponentBaseProps<State>;
 
