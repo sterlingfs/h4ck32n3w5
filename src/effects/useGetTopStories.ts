@@ -12,12 +12,12 @@ export default function useGetTopStories(ids: number[], dispatch: Dispatch) {
   const [comments, setComments] = useState<HNComment[]>([]);
   const [topStoryList, setTopStoryList] = useState<HNStory[]>([]);
 
-  function getTopCommentIds(stories: HNStory[]) {
-    return stories
-      .slice(0, 20)
-      .map(({ kids }) => (kids?.length > 0 ? kids[0] : -1))
-      .filter((id) => id > 0);
-  }
+  // function getTopCommentIds(stories: HNStory[]) {
+  //   return stories
+  //     .slice(0, 20)
+  //     .map(({ kids }) => (kids?.length > 0 ? kids[0] : -1))
+  //     .filter((id) => id > 0);
+  // }
 
   useEffect(() => {
     getItems<HNStory>(ids).then((stories) => {
@@ -25,14 +25,15 @@ export default function useGetTopStories(ids: number[], dispatch: Dispatch) {
     });
   }, [ids]);
 
-  useEffect(() => {
-    const commentIds = getTopCommentIds(stories);
-    getItems<HNComment>(commentIds).then(setComments);
-  }, [stories]);
+  // useEffect(() => {
+  //   const commentIds = getTopCommentIds(stories);
+  //   getItems<HNComment>(commentIds).then(setComments);
+  // }, [stories]);
 
   useEffect(() => {
-    if (comments.length > 0 && stories.length > 0) {
-      const topComments = comments.slice(0, 10);
+    // if (comments.length > 0 && stories.length > 0) {
+    if (stories.length > 0) {
+      const topComments = comments.slice(0, 3);
       const storyList = appendComments(stories, topComments);
       setTopStoryList(storyList);
     }
@@ -40,9 +41,11 @@ export default function useGetTopStories(ids: number[], dispatch: Dispatch) {
 
   useEffect(() => {
     if (topStoryList.length > 0) {
-      dispatch({
-        type: ActionType.setState,
-        payload: { topStoryList } as Pick<State, "topStoryList">,
+      localforage.setItem("topStoryList", topStoryList).then(() => {
+        dispatch({
+          type: ActionType.setState,
+          payload: { topStoryList } as Pick<State, "topStoryList">,
+        });
       });
     }
   }, [topStoryList, dispatch]);
