@@ -1,22 +1,19 @@
-import React, { Suspense, useEffect, useReducer } from "react";
 import "./App.css";
+import "firebase/database";
+
+import React, { Suspense } from "react";
 
 import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
-
-import { useRouter } from "./effects/use-router/useRouter";
-import { routeTree } from "./routeTree";
-import { RouteName } from "./effects/use-router/RouteName";
 import { matchPathname } from "./effects/use-router/matchPathname";
-import { ActionType } from "./enums/ActionType";
-
-import { reducer } from "./reducer";
-
-import { State } from "./state";
-import { Action } from "./types";
+import { RouteName } from "./effects/use-router/RouteName";
+import { useRouter } from "./effects/use-router/useRouter";
+import { useStore } from "./effects/use-store/useStore";
 import { useAppInit } from "./effects/useAppInit";
 import { useWatchUid } from "./effects/useWatchUid";
-import { useStore } from "./effects/use-store/useStore";
+import { reducer } from "./reducer";
+import { routeTree } from "./routeTree";
+import { State } from "./state";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -38,63 +35,21 @@ const initState: State = {
 };
 
 function App() {
-  // Router
   const { route, setRoute } = useRouter(window.location.pathname, routeTree);
+  const store = useStore(reducer, initState);
 
-  // Store
-  const [state, dispatch] = useStore(reducer, initState);
-
-  // Init
-  useAppInit(dispatch);
-
-  useWatchUid(state.auth.uid, dispatch);
-
-  //   // FIXME Destory these listeners when the user changes accounts
-  //   const submitted = state.auth.user?.submitted.slice(0, 50);
-  //   if (submitted) {
-  //     const db = firebase.database();
-  //     submitted.forEach(async (id) => {
-  //       if (state.submissionRecord[id] === undefined) {
-  //         dispatch({
-  //           type: ActionType.emitSubmission,
-  //           payload: { [id]: {} },
-  //         });
-
-  //         db.ref(`/v0/item/${id}`).on("value", (submissionSnap) => {
-  //           const submission: HNStory | HNComment = submissionSnap?.val();
-
-  //           dispatch({
-  //             type: ActionType.emitSubmission,
-  //             payload: { [id]: submissionSnap.val() },
-  //           });
-
-  //           // FIXME Hold reply refs until needs to dealoc
-  //           const replyRefs = submission.kids?.map((id) => {
-  //             if (state.replyRecord[id] === undefined) {
-  //               dispatch({
-  //                 type: ActionType.emitReply,
-  //                 payload: { [id]: {} },
-  //               });
-  //               return db.ref(`/v0/item/${id}`).on("value", (replySnap) => {
-  //                 dispatch({
-  //                   type: ActionType.emitReply,
-  //                   payload: { [id]: replySnap.val() },
-  //                 });
-  //               });
-  //             } else {
-  //               return undefined;
-  //             }
-  //           });
-  //         });
-  //       }
-  //     });
-  //   }
-  // }, [state.auth.user?.submitted, state.submissionRecord, state.replyRecord]);
+  useAppInit(store.dispatch);
+  useWatchUid(store.state.auth.uid, store.dispatch);
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);
 
-  const store = { state, dispatch };
+  // const newStoriesRef = firebase.database().ref("/v0/newstories");
+  // newStoriesRef.on("value", (snap) => {
+  //   console.log(">>> SNAP", snap.val());
+  //   // dispatch({ type: ActionType.emitNewStoryIds, payload: snap.val() })
+  // });
+
   return (
     <div className="App">
       <AppBar store={store} router={{ route, setRoute }} />

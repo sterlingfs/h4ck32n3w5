@@ -9,6 +9,7 @@ export type StoriesProps = ComponentBaseProps<State>;
 
 export default function Stories(props: StoriesProps) {
   const { state, dispatch } = props.store;
+
   useGetTopStories(state.topStoryIds, dispatch);
 
   return (

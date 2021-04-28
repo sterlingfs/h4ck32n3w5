@@ -5,11 +5,12 @@ import Style from "./StoryItem.module.css";
 export type StoryItemProps = {
   index: number;
   story?: HNStory;
+  id?: number;
   shouldPushComments: () => void;
 };
 
 export default function StoryItem(props: StoryItemProps) {
-  const { index, story, shouldPushComments } = props;
+  const { index, story, id, shouldPushComments } = props;
   const pdate = (t: number) => new Date(t * 1000).toLocaleString();
 
   const firstComment = story?.firstComment?.text || "";
@@ -17,6 +18,7 @@ export default function StoryItem(props: StoryItemProps) {
   return (
     <div className={Style.StoryItem}>
       <div>{index}</div>
+      <div>{id}</div>
       <a href={story?.url || "/"}>{story?.title}</a>
       <div>{story && pdate(story?.time)}</div>
       <div>

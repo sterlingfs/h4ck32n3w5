@@ -8,33 +8,32 @@ import { Action } from "../types";
 
 export function useAppInit(dispatch: React.Dispatch<Action<ActionType>>) {
   useEffect(() => {
-    localForage
-      .iterate((value, key) => {
-        dispatch({ type: ActionType.setState, payload: { [key]: value } });
-      })
-      .then(() => {
-        const db = firebase.database();
+    const db = firebase.database();
+    const newStoriesRef = db.ref("/v0/newstories");
+    const topStoriesRef = db.ref("/v0/topstories");
 
-        /**
-         * Watch topStories and emit id list
-         */
-        const topStoriesRef = db.ref("/v0/topstories");
-        topStoriesRef.on("value", (snap) =>
-          dispatch({ type: ActionType.emitTopStoryIds, payload: snap.val() })
-        );
-
-        /**
-         * Watch new story ids and emit id list
-         */
-        const newStoriesRef = db.ref("/v0/newstories");
-        newStoriesRef.on("value", (snap) =>
-          dispatch({ type: ActionType.emitNewStoryIds, payload: snap.val() })
-        );
-
-        return () => {
-          newStoriesRef.off();
-          topStoriesRef.off();
-        };
+    const fetchIds = () => {
+      topStoriesRef.on("value", (snap) => {
+        dispatch({ type: ActionType.emitTopStoryIds, payload: snap.val() });
       });
+      newStoriesRef.on("value", (snap) =>
+        dispatch({ type: ActionType.emitNewStoryIds, payload: snap.val() })
+      );
+    };
+
+    if (localForage.keys.length > 0) {
+      localForage
+        .iterate((value, key) => {
+          dispatch({ type: ActionType.setState, payload: { [key]: value } });
+        })
+        .then(() => fetchIds());
+    } else {
+      fetchIds();
+    }
+
+    return () => {
+      newStoriesRef.off();
+      topStoriesRef.off();
+    };
   }, [dispatch]);
 }

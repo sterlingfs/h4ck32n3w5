@@ -30,7 +30,7 @@ export type State = {
 
   newStoryIds: number[];
   newStoryRecord: Record<string, HNStory>;
-  newStoryList: HNStory[];
+  newStoryList: { id: number; index: number; item: HNStory }[];
 
   topStoryIds: number[];
   topStoryRecord: Record<string, HNStory>;

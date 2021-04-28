@@ -1,6 +1,6 @@
 import { State } from "./state";
 import { ActionType } from "./enums/ActionType";
-import { Action, HNComment, HNStory, HNUser } from "./types";
+import { Action } from "./types";
 
 type Keys = keyof typeof ActionType;
 

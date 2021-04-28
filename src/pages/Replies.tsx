@@ -4,7 +4,7 @@ import Layout from "../components/Layout.module.css";
 import "firebase/database";
 
 import { State } from "../state";
-import { ComponentBaseProps, HNComment } from "../types";
+import { ComponentBaseProps } from "../types";
 
 import ReplyItem from "../components/reply-item/ReplyItem";
 
@@ -12,7 +12,7 @@ export type RepliesProps = ComponentBaseProps<State>;
 
 export default function Replies(props: RepliesProps) {
   const { store } = props;
-  const { state, dispatch } = store;
+  const { state } = store;
 
   const submissions = state.submissionRecord;
 
