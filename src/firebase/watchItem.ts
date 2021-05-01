@@ -1,13 +1,15 @@
-import firebase from "firebase/app";
 import "firebase/database";
+
+import firebase from "firebase/app";
+
 import { Options } from "../types";
-import { DBPath } from "./enums/DBPath";
+import { On } from "./";
 
-export function watchItem(id: string, path: DBPath, options: Options) {
+type SuccessCallback = Parameters<On>[1];
+
+export function watchItem(opts: Options, callback: SuccessCallback) {
   const database = firebase.database();
-  const ref = database.ref(`/v0/${path}/${id}`);
-
-  return new Promise((r) => {
-    ref.on(options.eventType || "value", r);
-  });
+  const ref = database.ref(`/v0/${opts.path}/${opts.id}`);
+  ref.on(opts.eventType || "value", callback);
+  return ref;
 }

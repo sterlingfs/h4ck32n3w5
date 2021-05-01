@@ -1,6 +1,7 @@
 import { NewRoute, Route } from "./effects/use-router/types";
 import { ActionType } from "./enums/ActionType";
 import { EventType } from "./firebase";
+import { DBPath } from "./firebase/enums/DBPath";
 import { State } from "./state";
 
 export type Data<S = HNItem> = { index: number; item: S };
@@ -78,6 +79,8 @@ export type StateMutation = {
 };
 
 export type Options = {
+  id: string | number;
+  path: DBPath;
   eventType?: EventType;
 };
 

@@ -1,71 +1,83 @@
-import { useEffect } from "react";
+import "firebase/database";
 
 import firebase from "firebase/app";
-import "firebase/database";
+import * as localforage from "localforage";
+import { useEffect, useState } from "react";
 
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { RouteName } from "../effects/use-router/RouteName";
-import { ActionType } from "../enums/ActionType";
-import { getItem } from "../firebase";
-import { DBPath } from "../firebase/enums/DBPath";
 import { State } from "../state";
-import { ComponentBaseProps } from "../types";
+import { ComponentBaseProps, HNStory } from "../types";
 
 export type LatestProps = ComponentBaseProps<State>;
 
+const LATEST_STORY_LIST = "latestStoryList";
+
 export default function Latest(props: LatestProps) {
-  const { state, dispatch } = props.store;
+  // const { state, dispatch } = props.store;
+  const [storyIds, setStoryIds] = useState<string[]>([]);
+  const [stories, setStories] = useState<HNStory[]>([]);
 
   useEffect(() => {
-    const db = firebase.database();
-    const newStoriesRef = db.ref("/v0/newstories");
+    const database = firebase.database();
+    const newStoriesRef = database.ref("/v0/newstories");
 
-    newStoriesRef.on("value", (snap) => {
-      const newStoryIds: string[] = snap.val() || [];
-      console.log(
-        "new stories",
-        newStoryIds[0],
-        new Date().toLocaleTimeString()
+    localforage
+      .getItem<HNStory[]>(LATEST_STORY_LIST)
+      .then((stories) => stories && setStories(stories))
+      .then(() =>
+        newStoriesRef.on("value", (snap) => {
+          const newStoryIds: string[] = snap.val() || [];
+          setStoryIds(newStoryIds);
+        })
       );
 
-      const snapsReqList = newStoryIds.map(async (id, index) => {
-        // FIXME the latest items are returning null
-        // TODO leave open the query to each id
+    return () => newStoriesRef?.off();
+  }, []);
 
-        const item = await getItem({ id, path: DBPath.item })?.catch((err) => {
-          console.log(">>> FAIL STORY FETCH", err);
-        });
-        return { index, item: item && item.val(), id };
-      });
+  useEffect(() => {
+    if (storyIds?.length > 0) {
+      const database = firebase.database();
+      const refs = storyIds.map((id) => database.ref(`/v0/item/${id}`));
 
-      Promise.all(snapsReqList).then((list) => {
-        const newStoryList = list;
+      const requests = refs.map(
+        (ref) =>
+          new Promise<HNStory>((resolve) =>
+            ref.on("value", (snap) => {
+              const snapVal = snap.val();
+              if (snapVal !== null) {
+                resolve({ id: snap.key, ...snapVal });
+                ref.off();
+              }
+            })
+          )
+      );
 
-        dispatch({
-          type: ActionType.setState,
-          payload: { newStoryList },
-        });
-      });
-    });
+      Promise.all(requests).then((stories) =>
+        localforage
+          .setItem(LATEST_STORY_LIST, stories.slice(0, 500))
+          .then(setStories)
+      );
 
-    return newStoriesRef.off;
-  }, [dispatch]);
+      return () => refs.forEach((ref) => ref.off());
+    }
+  }, [storyIds]);
 
   return (
     <div className={Layout.container}>
       <h2 style={{ paddingLeft: "16px" }}>Latest News</h2>
       <div>
-        {state.newStoryList.map((data, i) => (
+        {stories.map((story, i) => (
           <StoryItem
             key={i}
             index={i}
-            id={data.id}
-            story={data.item}
+            id={story?.id}
+            story={story}
             shouldPushComments={() => {
               props.router.setRoute({
                 name: RouteName.comments,
-                params: { storyId: data.item.id },
+                params: { storyId: story.id },
               });
             }}
           />
