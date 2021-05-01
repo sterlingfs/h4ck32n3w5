@@ -1,6 +1,5 @@
-import "firebase/database";
-
 import firebase from "firebase/app";
+import "firebase/database";
 
 import { Options } from "../types";
 import { On } from "./";

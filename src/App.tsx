@@ -1,5 +1,4 @@
 import "./App.css";
-import "firebase/database";
 
 import React, { Suspense } from "react";
 
@@ -43,12 +42,6 @@ function App() {
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);
-
-  // const newStoriesRef = firebase.database().ref("/v0/newstories");
-  // newStoriesRef.on("value", (snap) => {
-  //   console.log(">>> SNAP", snap.val());
-  //   // dispatch({ type: ActionType.emitNewStoryIds, payload: snap.val() })
-  // });
 
   return (
     <div className="App">

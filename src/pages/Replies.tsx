@@ -1,8 +1,6 @@
 import Style from "./Replies.module.css";
 import Layout from "../components/Layout.module.css";
 
-import "firebase/database";
-
 import { State } from "../state";
 import { ComponentBaseProps } from "../types";
 

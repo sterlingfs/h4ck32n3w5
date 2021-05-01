@@ -1,6 +1,6 @@
+import firebase from "firebase/app";
 import "firebase/database";
 
-import firebase from "firebase/app";
 import * as localforage from "localforage";
 import { useEffect, useState } from "react";
 
