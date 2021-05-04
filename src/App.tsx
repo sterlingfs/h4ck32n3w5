@@ -13,6 +13,7 @@ import { useWatchUid } from "./effects/useWatchUid";
 import { reducer } from "./reducer";
 import { routeTree } from "./routeTree";
 import { State } from "./state";
+import * as localforage from "localforage";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -40,16 +41,26 @@ function App() {
   useAppInit(store.dispatch);
   useWatchUid(store.state.auth.uid, store.dispatch);
 
+  const database = {
+    story: localforage.createInstance({ name: "story" }),
+    newstories: localforage.createInstance({ name: "newstories" }),
+    topstories: localforage.createInstance({ name: "topstories" }),
+  };
+
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);
 
   return (
     <div className="App">
-      <AppBar store={store} router={{ route, setRoute }} />
+      <AppBar store={store} database={database} router={{ route, setRoute }} />
 
       <Suspense fallback={<div>Loading...</div>}>
-        <RouterOutlet store={store} router={{ route, setRoute }} />
-        <Modal store={store} router={{ route, setRoute }} />
+        <RouterOutlet
+          store={store}
+          database={database}
+          router={{ route, setRoute }}
+        />
+        <Modal store={store} database={database} router={{ route, setRoute }} />
       </Suspense>
 
       <BottomNav setRoute={setRoute} />

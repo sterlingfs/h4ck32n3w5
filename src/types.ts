@@ -4,6 +4,12 @@ import { EventType } from "./firebase";
 import { DBPath } from "./firebase/enums/DBPath";
 import { State } from "./state";
 
+export enum DatabaseName {
+  story = "story",
+  topstories = "topstories",
+  newstories = "newstories",
+}
+
 export type Data<S = HNItem> = { index: number; item: S };
 
 export type Dispatch = React.Dispatch<Action<ActionType>>;
@@ -34,8 +40,7 @@ export type MutationFunction<State> = (state: State, payload: any) => State;
 export type ComponentBaseProps<State> = {
   store: Store<State, ActionType>;
   router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
-
-  [key: string]: any;
+  database: Record<keyof typeof DatabaseName, LocalForage>;
 };
 
 export type HNStory = {

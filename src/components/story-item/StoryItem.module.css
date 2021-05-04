@@ -4,7 +4,7 @@
 }
 
 .StoryItem:not(:last-of-type) {
-  border-bottom: 3px solid lightgray;
+  border-bottom: 1px solid lightgray;
 }
 
 .username {
