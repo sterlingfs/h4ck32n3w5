@@ -1,126 +1,100 @@
 import React from "react";
 
-// import Typo from "../../Typography.module.css";
+import { getTimePassedString } from "../../functions/getTimePassedString";
+
+import { ReactComponent as Grade } from "../../svg/grade.svg";
+import { ReactComponent as Comment } from "../../svg/comment.svg";
+import { ReactComponent as Insight } from "../../svg/insight.svg";
 
 import { HNStory } from "../../types";
 import Style from "./StoryItem.module.css";
 
 export type StoryItemProps = {
+  id?: number;
   index: number;
   story?: HNStory;
-  id?: number;
   shouldPushComments: () => void;
 };
 
-const parseDate = (t: number) =>
-  new Date(t * 1000).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-  });
-
 export default function StoryItem(props: StoryItemProps) {
-  const { index, story, id, shouldPushComments } = props;
+  const { index, story, shouldPushComments } = props;
+
+  // if (!story?.score || !story.descendants) throw new Error("No story");
 
   const firstComment = story?.firstComment?.text || "";
-
   const url = story?.url && new URL(story?.url);
   const host = url ? url.hostname : "";
 
+  function getPointsPerComment(points: number, comments: number) {
+    if (comments > 0) {
+      return Math.round((points / comments) * 100) / 100;
+    }
+  }
+
+  const ratio =
+    story?.score &&
+    story?.descendants &&
+    getPointsPerComment(story.score, story.descendants);
+
   return (
-    <div
-      className={Style.StoryItem}
-      style={{ display: "grid", gridTemplateColumns: "64px 1fr" }}
-    >
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          alignItems: "baseline",
-          marginBottom: 8,
-        }}
-      >
-        <span style={{ fontSize: "20px", fontWeight: "normal" }}>#{index}</span>
-        {/* <span
-          style={{
-            fontSize: "16px",
-            fontWeight: "bold",
-            opacity: 0.6,
-            letterSpacing: -0.3,
-            paddingLeft: "16px",
-          }}
-        >
-          {story?.score} points
-        </span> */}
+    <div className={Style.StoryItem}>
+      <div className={Style.topLineContainer}>
+        <div>{index}</div>
+        {/* <div>{ratio} PPC</div> */}
       </div>
       <div>
-        <a
-          href={story?.url || "/"}
-          style={{
-            fontSize: "18px",
-            color: "rgba(0,0,0,0.95)",
-            textDecoration: "none",
-            letterSpacing: -0.1,
-          }}
-        >
-          <span>{story?.title}</span>
-          <span style={{ opacity: 0.5, fontSize: "16px" }}>
-            {host && ` (${host})`}
-          </span>
-        </a>
-        <div
-          style={{
-            // fontSize: "16px",
-            // opacity: 0.8,
-            // letterSpacing: -0.3,
-            margin: "4px 0 16px",
-
-            fontSize: "14px",
-            // fontWeight: "bold",
-            // textTransform: "uppercase",
-            opacity: 0.6,
-            letterSpacing: -0.5,
-          }}
-        >
-          {story && `${parseDate(story?.time)} by ${story?.by}`}{" "}
-          {`(2 hours ago)`}
+        <div>
+          <a className={Style.titleLink} href={story?.url || "/"}>
+            <span className={Style.title}>{story?.title}</span>
+            <span className={Style.titleHost}> {host}</span>
+          </a>
         </div>
+
+        {/* <div>{host && `${host}`}</div> */}
+
+        {/* <div>
+          {story?.time &&
+            new Date(story?.time * 1000).toLocaleDateString("en-us", {
+              month: "long" as "long",
+              day: "numeric" as "numeric",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+        </div> */}
+
+        <span className={Style.byLine}>
+          <span>{getTimePassedString(story!.time)} </span>
+          <span>by </span>
+          <span>{story?.by} </span>
+        </span>
+
+        <div className={Style.bottomLineContainer}>
+          <div className={Style.tag}>
+            <Grade /> {story?.score ?? 0}
+          </div>
+          <div className={Style.tag}>
+            <Comment /> {story?.descendants ?? 0}
+          </div>
+
+          <div className={Style.ratio}>{ratio} PPC</div>
+        </div>
+
         {story && (
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              marginTop: "24px",
-            }}
-          >
-            <button
+          <div>
+            {/* <button
+              className={Style.commentButton}
               onClick={shouldPushComments}
-              style={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                opacity: 0.6,
-                letterSpacing: -0.3,
-                padding: "4px 12px",
-                background: "rgba(0,0,0,0.03)",
-                outline: "none",
-                border: "1px solid lightgray",
-              }}
             >
               {story?.descendants} comments
-            </button>
-            {/* <span
-              style={{
-                fontSize: "16px",
-                fontWeight: "bold",
-                opacity: 0.6,
-                letterSpacing: -0.3,
-                paddingRight: "16px",
-              }}
+            </button> */}
+
+            {/* <button
+              className={Style.commentButton}
+              onClick={shouldPushComments}
             >
-              23 comments
-            </span> */}
+              {story?.score} points
+            </button> */}
           </div>
         )}
       </div>

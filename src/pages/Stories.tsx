@@ -97,7 +97,7 @@ export default function Stories(props: StoriesProps) {
         {stories.map((story, i) => (
           <StoryItem
             key={i}
-            index={i}
+            index={i + 1}
             story={story}
             shouldPushComments={() => {
               props.router.setRoute({

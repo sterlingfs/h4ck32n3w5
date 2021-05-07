@@ -38,7 +38,7 @@ function App() {
   const { route, setRoute } = useRouter(window.location.pathname, routeTree);
   const store = useStore(reducer, initState);
 
-  useAppInit(store.dispatch);
+  // useAppInit(store.dispatch);
   useWatchUid(store.state.auth.uid, store.dispatch);
 
   const database = {
