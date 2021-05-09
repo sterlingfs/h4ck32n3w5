@@ -1,135 +1,95 @@
-import firebase from "firebase/app";
-import "firebase/database";
+import { NewRoute, Route } from "./effects/use-router/types";
+import { ActionType } from "./enums/ActionType";
+import { EventType } from "./firebase";
+import { DBPath } from "./firebase/enums/DBPath";
+import { State } from "./state";
 
-export type EventType = firebase.database.EventType;
-export type Snap = firebase.database.DataSnapshot;
-
-// export type ItemMap<T> = { [key: string]: T };
-
-export type Modal = {
-  position: "open" | "closed";
-  name?: string;
-};
-
-export type State = {
-  app: { init: boolean };
-  modal: Modal;
-  user?: User;
-  topStories?: ItemMap<Story>;
-  topStoryIds?: number[];
-  topStoriesOrderedList?: Story[];
-  commentStream?: [key: string, val: Comment][];
-};
-
-// export type Action = {
-//   type: keyof State;
-//   payload: State[keyof State];
-// };
-
-// export enum DBCollection {
-//   topstories = "topstories",
-//   newstories = "newstories",
-//   beststories = "beststories",
-// }
-
-// export type BaseProps = {
-//   store: { state: State; dispatch: React.Dispatch<Action> };
-// };
-
-export enum DBPath {
-  item = "item",
-  user = "user",
+export enum DatabaseName {
+  story = "story",
+  topstories = "topstories",
+  newstories = "newstories",
 }
 
-// export type BaseItem = {
-//   id: number;
-//   by: string;
-//   time: number;
-//   type: "story" | "comment" | "job" | "poll";
-// };
+export type Data<S = HNItem> = { index: number; item: S };
 
-// export type Story = BaseItem & {
-//   descendants: number;
-//   kids: number[];
-//   score: number;
-//   title: string;
-//   url: string;
-// };
+export type Dispatch = React.Dispatch<Action<ActionType>>;
 
-// export type Comment = BaseItem & {
-//   text: string;
-//   kids: number[];
-//   parent: number;
-// };
-
-// export type User = {
-//   id: string;
-//   created: number;
-//   karma: number;
-//   about: string;
-//   submitted: number[];
-// };
-
-export type Item = Story | Comment;
-
-// export type IdMap<T> = { [itemId: number]: T };
-
-// export type ItemEntry<T> = {
-//   id: number;
-//   story: T;
-// };
-
-// export type StoryItem = ItemEntry<Story>;
-
-// export type StoryItemCache = IdMap<StoryItem>;
-
-export type ItemMap<T> = { [key: string]: T };
-
-export enum ActionType {
-  app = "app",
-  user = "user",
-  modal = "modal",
-}
-
-export type Action = {
-  type: ActionType;
-  payload: unknown;
-};
-
-export type Store = {
+export type Store<State, Keys extends string> = {
   state: State;
-  dispatch: React.Dispatch<Action>;
+  dispatch: (action: Action<Keys>) => void;
 };
 
-export type BaseProps = {
-  store: Store;
+export type Action<Keys extends string> = {
+  type: Keys;
+  payload?: any;
 };
 
-export type BaseItem = {
-  id: number;
+export type ActionOptions<State, Keys extends string> = {
+  state: State;
+  commit: React.Dispatch<Action<Keys>>;
+  dispatch: React.Dispatch<Action<Keys>>;
+};
+
+export type ActionFunction<State, Keys extends string> = (
+  options: ActionOptions<State, Keys>,
+  payload: any
+) => Promise<any>;
+
+export type MutationFunction<State> = (state: State, payload: any) => State;
+
+export type ComponentBaseProps<State> = {
+  store: Store<State, ActionType>;
+  router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
+  database: Record<keyof typeof DatabaseName, LocalForage>;
+};
+
+export type HNStory = {
   by: string;
-  time: number;
-  type: "story" | "comment" | "job" | "poll";
-};
-
-export type Story = BaseItem & {
   descendants: number;
+  firstComment: HNComment;
+  id: number;
+  index: number;
   kids: number[];
   score: number;
+  time: number;
   title: string;
+  type: "story";
   url: string;
 };
 
-export type Comment = BaseItem & {
-  text: string;
+export type HNComment = {
+  by: string;
+  firstComment: HNComment;
+  id: number;
   kids: number[];
   parent: number;
+  text: string;
+  time: number;
+  type: "comment";
 };
 
-export type User = {
-  id: string;
-  created: number;
-  karma: number;
+export type HNItem = HNStory | HNComment;
+
+export type HNUser = {
   about: string;
+  created: number;
+  id: string;
+  karma: number;
   submitted: number[];
+};
+
+export type StateMutation = {
+  action: Action<ActionType>;
+  state: State;
+};
+
+export type Options = {
+  id: string | number;
+  path: DBPath;
+  eventType?: EventType;
+};
+
+export type StoryListItem = {
+  story: HNStory;
+  index: number;
 };

@@ -3,16 +3,24 @@ import Style from "./SignIn.module.css";
 
 import Dialog from "../../components/dialog/Dialog";
 import TextInput from "../../components/text-input/TextInput";
-import { ActionType, BaseProps } from "../../types";
-import { useWatchUser } from "../../effects/useWatchUser";
+import { ComponentBaseProps } from "../../types";
+import { ActionType } from "../../enums/ActionType";
+import { State } from "../../state";
 
-export type SignInProps = BaseProps;
+export type SignInProps = ComponentBaseProps<State>;
 
 export default function SignIn(props: SignInProps) {
   const { store } = props;
+  const user = store.state.auth.user;
 
-  const [username, setUsername] = useState(store.state.user?.id ?? "");
-  const user = useWatchUser(username);
+  const [username, setUsername] = useState(store.state.auth.user?.id);
+
+  const getUser = (uid: string) => {
+    store.dispatch({
+      type: ActionType.watchUid,
+      payload: { uid },
+    });
+  };
 
   return (
     <div className={Style.SignIn}>
@@ -25,26 +33,22 @@ export default function SignIn(props: SignInProps) {
               <section>
                 <TextInput
                   type={"text"}
-                  label={"u53rn4m3"}
+                  label={"HN Username"}
                   onChange={(ev) => {
                     setUsername(ev.target.value);
                   }}
                   onKeyDown={(ev) =>
-                    ev.key === "Enter" &&
-                    store.dispatch({
-                      type: ActionType.user,
-                      payload: { id: username },
-                    })
+                    ev.key === "Enter" && username && getUser(username)
                   }
-                  placeholder={"hN username"}
+                  placeholder={""}
                 />
               </section>
 
               <section>
                 <div>USER PROFILE</div>
                 <div>
-                  <div>{user?.val()?.id}</div>
-                  <div>{user?.val()?.karma}</div>
+                  <div>{user?.id}</div>
+                  <div>{user?.karma}</div>
                 </div>
               </section>
 

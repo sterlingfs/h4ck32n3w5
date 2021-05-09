@@ -1,52 +1,40 @@
-import React from "react";
 import Style from "./Replies.module.css";
 import Layout from "../components/Layout.module.css";
 
-import { useComments } from "../effects/useComments";
-import { BaseProps } from "../types";
+import { State } from "../state";
+import { ComponentBaseProps } from "../types";
 
-export type RepliesProps = BaseProps;
+import ReplyItem from "../components/reply-item/ReplyItem";
+
+export type RepliesProps = ComponentBaseProps<State>;
 
 export default function Replies(props: RepliesProps) {
   const { store } = props;
   const { state } = store;
 
-  const username = state?.user?.id ?? "";
-  const listItems = useComments(username);
+  const submissions = state.submissionRecord;
 
-  function dateString(t: number) {
-    return new Date(t * 1000).toLocaleString();
-  }
+  // TODO #5 Cache to store
+  const replies = Object.values(state.commentRecord)
+    .filter((reply) => reply.id)
+    .sort((a, b) => {
+      return a.time < b.time ? 1 : -1;
+    });
+
+  const id = state.auth.user?.id;
 
   return (
     <div className={Layout.container}>
       <div className={Style.list}>
-        {listItems.map(([k, v]) => {
-          return (
-            <div key={k} className={Style.item}>
-              <div
-                className={`${Style.username} ${
-                  v.by === username && Style.isOwner
-                }`}
-              >
-                <a href={`https://news.ycombinator.com/user?id=${v.by}`}>
-                  {v.by}
-                </a>
-              </div>
-              <div>{dateString(v.time)}</div>
-
-              <div
-                className={Style.htmlComment}
-                dangerouslySetInnerHTML={{
-                  __html: v.text,
-                }}
-              />
-
-              <div>DISC conversation qty</div>
-              <div>open comment in hn</div>
-            </div>
-          );
-        })}
+        {id &&
+          replies.map((comment, i) => (
+            <ReplyItem
+              key={i}
+              userId={id}
+              comment={comment}
+              parent={submissions[comment.parent]}
+            />
+          ))}
       </div>
     </div>
   );

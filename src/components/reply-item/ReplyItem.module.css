@@ -1,0 +1,66 @@
+.ReplyItem {
+  margin: 8px 0;
+}
+
+.ReplyItem::after {
+  content: " ";
+  display: block;
+
+  margin-top: 24px;
+  height: 1px;
+  background: lightgray;
+  width: 100%;
+}
+
+.sourceContainer {
+  padding: 16px;
+  margin: 20px 16px;
+  border: 1px solid lightblue;
+
+  background: lightgray;
+}
+
+.sourceTitle {
+  margin-bottom: 8px;
+}
+
+.sourceTitleUser {
+  font-weight: bold;
+}
+
+.replyContainer {
+  padding: 0 16px;
+}
+
+.usernameContainer {
+  padding: 12px 0;
+}
+
+.username {
+  font-weight: bold;
+}
+
+.topbar {
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  gap: 4px;
+
+  padding: 12px 16px;
+  box-sizing: border-box;
+}
+
+.htmlComment p {
+  font-style: normal;
+}
+
+.htmlComment a {
+  word-break: break-all;
+}
+
+.htmlComment pre {
+  white-space: break-spaces;
+}
+
+.htmlComment code {
+  white-space: break-spaces;
+}

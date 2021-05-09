@@ -1,0 +1,53 @@
+.h4 {
+  font-size: 34px;
+  letter-spacing: 0.25px;
+}
+
+.h5 {
+  font-size: 24px;
+}
+
+.h6 {
+  font-size: 20px;
+  letter-spacing: 0.15px;
+  font-weight: medium;
+}
+
+.subtitle1 {
+  font-size: 16px;
+  letter-spacing: 0.15px;
+}
+
+.subtitle2 {
+  font-size: 16px;
+  font-weight: medium;
+  letter-spacing: 0.1px;
+}
+
+.body {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+.body2 {
+  font-size: 14px;
+  letter-spacing: 0.25px;
+}
+
+.button {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  font-weight: medium;
+}
+
+.caption {
+  font-size: 12px;
+  letter-spacing: 0.4px;
+}
+
+.overline {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}

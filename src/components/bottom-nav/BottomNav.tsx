@@ -1,4 +1,6 @@
 import React from "react";
+
+import { RouteName } from "../../effects/use-router/RouteName";
 import Button from "../button/Button";
 import Style from "./BottomNav.module.css";
 
@@ -12,8 +14,20 @@ export default function BottomBar(props: BottomBarProps) {
   return (
     <div className={Style.BottomNav}>
       <div className={Style.container}>
-        <Button title={"top stories"} onClick={() => setRoute("/stories")} />
-        <Button title={"replies"} onClick={() => setRoute("/replies")} />
+        <Button
+          title={"top stories"}
+          onClick={() => {
+            setRoute({ name: RouteName.topStories });
+          }}
+        />
+        <Button
+          title={"latest news"}
+          onClick={() => setRoute({ name: RouteName.lastest })}
+        />
+        <Button
+          title={"replies"}
+          onClick={() => setRoute({ name: RouteName.replies })}
+        />
       </div>
     </div>
   );
