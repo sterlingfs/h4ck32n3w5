@@ -19,6 +19,8 @@ export type StoryItemProps = {
   shouldPushComments: () => void;
 };
 
+// https://news.ycombinator.com/newsguidelines.html
+
 export default function StoryItem(props: StoryItemProps) {
   const { index, story, shouldPushComments } = props;
 
@@ -97,7 +99,9 @@ export default function StoryItem(props: StoryItemProps) {
           </div>
           <div className={Style.tag}>
             <Comment className={Style.tagIcon} />
-            <span>{story?.descendants ?? 0}</span>
+            <span>
+              {story?.descendants ?? 0}/{story?.kids?.length ?? 0}
+            </span>
           </div>
         </div>
 
