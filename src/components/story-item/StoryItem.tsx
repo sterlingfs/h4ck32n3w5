@@ -1,10 +1,13 @@
 import React from "react";
 
-import { getTimePassedString } from "../../functions/getTimePassedString";
+import {
+  getTimePassedString,
+  howLongAgo,
+} from "../../functions/getTimePassedString";
 
-import { ReactComponent as Grade } from "../../svg/grade.svg";
+import { ReactComponent as ThumbUp } from "../../svg/thumb-up.svg";
 import { ReactComponent as Comment } from "../../svg/comment.svg";
-import { ReactComponent as Insight } from "../../svg/insight.svg";
+import { ReactComponent as Launch } from "../../svg/launch.svg";
 
 import { HNStory } from "../../types";
 import Style from "./StoryItem.module.css";
@@ -16,10 +19,15 @@ export type StoryItemProps = {
   shouldPushComments: () => void;
 };
 
+// https://news.ycombinator.com/newsguidelines.html
+
 export default function StoryItem(props: StoryItemProps) {
   const { index, story, shouldPushComments } = props;
 
   // if (!story?.score || !story.descendants) throw new Error("No story");
+
+  // const timeAgo = story?.time && howLongAgo(story?.time);
+  // console.log("time ago", timeAgo);
 
   const firstComment = story?.firstComment?.text || "";
   const url = story?.url && new URL(story?.url);
@@ -36,6 +44,22 @@ export default function StoryItem(props: StoryItemProps) {
     story?.descendants &&
     getPointsPerComment(story.score, story.descendants);
 
+  const timeAgo = howLongAgo(story!.time ?? Date.now() / 1000);
+
+  const dateString = ({
+    days,
+    hours,
+    minutes,
+  }: ReturnType<typeof howLongAgo>) => {
+    if (days) {
+      return `${days} day${days > 1 ? "s" : ""} ago`;
+    } else if (hours) {
+      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    } else if (minutes) {
+      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
+    }
+  };
+
   return (
     <div className={Style.StoryItem}>
       <div className={Style.topLineContainer}>
@@ -44,9 +68,10 @@ export default function StoryItem(props: StoryItemProps) {
       </div>
       <div>
         <div>
+          <div className={Style.title}>{story?.title}</div>
           <a className={Style.titleLink} href={story?.url || "/"}>
-            <span className={Style.title}>{story?.title}</span>
             <span className={Style.titleHost}> {host}</span>
+            <Launch style={{ height: "14px" }} />
           </a>
         </div>
 
@@ -64,20 +89,20 @@ export default function StoryItem(props: StoryItemProps) {
         </div> */}
 
         <span className={Style.byLine}>
-          <span>{getTimePassedString(story!.time)} </span>
-          <span>by </span>
-          <span>{story?.by} </span>
+          {dateString(timeAgo)} by {story?.by}
         </span>
 
         <div className={Style.bottomLineContainer}>
           <div className={Style.tag}>
-            <Grade /> {story?.score ?? 0}
+            <ThumbUp className={Style.tagIcon} />
+            <span>{story?.score ?? 0}</span>
           </div>
           <div className={Style.tag}>
-            <Comment /> {story?.descendants ?? 0}
+            <Comment className={Style.tagIcon} />
+            <span>
+              {story?.descendants ?? 0}/{story?.kids?.length ?? 0}
+            </span>
           </div>
-
-          <div className={Style.ratio}>{ratio} PPC</div>
         </div>
 
         {story && (

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: system-ui, "operator mono", Menlo, Monaco, Consolas;
+  font-family: system-ui, "operator mono";
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -16,6 +16,5 @@ a {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: "operator mono", Menlo, Monaco, Consolas, monospace;
 }

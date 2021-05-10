@@ -21,12 +21,31 @@
   grid-auto-flow: column;
   gap: 12px;
   width: min-content;
+
+  margin-top: 12px;
+
+  color: rgb(0 0 0 / 80%);
 }
 
 .tag {
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* align-items: start; */
+
+  display: grid;
+  grid-auto-flow: column;
+  align-items: flex-start;
+  gap: 4px;
+
+  border: 1px solid lightgray;
+  border-radius: 4px;
+
   white-space: nowrap;
+  padding: 4px 8px;
+}
+
+.tagIcon {
+  fill: rgb(0 0 0 / 80%);
+  height: 20px;
 }
 
 .ratio {
@@ -54,11 +73,12 @@
 }
 
 .titleLink {
-  text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
 .title {
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 
 .titleHost {
@@ -94,10 +114,6 @@
 .host {
   /* color: rgba(0, 0, 0, 0.67);
   font-weight: bold; */
-}
-
-.host {
-  font-style: italic;
 }
 
 /* Keep */
