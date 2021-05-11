@@ -19,15 +19,8 @@ export type StoryItemProps = {
   shouldPushComments: () => void;
 };
 
-// https://news.ycombinator.com/newsguidelines.html
-
 export default function StoryItem(props: StoryItemProps) {
-  const { index, story, shouldPushComments } = props;
-
-  // if (!story?.score || !story.descendants) throw new Error("No story");
-
-  // const timeAgo = story?.time && howLongAgo(story?.time);
-  // console.log("time ago", timeAgo);
+  const { index, story } = props;
 
   const firstComment = story?.firstComment?.text || "";
   const url = story?.url && new URL(story?.url);
@@ -64,7 +57,6 @@ export default function StoryItem(props: StoryItemProps) {
     <div className={Style.StoryItem}>
       <div className={Style.topLineContainer}>
         <div>{index}</div>
-        {/* <div>{ratio} PPC</div> */}
       </div>
       <div>
         <div>
@@ -74,19 +66,6 @@ export default function StoryItem(props: StoryItemProps) {
             <Launch style={{ height: "14px" }} />
           </a>
         </div>
-
-        {/* <div>{host && `${host}`}</div> */}
-
-        {/* <div>
-          {story?.time &&
-            new Date(story?.time * 1000).toLocaleDateString("en-us", {
-              month: "long" as "long",
-              day: "numeric" as "numeric",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
-        </div> */}
 
         <span className={Style.byLine}>
           {dateString(timeAgo)} by {story?.by}
