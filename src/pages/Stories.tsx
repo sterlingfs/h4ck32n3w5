@@ -1,35 +1,26 @@
 import "firebase/database";
 
 import firebase from "firebase/app";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
-import { ComponentBaseProps, HNStory } from "../types";
+import { ComponentBaseProps, HNStory, HNUser } from "../types";
+import { DBPath } from "../firebase/enums/DBPath";
 
 export type StoriesProps = ComponentBaseProps<State>;
 
 const TOP_STORIES = "topstories";
 
-// NEXT
-// TODO add story prop lastClickedState: HNStory
-// TODO make seperate localforage db that uses story.id as key
-// Emit click from list item
-
 export default function Stories(props: StoriesProps) {
   // const { state, dispatch } = props.store;
 
-  // const storyDatabase = props.database.story;
   const topstoriesDatabase = props.database.topstories;
 
   const [storyIds, setStoryIds] = useState<string[]>([]);
   const [stories, setStories] = useState<HNStory[]>([]);
-  // const [history, prependHistory] = useReducer(
-  //   (a: HNStory[][], c: HNStory[]) => [c, ...a].slice(0, 3),
-  //   []
-  // );
 
   useEffect(() => {
     const database = firebase.database();
@@ -51,7 +42,9 @@ export default function Stories(props: StoriesProps) {
   useEffect(() => {
     if (storyIds?.length > 0) {
       const database = firebase.database();
-      const refs = storyIds.map((id) => database.ref(`/v0/item/${id}`));
+      const refs = storyIds.map((id) =>
+        database.ref(`/v0/${DBPath.item}/${id}`)
+      );
 
       const requests = refs.map(
         (ref) =>
@@ -74,21 +67,6 @@ export default function Stories(props: StoriesProps) {
       return () => refs.forEach((ref) => ref.off());
     }
   }, [storyIds, topstoriesDatabase]);
-
-  /**
-   * History
-   */
-  // useEffect(() => prependHistory(stories), [stories]);
-
-  /**
-   * Local list state
-   */
-  // useEffect(() => {
-  //   // Story funnel
-  //   stories.forEach((story) => {
-  //     story.id && storyDatabase.setItem(`${story.id}`, story);
-  //   });
-  // }, [stories, storyDatabase]);
 
   return (
     <div className={Layout.container}>
