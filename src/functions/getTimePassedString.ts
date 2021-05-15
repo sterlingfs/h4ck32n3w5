@@ -5,22 +5,6 @@ const formatOptions: FormatOptions = {
   year: "numeric",
 };
 
-export function howLongAgo(seconds: number) {
-  const now = Date.now() / 1000;
-  const then = seconds;
-
-  const difSecs = now - then;
-  const minSecs = 60;
-  const hourSecs = 60 * minSecs;
-  const daySecs = 24 * hourSecs;
-
-  return {
-    days: Math.floor(difSecs / daySecs),
-    hours: Math.floor(difSecs / hourSecs) % 24,
-    minutes: Math.floor(difSecs / minSecs) % 60,
-  };
-}
-
 export function getTimePassedString(seconds: number) {
   if (seconds) {
     const MINUTE = 60;

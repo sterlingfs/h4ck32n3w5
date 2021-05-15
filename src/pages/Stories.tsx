@@ -9,6 +9,7 @@ import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
 import { ComponentBaseProps, HNStory, HNUser } from "../types";
 import { DBPath } from "../firebase/enums/DBPath";
+import { timeAgo } from "../functions/timeAgo";
 
 export type StoriesProps = ComponentBaseProps<State>;
 
@@ -77,6 +78,7 @@ export default function Stories(props: StoriesProps) {
             key={i}
             index={i + 1}
             story={story}
+            timeAgo={timeAgo(story!.time ?? Date.now() / 1000)}
             shouldPushComments={() => {
               props.router.setRoute({
                 name: RouteName.comments,
