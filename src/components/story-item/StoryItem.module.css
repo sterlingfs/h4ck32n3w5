@@ -1,19 +1,25 @@
 .StoryItem {
-  display: grid;
-  grid-template-columns: 48px 1fr;
-  padding: 24px 16px;
   box-sizing: border-box;
+  display: grid;
+  /* grid-template-columns: 48px 1fr; */
+  grid-template-columns: 1fr;
+  padding: 24px 16px;
 }
 
 .StoryItem:not(:last-of-type) {
   border-bottom: 1px solid lightgray;
 }
 
-.topLineContainer {
+.indexColumn {
   /* display: grid;
   grid-auto-flow: column;
   gap: 12px;
   width: min-content; */
+}
+
+.contentColumn {
+  /* width: fit-content; */
+  overflow: hidden;
 }
 
 .bottomLineContainer {
@@ -74,21 +80,20 @@
 
 .titleLink {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .title {
-  /* text-decoration: underline; */
+  text-decoration: underline;
 }
 
 .titleHost {
-  color: rgba(0, 0, 0, 0.56);
-
-  /* display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
   overflow: hidden;
-  word-break: break-all; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.56);
 }
 
 .commentButton {

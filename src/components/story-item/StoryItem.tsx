@@ -2,7 +2,7 @@ import React from "react";
 
 import { ReactComponent as ThumbUp } from "../../svg/thumb-up.svg";
 import { ReactComponent as Comment } from "../../svg/comment.svg";
-import { ReactComponent as Launch } from "../../svg/launch.svg";
+import { ReactComponent as Leaderboard } from "../../svg/leaderboard.svg";
 
 import { HNStory } from "../../types";
 import Style from "./StoryItem.module.css";
@@ -23,16 +23,15 @@ export default function StoryItem(props: StoryItemProps) {
   const host = url ? url.hostname : "";
 
   return (
-    <div className={Style.StoryItem}>
-      <div className={Style.topLineContainer}>
+    <div key={index} className={Style.StoryItem}>
+      {/* <div className={Style.indexColumn}>
         <div>{index}</div>
-      </div>
-      <div>
+      </div> */}
+      <div className={Style.contentColumn}>
         <div>
-          <div className={Style.title}>{story?.title}</div>
           <a className={Style.titleLink} href={story?.url || "/"}>
-            <span className={Style.titleHost}> {host}</span>
-            <Launch style={{ height: "14px" }} />
+            <span className={Style.title}>{story?.title}</span>
+            <span className={Style.titleHost}>{host}</span>
           </a>
         </div>
 
@@ -41,6 +40,10 @@ export default function StoryItem(props: StoryItemProps) {
         </span>
 
         <div className={Style.bottomLineContainer}>
+          <div className={Style.tag}>
+            <Leaderboard className={Style.tagIcon} />
+            <span>{index}</span>
+          </div>
           <div className={Style.tag}>
             <ThumbUp className={Style.tagIcon} />
             <span>{story?.score ?? 0}</span>

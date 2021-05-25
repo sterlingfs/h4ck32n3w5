@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import * as localforage from "localforage";
 import React, { useEffect, useState } from "react";
 
-import LatestStoryItem from "../components/latest-story-item/LatestStoryItem";
+import StoryItem from "../components/story-item/StoryItem";
 import Layout from "../components/Layout.module.css";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
@@ -76,8 +76,7 @@ export default function Latest(props: LatestProps) {
       <h2 style={{ paddingLeft: "16px" }}>Latest News</h2>
       <div>
         {stories.map((story, i) => (
-          <LatestStoryItem
-            key={i}
+          <StoryItem
             index={i}
             id={story?.id}
             story={story}
