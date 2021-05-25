@@ -1,7 +1,6 @@
 import React from "react";
 import Style from "./AppBar.module.css";
 
-import { styles } from "../../pages/utils";
 import { ComponentBaseProps } from "../../types";
 
 import { ReactComponent as AccountSVG } from "../../svg/account_circle-24px.svg";
@@ -19,7 +18,7 @@ export default function AppBar(props: ComponentBaseProps<State>) {
         <div className={Style.title}>h4ck32n3w5.app</div>
       </div>
 
-      <div className={styles(Style.section, Style.right)}>
+      <div className={Style.section}>
         <IconButton
           icon={AccountSVG}
           onClick={() => {

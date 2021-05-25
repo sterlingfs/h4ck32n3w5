@@ -2,7 +2,6 @@ import React, { Suspense, useEffect, useState } from "react";
 import Style from "./Modal.module.css";
 
 import { ComponentBaseProps } from "../../types";
-import { styles } from "../utils";
 import { ActionType } from "../../enums/ActionType";
 import { State } from "../../state";
 
@@ -48,7 +47,7 @@ export default function Modal(props: ModalProps) {
 
   return (
     // <div className={styles(Style.Modal, Style.closed)}>
-    <div className={styles(Style.Modal, Style[position])}>
+    <div className={[Style.Modal, Style[position]].join(" ")}>
       {RouterOutlet && (
         <Suspense fallback={<div>Loading...</div>}>
           <RouterOutlet {...props} />

@@ -1,7 +1,6 @@
 import React from "react";
 import Style from "./CommentItem.module.css";
 import { HNComment } from "../../types";
-import { dateString } from "../../pages/utils";
 
 export type CommentItemProps = { comment: HNComment; isOwner?: boolean };
 
@@ -14,7 +13,6 @@ export default function CommentItem(props: CommentItemProps) {
           {comment.by}
         </a>
       </div>
-      <div>{dateString(comment.time)}</div>
 
       <div
         className={Style.htmlComment}

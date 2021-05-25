@@ -1,7 +1,6 @@
 import React from "react";
 import Style from "./ReplyItem.module.css";
 import { HNComment, HNStory } from "../../types";
-import { dateString } from "../../pages/utils";
 
 export type ReplyItemProps = {
   userId: string;
@@ -24,7 +23,6 @@ export default function ReplyItem(props: ReplyItemProps) {
           >
             {comment.by}
           </a>
-          <span> on {dateString(comment.time)}</span>
         </div>
 
         <div
@@ -38,7 +36,9 @@ export default function ReplyItem(props: ReplyItemProps) {
       <div className={Style.sourceContainer}>
         <div className={Style.sourceTitle}>
           <span>In reply to </span>
-          <span className={Style.sourceTitleUser}>{parent.by === userId ? "me" : parent.by}</span>
+          <span className={Style.sourceTitleUser}>
+            {parent.by === userId ? "me" : parent.by}
+          </span>
         </div>
         <div
           dangerouslySetInnerHTML={{

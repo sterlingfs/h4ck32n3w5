@@ -1,11 +1,11 @@
-import firebase from "firebase/app";
 import "firebase/database";
 
+import firebase from "firebase/app";
 import * as localforage from "localforage";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
+import Layout from "../components/Layout.module.css";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
 import { ComponentBaseProps, HNStory } from "../types";
@@ -56,7 +56,14 @@ export default function Latest(props: LatestProps) {
 
       Promise.all(requests).then((stories) =>
         localforage
-          .setItem(LATEST_STORY_LIST, stories.slice(0, 500))
+          .setItem(
+            LATEST_STORY_LIST,
+            stories
+              .sort(($0, $1) => {
+                return $0.time < $1.time ? 1 : -1;
+              })
+              .slice(0, 500)
+          )
           .then(setStories)
       );
 
@@ -70,7 +77,6 @@ export default function Latest(props: LatestProps) {
       <div>
         {stories.map((story, i) => (
           <StoryItem
-            key={i}
             index={i}
             id={story?.id}
             story={story}
