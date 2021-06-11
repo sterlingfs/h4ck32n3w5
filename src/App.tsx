@@ -1,5 +1,6 @@
 import "./App.css";
 
+import * as localforage from "localforage";
 import React, { Suspense } from "react";
 
 import AppBar from "./components/app-bar/AppBar";
@@ -8,12 +9,10 @@ import { matchPathname } from "./effects/use-router/matchPathname";
 import { RouteName } from "./effects/use-router/RouteName";
 import { useRouter } from "./effects/use-router/useRouter";
 import { useStore } from "./effects/use-store/useStore";
-import { useAppInit } from "./effects/useAppInit";
 import { useWatchUid } from "./effects/useWatchUid";
 import { reducer } from "./reducer";
 import { routeTree } from "./routeTree";
 import { State } from "./state";
-import * as localforage from "localforage";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 

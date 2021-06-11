@@ -28,30 +28,35 @@ export default function StoryItem(props: StoryItemProps) {
         <div>{index}</div>
       </div> */}
       <div className={Style.contentColumn}>
-        <div>
+        <div className={Style.titleContainer}>
           <a className={Style.titleLink} href={story?.url || "/"}>
             <span className={Style.title}>{story?.title}</span>
+          </a>
+        </div>
+
+        <div className={Style.titleContainer}>
+          <a href={story?.url || "/"}>
             <span className={Style.titleHost}>{host}</span>
           </a>
         </div>
 
-        <span className={Style.byLine}>
+        <div className={Style.byLine}>
           {timeAgo} by {story?.by}
-        </span>
+        </div>
 
         <div className={Style.bottomLineContainer}>
           <div className={Style.tag}>
-            <Leaderboard className={Style.tagIcon} />
+            <span>👑</span>
             <span>{index}</span>
           </div>
           <div className={Style.tag}>
-            <ThumbUp className={Style.tagIcon} />
+            👍
             <span>{story?.score ?? 0}</span>
           </div>
           <div className={Style.tag}>
-            <Comment className={Style.tagIcon} />
+            💬
             <span>
-              {story?.descendants ?? 0}/{story?.kids?.length ?? 0}
+              {story?.descendants ?? 0}:{story?.kids?.length ?? 0}
             </span>
           </div>
         </div>

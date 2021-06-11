@@ -10,24 +10,42 @@ import { State } from "../state";
 import { ComponentBaseProps, HNStory, HNUser } from "../types";
 import { DBPath } from "../firebase/enums/DBPath";
 import { timeAgo } from "../functions/timeAgo";
+import { getModeratorsComments } from "../functions/getModeratorsComments";
+import { getRootStory } from "../functions/getRootStory";
+import { collateIds, ModRecord } from "../functions/collateIds";
 
 export type StoriesProps = ComponentBaseProps<State>;
 
 const TOP_STORIES = "topstories";
 
 export default function Stories(props: StoriesProps) {
-  // const { state, dispatch } = props.store;
-
-  const topstoriesDatabase = props.database.topstories;
+  const database = firebase.database();
 
   const [storyIds, setStoryIds] = useState<string[]>([]);
   const [stories, setStories] = useState<HNStory[]>([]);
+  const [modRecord, setModRecord] = useState<ModRecord>({});
 
   useEffect(() => {
-    const database = firebase.database();
-    const topStoriesRef = database.ref(`/v0/${TOP_STORIES}`);
+    database
+      .ref(`/v0/${DBPath.user}/${"dang"}`)
+      .get()
+      .then(async (userSnap) => {
+        const user = userSnap.val() as HNUser;
+        const warnings = await getModeratorsComments(user);
+        const reqs = warnings.map((warning) => getRootStory(warning.parent));
+        const moderatedStories = await Promise.all(reqs);
+        const ids = moderatedStories
+          .map((story) => story?.id ?? 0)
+          .sort(($1, $2) => ($1 > $2 ? 1 : -1));
 
-    topstoriesDatabase
+        const mods = collateIds(ids, {});
+        setModRecord(mods);
+      });
+  }, [database]);
+
+  useEffect(() => {
+    const topStoriesRef = database.ref(`/v0/${TOP_STORIES}`);
+    props.database.topstories
       .getItem<HNStory[]>(TOP_STORIES)
       .then((stories) => stories && setStories(stories))
       .then(() =>
@@ -38,11 +56,10 @@ export default function Stories(props: StoriesProps) {
       );
 
     return () => topStoriesRef?.off();
-  }, [topstoriesDatabase]);
+  }, [database, props.database.topstories]);
 
   useEffect(() => {
     if (storyIds?.length > 0) {
-      const database = firebase.database();
       const refs = storyIds.map((id) =>
         database.ref(`/v0/${DBPath.item}/${id}`)
       );
@@ -62,12 +79,12 @@ export default function Stories(props: StoriesProps) {
 
       Promise.all(requests).then((stories) => {
         const list = stories.slice(0, 200);
-        topstoriesDatabase.setItem(TOP_STORIES, list).then(setStories);
+        props.database.topstories.setItem(TOP_STORIES, list).then(setStories);
       });
 
       return () => refs.forEach((ref) => ref.off());
     }
-  }, [storyIds, topstoriesDatabase]);
+  }, [storyIds, database, props.database.topstories]);
 
   return (
     <div className={Layout.container}>
