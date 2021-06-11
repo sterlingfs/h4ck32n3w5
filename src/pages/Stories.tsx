@@ -90,20 +90,23 @@ export default function Stories(props: StoriesProps) {
     <div className={Layout.container}>
       <h2 style={{ paddingLeft: "16px" }}>Top Stories</h2>
       <div>
-        {stories.map((story, i) => (
-          <StoryItem
-            key={i}
-            index={i + 1}
-            story={story}
-            timeAgo={timeAgo(story!.time ?? Date.now() / 1000)}
-            shouldPushComments={() => {
-              props.router.setRoute({
-                name: RouteName.comments,
-                params: { storyId: story.id },
-              });
-            }}
-          />
-        ))}
+        {stories.map(
+          (story, i) =>
+            story && (
+              <StoryItem
+                key={i}
+                index={i + 1}
+                story={story}
+                timeAgo={timeAgo(story!.time ?? Date.now() / 1000)}
+                shouldPushComments={() => {
+                  props.router.setRoute({
+                    name: RouteName.comments,
+                    params: { storyId: story.id },
+                  });
+                }}
+              />
+            )
+        )}
       </div>
     </div>
   );

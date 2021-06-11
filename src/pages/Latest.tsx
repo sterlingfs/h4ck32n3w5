@@ -4,8 +4,8 @@ import firebase from "firebase/app";
 import * as localforage from "localforage";
 import React, { useEffect, useState } from "react";
 
-import StoryItem from "../components/story-item/StoryItem";
 import Layout from "../components/Layout.module.css";
+import StoryItem from "../components/story-item/StoryItem";
 import { RouteName } from "../effects/use-router/RouteName";
 import { State } from "../state";
 import { ComponentBaseProps, HNStory } from "../types";
@@ -78,7 +78,6 @@ export default function Latest(props: LatestProps) {
         {stories.map((story, i) => (
           <StoryItem
             index={i}
-            id={story?.id}
             story={story}
             shouldPushComments={() => {
               props.router.setRoute({

@@ -1,9 +1,11 @@
 .StoryItem {
   box-sizing: border-box;
   display: grid;
-  /* grid-template-columns: 48px 1fr; */
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr min-content;
+  gap: 16px;
   padding: 24px 16px;
+
+  text-decoration: none;
 }
 
 .StoryItem:not(:last-of-type) {
@@ -18,7 +20,6 @@
 }
 
 .contentColumn {
-  /* width: fit-content; */
   overflow: hidden;
 }
 
@@ -34,19 +35,11 @@
 }
 
 .tag {
-  /* display: flex; */
-  /* align-items: start; */
-
   display: grid;
   grid-auto-flow: column;
   align-items: center;
   gap: 4px;
-
-  /* border: 1px solid lightgray;
-  border-radius: 4px; */
-
   white-space: nowrap;
-  /* padding: 4px 8px; */
 }
 
 .tagIcon {
@@ -73,7 +66,6 @@
   display: grid;
   grid-template-columns: repeat(3, min-content);
   gap: 4px;
-
   padding: 12px 16px;
   box-sizing: border-box;
 }
@@ -84,7 +76,6 @@
 }
 
 .title {
-  text-decoration: underline;
 }
 
 .flame {
