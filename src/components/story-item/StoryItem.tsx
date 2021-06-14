@@ -57,7 +57,7 @@ export default function StoryItem(props: StoryItemProps) {
       )}
 
       <div className={Style.contentColumn}>
-        <a href={url.toString()}>
+        <a href={url.toString()} onClick={(e) => e.stopPropagation()}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"
