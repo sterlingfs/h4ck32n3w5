@@ -1,7 +1,7 @@
 import "./App.css";
 
 import * as localforage from "localforage";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 
 import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
@@ -13,6 +13,7 @@ import { useWatchUid } from "./effects/useWatchUid";
 import { reducer } from "./reducer";
 import { routeTree } from "./routeTree";
 import { State } from "./state";
+import { HNStory } from "./types";
 
 const Modal = React.lazy(() => import("./pages/modals/Modal"));
 
@@ -38,13 +39,37 @@ function App() {
   const store = useStore(reducer, initState);
 
   // useAppInit(store.dispatch);
-  useWatchUid(store.state.auth.uid, store.dispatch);
+  // useWatchUid(store.state.auth.uid, store.dispatch);
 
   const database = {
     story: localforage.createInstance({ name: "story" }),
     newstories: localforage.createInstance({ name: "newstories" }),
     topstories: localforage.createInstance({ name: "topstories" }),
   };
+
+  // useEffect(() => {
+  //   const database = firebase.database();
+
+  //   if (route?.name === RouteName.story) {
+  //     const id = route.params?.storyId;
+
+  //     database.ref(`/v0/item/${id}`).on("value", (storySnap) => {
+  //       const { kids } = storySnap.val() as HNStory;
+
+  //       Promise.all(
+  //         kids.map((id) => database.ref(`/v0/item/${id}`).get())
+  //       ).then((results) => {
+  //         // console.log("results", results);
+  //         // setComments(results.map((snap) => snap.val()));
+  //       });
+
+  //       // return () =>
+  //       //   story?.kids
+  //       //     .slice(0, 30)
+  //       //     .forEach((id) => database.ref(`/v0/item/${id}`).off());
+  //     });
+  //   }
+  // }, [route]);
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

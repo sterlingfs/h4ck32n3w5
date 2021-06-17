@@ -3,5 +3,5 @@ export enum RouteName {
   topStories = "top-stories",
   lastest = "lastest",
   replies = "replies",
-  comments = "comments",
+  story = "s",
 }

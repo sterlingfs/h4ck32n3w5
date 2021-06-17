@@ -6,7 +6,7 @@ export type LazyComp = typeof Stories | typeof Replies;
 const Latest = React.lazy(() => import("../../pages/Latest"));
 const Stories = React.lazy(() => import("../../pages/Stories"));
 const Replies = React.lazy(() => import("../../pages/Replies"));
-const Comments = React.lazy(() => import("../../pages/Comments"));
+const Story = React.lazy(() => import("../../pages/Story"));
 
 export const matchPathname = (routeName: RouteName): LazyComp => {
   switch (routeName) {
@@ -18,7 +18,9 @@ export const matchPathname = (routeName: RouteName): LazyComp => {
       return Latest;
     case RouteName.replies:
       return Replies;
-    case RouteName.comments:
-      return Comments;
+    case RouteName.story:
+      return Story;
+    default:
+      throw new Error("Switch fallthrough");
   }
 };

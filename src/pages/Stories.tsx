@@ -78,7 +78,7 @@ export default function Stories(props: StoriesProps) {
       );
 
       Promise.all(requests).then((stories) => {
-        const list = stories.slice(0, 200);
+        const list = stories.slice(0, 500);
         props.database.topstories.setItem(TOP_STORIES, list).then(setStories);
       });
 
@@ -100,7 +100,7 @@ export default function Stories(props: StoriesProps) {
                 timeAgo={timeAgo(story!.time ?? Date.now() / 1000)}
                 shouldPushComments={() => {
                   props.router.setRoute({
-                    name: RouteName.comments,
+                    name: RouteName.story,
                     params: { storyId: story.id },
                   });
                 }}

@@ -14,8 +14,8 @@ export const routeTree = [
     path: "/stories",
   },
   {
-    name: RouteName.comments,
-    path: "/comments/:storyId",
+    name: RouteName.story,
+    path: `/${RouteName.story}/:storyId`,
   },
   {
     name: RouteName.replies,
