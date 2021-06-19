@@ -2,15 +2,15 @@ import "firebase/database";
 
 import firebase from "firebase/app";
 import * as localforage from "localforage";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { RouteName } from "../effects/use-router/RouteName";
-import { State } from "../state";
-import { ComponentBaseProps, HNStory } from "../types";
+import { HNStory } from "../types";
+import { ComponentBaseProps } from "./types";
 
-export type LatestProps = ComponentBaseProps<State>;
+export type LatestProps = ComponentBaseProps;
 
 const LATEST_STORY_LIST = "latestStoryList";
 
@@ -77,11 +77,11 @@ export default function Latest(props: LatestProps) {
       <div>
         {stories.map((story, i) => (
           <StoryItem
-            index={i}
+            rank={i}
             story={story}
             shouldPushComments={() => {
               props.router.setRoute({
-                name: RouteName.comments,
+                name: RouteName.story,
                 params: { storyId: story.id },
               });
             }}

@@ -1,14 +1,12 @@
 import React from "react";
 import Style from "./AppBar.module.css";
 
-import { ComponentBaseProps } from "../../types";
-
 import { ReactComponent as AccountSVG } from "../../svg/account_circle-24px.svg";
 import IconButton from "../icon-button/IconButton";
 import { ActionType } from "../../enums/ActionType";
-import { State } from "../../state";
+import { ComponentBaseProps } from "../../pages/types";
 
-export default function AppBar(props: ComponentBaseProps<State>) {
+export default function AppBar(props: ComponentBaseProps) {
   const { store } = props;
   const { dispatch } = store;
 

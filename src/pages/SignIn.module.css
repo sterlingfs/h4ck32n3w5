@@ -26,7 +26,6 @@
 .header,
 .content {
   padding: 0 var(--SignIn-gutters);
-  width: 100%;
 }
 
 .header {

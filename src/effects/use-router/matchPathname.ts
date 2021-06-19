@@ -4,7 +4,7 @@ import { RouteName } from "./RouteName";
 export type LazyComp = typeof Stories | typeof Replies;
 
 const Latest = React.lazy(() => import("../../pages/Latest"));
-const Stories = React.lazy(() => import("../../pages/Stories"));
+const Stories = React.lazy(() => import("../../pages/TopStories"));
 const Replies = React.lazy(() => import("../../pages/Replies"));
 const Story = React.lazy(() => import("../../pages/Story"));
 

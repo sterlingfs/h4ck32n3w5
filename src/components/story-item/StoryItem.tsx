@@ -3,27 +3,23 @@ import React from "react";
 import { HNStory } from "../../types";
 import Style from "./StoryItem.module.css";
 
+import { getTimeAgo } from "../../functions/getTimeAgo";
+import { getURLforStory } from "../../functions/getURLforStory";
+
 export type StoryItemProps = {
-  index: number;
+  rank: number;
   story: HNStory;
-  timeAgo?: string;
   shouldPushComments: () => void;
 };
 
 export default function StoryItem(props: StoryItemProps) {
-  const { index, story, timeAgo, shouldPushComments } = props;
+  const { rank, story, shouldPushComments } = props;
 
-  const firstComment = story?.firstComment?.text || "";
-
-  const getURL = (story: HNStory) => {
-    const BASE_URL = "https://news.ycombinator.com";
-    return new URL(story?.url || `${BASE_URL}/item?id=${story?.id}`);
-  };
-
-  const url = getURL(story);
+  const timeAgo = story.time && getTimeAgo(story.time);
+  const url = getURLforStory(story);
 
   return (
-    <div key={index} className={Style.StoryItem} onClick={shouldPushComments}>
+    <div className={Style.StoryItem} onClick={shouldPushComments}>
       <div className={Style.contentColumn}>
         <span className={Style.title}>{story?.title}</span>
         <div className={Style.titleHost}>{url.hostname}</div>
@@ -35,7 +31,7 @@ export default function StoryItem(props: StoryItemProps) {
         <div className={Style.bottomLineContainer}>
           <div className={Style.tag}>
             <span>👑</span>
-            <span>{index}</span>
+            <span>{rank}</span>
           </div>
           <div className={Style.tag}>
             <span>👍</span>
@@ -50,11 +46,11 @@ export default function StoryItem(props: StoryItemProps) {
         </div>
       </div>
 
-      {firstComment && (
+      {/* {firstComment && (
         <div>
           <div dangerouslySetInnerHTML={{ __html: firstComment }} />
         </div>
-      )}
+      )} */}
 
       <div className={Style.contentColumn}>
         <a href={url.toString()} onClick={(e) => e.stopPropagation()}>

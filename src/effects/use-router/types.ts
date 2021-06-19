@@ -1,7 +1,3 @@
-/**
- * Raw route pathname may contain /segment/:vars
- */
-
 import { RouteName } from "./RouteName";
 
 export type Dispatch = React.Dispatch<Action>;

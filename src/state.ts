@@ -1,43 +1,46 @@
-import {
-  HNUser,
-  HNComment,
-  HNStory,
-  StateMutation,
-  StoryListItem,
-} from "./types";
+import { AuthStatus } from "./enums/AuthStatus";
+import { HNUser, HNComment, HNStory } from "./types";
 
 export type State = {
   app: {
     init: boolean;
+    modal: {
+      position: "open" | "closed";
+      name?: string;
+    };
   };
-
   auth: {
-    status: "init" | "awaiting" | "emitting" | "unsubscribed";
+    status: AuthStatus;
     uid?: string;
     user?: HNUser;
   };
-
-  mount: Record<string, { active: boolean }>;
-
-  network: {
-    topStory?: { status: "init" | "awaiting" | "resolved" | "rejected" };
+  topStoryPage: {
+    topStoryIds: number[];
+    topStoryList: { id: number; rank: number; story: HNStory }[];
   };
-
-  modal: {
-    position: "open" | "closed";
-    name?: string;
+  storyPage: {
+    expanded: boolean;
+    comments?: HNComment[];
+    story?: HNStory;
   };
+  newStoryPage: {
+    newStoryIds: number[];
+    newStoryRecord: Record<string, HNStory>;
+    newStoryList: { id: number; rank: number; story: HNStory }[];
+  };
+};
 
-  newStoryIds: number[];
-  newStoryRecord: Record<string, HNStory>;
-  newStoryList: { id: number; index: number; item: HNStory }[];
-
-  topStoryIds: number[];
-  topStoryRecord: Record<string, HNStory>;
-  topStoryList: HNStory[];
-
-  commentRecord: Record<string, HNComment>;
-  submissionRecord: Record<string, HNStory | HNComment>;
-
-  mutationHistory: StateMutation[];
+export const state: State = {
+  app: { init: false, modal: { position: "closed" } },
+  auth: { status: AuthStatus.unsubscribed },
+  newStoryPage: {
+    newStoryIds: [],
+    newStoryList: [],
+    newStoryRecord: {},
+  },
+  topStoryPage: {
+    topStoryIds: [],
+    topStoryList: [],
+  },
+  storyPage: { expanded: false },
 };

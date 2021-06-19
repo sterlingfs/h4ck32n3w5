@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import Style from "./SignIn.module.css";
 
-import Dialog from "../../components/dialog/Dialog";
-import TextInput from "../../components/text-input/TextInput";
-import { ComponentBaseProps } from "../../types";
-import { ActionType } from "../../enums/ActionType";
-import { State } from "../../state";
+import Dialog from "../components/dialog/Dialog";
+import TextInput from "../components/text-input/TextInput";
 
-export type SignInProps = ComponentBaseProps<State>;
+import { ActionType } from "../enums/ActionType";
+import { State } from "../state";
+import { ComponentBaseProps } from "./types";
+
+export type SignInProps = ComponentBaseProps;
 
 export default function SignIn(props: SignInProps) {
   const { store } = props;
@@ -17,7 +18,7 @@ export default function SignIn(props: SignInProps) {
 
   const getUser = (uid: string) => {
     store.dispatch({
-      type: ActionType.watchUid,
+      type: ActionType.getUser,
       payload: { uid },
     });
   };

@@ -1,46 +1,7 @@
-import { NewRoute, Route } from "./effects/use-router/types";
-import { ActionType } from "./enums/ActionType";
-import { EventType } from "./firebase";
-import { DBPath } from "./firebase/enums/DBPath";
-import { State } from "./state";
-
-export enum DatabaseName {
-  story = "story",
-  topstories = "topstories",
-  newstories = "newstories",
-}
-
-export type Data<S = HNItem> = { index: number; item: S };
-
-export type Dispatch = React.Dispatch<Action<ActionType>>;
-
-export type Store<State, Keys extends string> = {
-  state: State;
-  dispatch: (action: Action<Keys>) => void;
-};
-
-export type Action<Keys extends string> = {
-  type: Keys;
-  payload?: any;
-};
-
-export type ActionOptions<State, Keys extends string> = {
-  state: State;
-  commit: React.Dispatch<Action<Keys>>;
-  dispatch: React.Dispatch<Action<Keys>>;
-};
-
-export type ActionFunction<State, Keys extends string> = (
-  options: ActionOptions<State, Keys>,
-  payload: any
-) => Promise<any>;
-
-export type MutationFunction<State> = (state: State, payload: any) => State;
-
-export type ComponentBaseProps<State> = {
-  store: Store<State, ActionType>;
-  router: { route?: Route; setRoute: (newRoute: NewRoute) => void };
-  database: Record<keyof typeof DatabaseName, LocalForage>;
+export type ComponentBaseProps<Store, Router, Database> = {
+  store: Store;
+  router: Router;
+  database: Database;
 };
 
 export type HNStory = {
@@ -68,8 +29,6 @@ export type HNComment = {
   type: "comment";
 };
 
-export type HNItem = HNStory | HNComment;
-
 export type HNUser = {
   about: string;
   created: number;
@@ -78,18 +37,7 @@ export type HNUser = {
   submitted: number[];
 };
 
-export type StateMutation = {
-  action: Action<ActionType>;
+export type StateMutation<State, Action> = {
+  action: Action;
   state: State;
-};
-
-export type Options = {
-  id: string | number;
-  path: DBPath;
-  eventType?: EventType;
-};
-
-export type StoryListItem = {
-  story: HNStory;
-  index: number;
 };

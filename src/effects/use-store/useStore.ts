@@ -1,22 +1,40 @@
-import { useReducer } from "react";
-import { ActionType } from "../../enums/ActionType";
-import { Reducer } from "../../reducer";
-import { State } from "../../state";
-import { Action } from "../../types";
+import React, { useReducer } from "react";
 
-export function useStore(reducer: Reducer, initState: State) {
-  // Store
+export type Action<ActionType> = {
+  type: ActionType;
+  payload?: any;
+};
+
+type ReducerFunction<State> = (state: State, payload?: any) => State;
+
+export type Store<ActionType, State> = {
+  state: State;
+  dispatch: React.Dispatch<Action<ActionType>>;
+  actions?: any;
+};
+
+export function useStore<ActionType extends string, State>(opts: {
+  initState: State;
+  mutations: Record<ActionType, ReducerFunction<State>>;
+}): Store<ActionType, State> {
   const [state, dispatch] = useReducer(
     (state: State, action: Action<ActionType>) => {
-      const newState = reducer(state, action);
-      // const mutationHistory = [
-      //   ...state.mutationHistory.slice(0, 50),
-      //   { action, state: newState },
-      // ];
-      return { ...newState };
+      const newState = opts.mutations[action.type](state, action.payload);
+
+      if (window.location.hostname === "localhost") {
+        console.group(action.type);
+        console.log({ payload: action.payload });
+        console.log({ state: newState });
+        console.groupEnd();
+      }
+
+      return newState;
     },
-    initState
+    opts.initState
   );
 
-  return { state, dispatch };
+  return {
+    state,
+    dispatch,
+  };
 }

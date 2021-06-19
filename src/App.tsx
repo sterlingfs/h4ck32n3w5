@@ -1,4 +1,5 @@
 import "./App.css";
+import "firebase/database";
 
 import * as localforage from "localforage";
 import React, { Suspense, useEffect } from "react";
@@ -9,36 +10,21 @@ import { matchPathname } from "./effects/use-router/matchPathname";
 import { RouteName } from "./effects/use-router/RouteName";
 import { useRouter } from "./effects/use-router/useRouter";
 import { useStore } from "./effects/use-store/useStore";
-import { useWatchUid } from "./effects/useWatchUid";
-import { reducer } from "./reducer";
+import { mutations } from "./mutations";
 import { routeTree } from "./routeTree";
-import { State } from "./state";
-import { HNStory } from "./types";
+import { State, state as initState } from "./state";
+import { ActionType } from "./enums/ActionType";
 
-const Modal = React.lazy(() => import("./pages/modals/Modal"));
-
-const initState: State = {
-  mutationHistory: [],
-  network: {},
-  app: { init: false },
-  mount: {},
-  auth: { status: "unsubscribed" },
-  modal: { position: "closed" },
-  newStoryIds: [],
-  newStoryRecord: {},
-  newStoryList: [],
-  topStoryRecord: {},
-  topStoryIds: [],
-  topStoryList: [],
-  submissionRecord: {},
-  commentRecord: {},
-};
+const Modal = React.lazy(() => import("./pages/Modal"));
 
 function App() {
   const { route, setRoute } = useRouter(window.location.pathname, routeTree);
-  const store = useStore(reducer, initState);
 
-  // useAppInit(store.dispatch);
+  const store = useStore<ActionType, State>({
+    initState,
+    mutations,
+  });
+
   // useWatchUid(store.state.auth.uid, store.dispatch);
 
   const database = {
@@ -47,29 +33,44 @@ function App() {
     topstories: localforage.createInstance({ name: "topstories" }),
   };
 
-  // useEffect(() => {
-  //   const database = firebase.database();
+  const dispatch = store.dispatch;
 
-  //   if (route?.name === RouteName.story) {
-  //     const id = route.params?.storyId;
+  useEffect(() => {
+    // const database = firebase.database();
 
-  //     database.ref(`/v0/item/${id}`).on("value", (storySnap) => {
-  //       const { kids } = storySnap.val() as HNStory;
-
-  //       Promise.all(
-  //         kids.map((id) => database.ref(`/v0/item/${id}`).get())
-  //       ).then((results) => {
-  //         // console.log("results", results);
-  //         // setComments(results.map((snap) => snap.val()));
-  //       });
-
-  //       // return () =>
-  //       //   story?.kids
-  //       //     .slice(0, 30)
-  //       //     .forEach((id) => database.ref(`/v0/item/${id}`).off());
-  //     });
-  //   }
-  // }, [route]);
+    if (route?.name === RouteName.story) {
+      // const id = route.params?.storyId;
+      // database.ref(`/v0/item/${id}`).on("value", (storySnap) => {
+      //   const { kids } = storySnap.val() as HNStory;
+      //   Promise.all(
+      //     kids.map((id) => database.ref(`/v0/item/${id}`).get())
+      //   ).then((kidSnaps) => {
+      //     dispatch({
+      //       type: ActionType.setSelectedStory,
+      //       payload: {
+      //         story: storySnap.val(),
+      //         comments: kidSnaps.map((c) => c.val()),
+      //       },
+      //     });
+      //   });
+      //   return () => {
+      //     storySnap.ref.off();
+      //     kids.forEach((id) => database.ref(`/v0/item/${id}`).off());
+      //   };
+      // });
+    } else if (route?.name === RouteName.topStories) {
+      /**
+       * NEW CASE
+       */
+      // set forage on each state change
+      // set state from forage on app init
+      // const topStoriesRef = database.ref(`/v0/${TOP_STORIES}`);
+      // topStoriesRef.on("value", (snap) => {
+      //   dispatch({ type: ActionType.emitTopStoryIds, payload: snap.val() });
+      // });
+      // return () => topStoriesRef?.off();
+    }
+  }, [dispatch, route]);
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

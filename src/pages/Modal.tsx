@@ -1,11 +1,10 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Style from "./Modal.module.css";
 
-import { ComponentBaseProps } from "../../types";
-import { ActionType } from "../../enums/ActionType";
-import { State } from "../../state";
+import { ComponentBaseProps } from "./types";
+import { ActionType } from "../enums/ActionType";
 
-export type ModalProps = ComponentBaseProps<State> & {};
+export type ModalProps = ComponentBaseProps;
 
 // type LazyComponent =
 //   | React.LazyExoticComponent<(props: BaseProps) => JSX.Element>
@@ -32,7 +31,7 @@ export default function Modal(props: ModalProps) {
       }
     };
 
-    const name = state?.modal?.name;
+    const name = state?.app.modal?.name;
     const isCached = name && cache[name];
 
     if (!isCached && name) {
@@ -41,7 +40,7 @@ export default function Modal(props: ModalProps) {
     }
   }, [state, cache, setCache]);
 
-  const modal = state?.modal;
+  const modal = state?.app.modal;
   const position = modal?.position ?? "closed";
   const RouterOutlet = modal?.name ? cache[modal?.name] : undefined;
 

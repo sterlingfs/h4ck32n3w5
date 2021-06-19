@@ -1,14 +1,15 @@
+import "firebase/database";
+
 import firebase from "firebase/app";
-
-import Layout from "../components/Layout.module.css";
 import { useEffect, useState } from "react";
-import { getItem } from "../firebase";
-import { ComponentBaseProps, HNStory, HNComment } from "../types";
-import CommentItem from "../components/comment-item/CommentItem";
-import { DBPath } from "../firebase/enums/DBPath";
-import { State } from "../state";
 
-export type CommentsProps = ComponentBaseProps<State>;
+import CommentItem from "../components/comment-item/CommentItem";
+import Layout from "../components/Layout.module.css";
+
+import { HNComment, HNStory } from "../types";
+import { ComponentBaseProps } from "./types";
+
+export type CommentsProps = ComponentBaseProps;
 
 const database = firebase.database();
 

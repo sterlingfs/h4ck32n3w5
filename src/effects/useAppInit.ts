@@ -1,12 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/database";
 
-import React, { useEffect } from "react";
-import * as localForage from "localforage";
-import { ActionType } from "../enums/ActionType";
-import { Action } from "../types";
+import { useEffect } from "react";
 
-export function useAppInit(dispatch: React.Dispatch<Action<ActionType>>) {
+export function useAppInit() {
   useEffect(() => {
     const db = firebase.database();
     const newStoriesRef = db.ref("/v0/newstories");
@@ -37,5 +34,5 @@ export function useAppInit(dispatch: React.Dispatch<Action<ActionType>>) {
       newStoriesRef.off();
       topStoriesRef.off();
     };
-  }, [dispatch]);
+  }, []);
 }

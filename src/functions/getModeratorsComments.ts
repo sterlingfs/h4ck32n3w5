@@ -2,7 +2,7 @@ import "firebase/database";
 
 import firebase from "firebase/app";
 
-import { DBPath } from "../firebase/enums/DBPath";
+import { DBPath } from "../enums/DBPath";
 import { HNComment, HNUser } from "../types";
 
 const database = firebase.database();

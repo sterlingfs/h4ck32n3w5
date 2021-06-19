@@ -1,6 +1,6 @@
 import { dateString } from "./dateString";
 
-export function timeAgo(seconds: number) {
+export function getTimeAgo(seconds: number) {
   const now = Date.now() / 1000;
   const then = seconds;
 
