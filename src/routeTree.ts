@@ -1,17 +1,19 @@
-import { RouteName } from "./effects/use-router/RouteName";
+import { RouteName } from "./effects/use-router/types";
+import { RouteConfig } from "./effects/use-router/types";
 
-export const routeTree = [
+export const routeTree: RouteConfig[] = [
   {
     name: RouteName.root,
     path: "/",
+    redirect: RouteName.topStories,
   },
   {
     name: RouteName.lastest,
-    path: "/latest",
+    path: `/${RouteName.lastest}`,
   },
   {
     name: RouteName.topStories,
-    path: "/stories",
+    path: `/${RouteName.topStories}`,
   },
   {
     name: RouteName.story,
@@ -19,6 +21,6 @@ export const routeTree = [
   },
   {
     name: RouteName.replies,
-    path: "/replies",
+    path: `/${RouteName.replies}`,
   },
 ];

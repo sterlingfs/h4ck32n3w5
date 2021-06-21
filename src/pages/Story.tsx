@@ -1,5 +1,5 @@
 import Layout from "../components/Layout.module.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import CommentItem from "../components/comment-item/CommentItem";
 
 import StoryItem from "../components/story-item/StoryItem";

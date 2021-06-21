@@ -1,6 +1,6 @@
 import { Route, RawRoute } from "../types";
 
-export function getRoute(rawRoute: RawRoute): Route | undefined {
+export function getRoute(rawRoute: RawRoute): Route {
   const params =
     rawRoute.params ??
     rawRoute?.segments
@@ -10,7 +10,7 @@ export function getRoute(rawRoute: RawRoute): Route | undefined {
   return {
     ...rawRoute,
     params,
-    redirect: rawRoute.redirect ?? false,
+    redirect: rawRoute.redirect ?? null,
     hooks: {
       before: () => {},
       after: () => {},

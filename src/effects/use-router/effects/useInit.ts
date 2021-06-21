@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { findRouteByPath } from "../findRouteByPath";
+import { findRouteByPath } from "../functions/findRouteByPath";
 import { ActionType, Dispatch, RouteConfig } from "../types";
 
 export function useInit(

@@ -5,7 +5,7 @@ export type Action<ActionType> = {
   payload?: any;
 };
 
-type ReducerFunction<State> = (state: State, payload?: any) => State;
+export type ReducerFunction<State> = (state: State, payload?: any) => State;
 
 export type Store<ActionType, State> = {
   state: State;

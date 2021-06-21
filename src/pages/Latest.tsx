@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
-import { RouteName } from "../effects/use-router/RouteName";
+import { RouteName } from "../effects/use-router/types";
 import { HNStory } from "../types";
 import { ComponentBaseProps } from "./types";
 
@@ -19,57 +19,57 @@ export default function Latest(props: LatestProps) {
   const [storyIds, setStoryIds] = useState<string[]>([]);
   const [stories, setStories] = useState<HNStory[]>([]);
 
-  useEffect(() => {
-    const database = firebase.database();
-    const newStoriesRef = database.ref("/v0/newstories");
+  // useEffect(() => {
+  //   const database = firebase.database();
+  //   const newStoriesRef = database.ref("/v0/newstories");
 
-    localforage
-      .getItem<HNStory[]>(LATEST_STORY_LIST)
-      .then((stories) => stories && setStories(stories))
-      .then(() =>
-        newStoriesRef.on("value", (snap) => {
-          const newStoryIds: string[] = snap.val() || [];
-          setStoryIds(newStoryIds);
-        })
-      );
+  //   localforage
+  //     .getItem<HNStory[]>(LATEST_STORY_LIST)
+  //     .then((stories) => stories && setStories(stories))
+  //     .then(() =>
+  //       newStoriesRef.on("value", (snap) => {
+  //         const newStoryIds: string[] = snap.val() || [];
+  //         setStoryIds(newStoryIds);
+  //       })
+  //     );
 
-    return () => newStoriesRef?.off();
-  }, []);
+  //   return () => newStoriesRef?.off();
+  // }, []);
 
-  useEffect(() => {
-    if (storyIds?.length > 0) {
-      const database = firebase.database();
-      const refs = storyIds.map((id) => database.ref(`/v0/item/${id}`));
+  // useEffect(() => {
+  //   if (storyIds?.length > 0) {
+  //     const database = firebase.database();
+  //     const refs = storyIds.map((id) => database.ref(`/v0/item/${id}`));
 
-      const requests = refs.map(
-        (ref) =>
-          new Promise<HNStory>((resolve) =>
-            ref.on("value", (snap) => {
-              const snapVal = snap.val();
-              if (snapVal !== null) {
-                resolve({ id: snap.key, ...snapVal });
-                ref.off();
-              }
-            })
-          )
-      );
+  //     const requests = refs.map(
+  //       (ref) =>
+  //         new Promise<HNStory>((resolve) =>
+  //           ref.on("value", (snap) => {
+  //             const snapVal = snap.val();
+  //             if (snapVal !== null) {
+  //               resolve({ id: snap.key, ...snapVal });
+  //               ref.off();
+  //             }
+  //           })
+  //         )
+  //     );
 
-      Promise.all(requests).then((stories) =>
-        localforage
-          .setItem(
-            LATEST_STORY_LIST,
-            stories
-              .sort(($0, $1) => {
-                return $0.time < $1.time ? 1 : -1;
-              })
-              .slice(0, 500)
-          )
-          .then(setStories)
-      );
+  //     Promise.all(requests).then((stories) =>
+  //       localforage
+  //         .setItem(
+  //           LATEST_STORY_LIST,
+  //           stories
+  //             .sort(($0, $1) => {
+  //               return $0.time < $1.time ? 1 : -1;
+  //             })
+  //             .slice(0, 500)
+  //         )
+  //         .then(setStories)
+  //     );
 
-      return () => refs.forEach((ref) => ref.off());
-    }
-  }, [storyIds]);
+  //     return () => refs.forEach((ref) => ref.off());
+  //   }
+  // }, [storyIds]);
 
   return (
     <div className={Layout.container}>
@@ -77,6 +77,7 @@ export default function Latest(props: LatestProps) {
       <div>
         {stories.map((story, i) => (
           <StoryItem
+            key={i}
             rank={i}
             story={story}
             shouldPushComments={() => {

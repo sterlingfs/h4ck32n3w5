@@ -1,6 +1,6 @@
 import { RouteConfig, NewRoute, State } from "./types";
-import { findRouteByName } from "./findRouteByName";
-import { setRoute } from "./setRoute";
+import { findRouteByName } from "./functions/findRouteByName";
+import { setRoute } from "./functions/setRoute";
 import { usePopStateListener } from "./effects/usePopStateListener";
 import { useInit } from "./effects/useInit";
 import { useStore } from "./effects/useStore";
@@ -19,7 +19,11 @@ export function useRouter(pathname: string, routeTree: RouteConfig[]) {
     route: state.route,
     setRoute: (newRoute: NewRoute) => {
       const route = findRouteByName(newRoute, state.routeTree);
-      route && setRoute(route, dispatch);
+      if (route) {
+        setRoute(route, dispatch);
+      } else {
+        throw new Error("Route not found");
+      }
     },
   };
 }

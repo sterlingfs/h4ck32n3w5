@@ -7,7 +7,7 @@ import React, { Suspense, useEffect } from "react";
 import AppBar from "./components/app-bar/AppBar";
 import BottomNav from "./components/bottom-nav/BottomNav";
 import { matchPathname } from "./effects/use-router/matchPathname";
-import { RouteName } from "./effects/use-router/RouteName";
+import { RouteName } from "./effects/use-router/types";
 import { useRouter } from "./effects/use-router/useRouter";
 import { useStore } from "./effects/use-store/useStore";
 import { mutations } from "./mutations";

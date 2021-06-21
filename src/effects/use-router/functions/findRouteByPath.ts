@@ -1,6 +1,6 @@
-import { getRoute } from "./functions/getRoute";
-import { RawRoute, Route, RouteConfig } from "./types";
-import { matchSegments } from "./functions/matchSegments";
+import { getRoute } from "./getRoute";
+import { RawRoute, Route, RouteConfig } from "../types";
+import { matchSegments } from "./matchSegments";
 
 export function findRouteByPath(
   pathname: string,

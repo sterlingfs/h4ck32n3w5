@@ -1,4 +1,4 @@
-import { ActionType, Route, Dispatch } from "./types";
+import { ActionType, Route, Dispatch } from "../types";
 
 export const setRoute = (route: Route, dispatch: Dispatch) => {
   if (route?.pathname) {

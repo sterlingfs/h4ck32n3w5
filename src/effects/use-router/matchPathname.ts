@@ -1,5 +1,5 @@
 import React from "react";
-import { RouteName } from "./RouteName";
+import { RouteName } from "./types";
 
 export type LazyComp = typeof Stories | typeof Replies;
 

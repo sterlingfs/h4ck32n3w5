@@ -5,19 +5,17 @@ import { useEffect } from "react";
 
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
-import { RouteName } from "../effects/use-router/RouteName";
-import { HNStory } from "../types";
+import { RouteName } from "../effects/use-router/types";
 import { DBPath } from "../enums/DBPath";
-import { ActionType } from "../enums/ActionType";
+import { HNStory } from "../types";
 import { ComponentBaseProps } from "./types";
+import { ActionType } from "../enums/ActionType";
 
 export type TopStoriesProps = ComponentBaseProps;
 
 export default function TopStories(props: TopStoriesProps) {
   const state = props.store.state.topStoryPage;
   const stories = state.topStoryList;
-
-  const dispatch = props.store.dispatch;
 
   // const [storyIds, setStoryIds] = useState<string[]>([]);
   // const [stories, setStories] = useState<HNStory[]>([]);
@@ -122,13 +120,17 @@ export default function TopStories(props: TopStoriesProps) {
         const topStoryList = stories
           .slice(0, 500)
           .map((story) => ({ story, rank: 0 }));
-        dispatch({ type: ActionType.emitTopStory, payload: { topStoryList } });
+
+        props.store.dispatch({
+          type: ActionType.emitTopStory,
+          payload: { topStoryList },
+        });
 
         // TODO CACHE
         // props.database.topstories.setItem(TOP_STORIES, list).then(setStories);
       });
     });
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className={Layout.container}>

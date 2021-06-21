@@ -1,7 +1,13 @@
-import { RouteName } from "./RouteName";
-
 export type Dispatch = React.Dispatch<Action>;
 export type MutationOptions = { state: State; payload: any };
+
+export enum RouteName {
+  root = "root",
+  topStories = "top-stories",
+  lastest = "lastest",
+  replies = "replies",
+  story = "s",
+}
 
 export enum ActionType {
   pushState = "pushState",
@@ -34,7 +40,7 @@ export type Segment = {
 export type RouteConfig = {
   name: RouteName;
   path: string;
-  redirect?: boolean;
+  redirect?: RouteName | null;
   hooks?: {
     before?: () => void;
     after?: () => void;

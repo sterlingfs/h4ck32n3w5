@@ -1,6 +1,6 @@
 import React from "react";
 
-import { RouteName } from "../../effects/use-router/RouteName";
+import { RouteName } from "../../effects/use-router/types";
 import Button from "../button/Button";
 import Style from "./BottomNav.module.css";
 
