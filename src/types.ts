@@ -41,3 +41,4 @@ export type StateMutation<State, Action> = {
   action: Action;
   state: State;
 };
+

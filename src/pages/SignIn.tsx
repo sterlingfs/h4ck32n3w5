@@ -18,7 +18,7 @@ export default function SignIn(props: SignInProps) {
 
   const getUser = (uid: string) => {
     store.dispatch({
-      type: ActionType.getUser,
+      type: ActionType.watchUid,
       payload: { uid },
     });
   };

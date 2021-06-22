@@ -10,10 +10,12 @@ import { matchPathname } from "./effects/use-router/matchPathname";
 import { RouteName } from "./effects/use-router/types";
 import { useRouter } from "./effects/use-router/useRouter";
 import { useStore } from "./effects/use-store/useStore";
-import { mutations } from "./mutations";
+import { ActionType } from "./enums/ActionType";
+import { mutations, Payload } from "./mutations";
 import { routeTree } from "./routeTree";
 import { State, state as initState } from "./state";
-import { ActionType } from "./enums/ActionType";
+import firebase from "firebase";
+import { DBPath } from "./enums/DBPath";
 
 const Modal = React.lazy(() => import("./pages/Modal"));
 
@@ -36,41 +38,13 @@ function App() {
   const dispatch = store.dispatch;
 
   useEffect(() => {
-    // const database = firebase.database();
-
-    if (route?.name === RouteName.story) {
-      // const id = route.params?.storyId;
-      // database.ref(`/v0/item/${id}`).on("value", (storySnap) => {
-      //   const { kids } = storySnap.val() as HNStory;
-      //   Promise.all(
-      //     kids.map((id) => database.ref(`/v0/item/${id}`).get())
-      //   ).then((kidSnaps) => {
-      //     dispatch({
-      //       type: ActionType.setSelectedStory,
-      //       payload: {
-      //         story: storySnap.val(),
-      //         comments: kidSnaps.map((c) => c.val()),
-      //       },
-      //     });
-      //   });
-      //   return () => {
-      //     storySnap.ref.off();
-      //     kids.forEach((id) => database.ref(`/v0/item/${id}`).off());
-      //   };
-      // });
-    } else if (route?.name === RouteName.topStories) {
-      /**
-       * NEW CASE
-       */
-      // set forage on each state change
-      // set state from forage on app init
-      // const topStoriesRef = database.ref(`/v0/${TOP_STORIES}`);
-      // topStoriesRef.on("value", (snap) => {
-      //   dispatch({ type: ActionType.emitTopStoryIds, payload: snap.val() });
-      // });
-      // return () => topStoriesRef?.off();
-    }
-  }, [dispatch, route]);
+    const database = firebase.database();
+    const topStoriesRef = database.ref(`/v0/${DBPath.topStories}`);
+    topStoriesRef.on("value", (snap) => {
+      const payload: Payload<ActionType.setTopStoryIds> = snap.val();
+      dispatch({ type: ActionType.setTopStoryIds, payload });
+    });
+  }, [dispatch]);
 
   // TODO #4 Lift router outlet to a component
   const RouterOutlet = matchPathname(route?.name || RouteName.root);

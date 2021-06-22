@@ -10,7 +10,6 @@ export type ReducerFunction<State> = (state: State, payload?: any) => State;
 export type Store<ActionType, State> = {
   state: State;
   dispatch: React.Dispatch<Action<ActionType>>;
-  actions?: any;
 };
 
 export function useStore<ActionType extends string, State>(opts: {

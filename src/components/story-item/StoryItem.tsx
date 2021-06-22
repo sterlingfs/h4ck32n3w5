@@ -7,7 +7,7 @@ import { getTimeAgo } from "../../functions/getTimeAgo";
 import { getURLforStory } from "../../functions/getURLforStory";
 
 export type StoryItemProps = {
-  rank: number;
+  rank: number | null;
   story: HNStory;
   shouldPushComments: () => void;
 };

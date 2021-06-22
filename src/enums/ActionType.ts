@@ -1,22 +1,12 @@
 export enum ActionType {
-  // initApp = "initApp",
+  watchUid = "watchUid",
   setState = "setState",
 
-  // FIXME Scoped reducer and action types
-
-  emitTopStory = "emitTopStory",
-  getStory = "getStory",
-
-  getUser = "getUser",
-
-  // DEP
-  // didMount = "didMount",
   setModal = "setModal",
 
-  // watchUid = "watchUid",
-  // emitUser = "emitUser",
-  // releaseUid = "releaseUid",
+  setTopStoryIds = "setTopStoryIds",
+  setTopStories = "setTopStories",
+  setStory = "setStory",
 
-  // emitReply = "emitReply",
-  // emitSubmission = "emitSubmission",
+  logout = "logout",
 }
