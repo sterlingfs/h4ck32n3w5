@@ -27,6 +27,7 @@ export type HNComment = {
   text: string;
   time: number;
   type: "comment";
+  depth?: number;
 };
 
 export type HNUser = {
@@ -42,3 +43,4 @@ export type StateMutation<State, Action> = {
   state: State;
 };
 
+export type CommentEntry = [HNComment, CommentEntry[] | []];

@@ -10,7 +10,7 @@ export type Mutations = {
   ): State;
   [ActionType.setStory](
     state: State,
-    payload: Pick<State["storyPage"], "status" | "comments" | "story">
+    payload: Partial<State["storyPage"]>
   ): State;
   [ActionType.setModal](state: State, payload: State["topStoryPage"]): State;
   [ActionType.watchUid](state: State, payload: State["topStoryPage"]): State;

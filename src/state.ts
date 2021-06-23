@@ -1,6 +1,6 @@
 import { AuthStatus } from "./enums/AuthStatus";
 import { NetworkStatus } from "./enums/NetworkStatus";
-import { HNUser, HNComment, HNStory } from "./types";
+import { HNUser, HNStory, CommentEntry } from "./types";
 
 export type State = {
   app: {
@@ -22,7 +22,7 @@ export type State = {
   storyPage: {
     status: NetworkStatus;
     expanded: boolean;
-    comments: HNComment[];
+    comments: CommentEntry[];
     story: HNStory | null;
   };
   newStoryPage: {

@@ -1,5 +1,5 @@
 .CommentItem {
-  padding: 12px 16px;
+  padding: 12px 0 12px 16px;
   box-sizing: border-box;
 }
 
@@ -11,13 +11,8 @@
   color: red;
 }
 
-.topbar {
-  display: grid;
-  grid-template-columns: repeat(3, min-content);
-  gap: 4px;
-
-  padding: 12px 16px;
-  box-sizing: border-box;
+.htmlComment {
+  /* padding: 12px 0; */
 }
 
 .htmlComment p {
@@ -34,4 +29,9 @@
 
 .htmlComment code {
   white-space: break-spaces;
+  word-break: break-all;
+}
+
+.comments {
+  margin: 24px 0;
 }
