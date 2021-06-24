@@ -39,9 +39,7 @@ export default function StoryItem(props: StoryItemProps) {
           </div>
           <div className={Style.tag}>
             <span>💬</span>
-            <span>
-              {story?.descendants ?? 0}:{story?.kids?.length ?? 0}
-            </span>
+            <span>{story?.descendants ?? 0}</span>
           </div>
         </div>
       </div>

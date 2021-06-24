@@ -12,12 +12,10 @@ export default function AppBar(props: ComponentBaseProps) {
 
   return (
     <div className={Style.AppBar}>
-      <div className={Style.section}>
-        <div className={Style.title}>h4ck32n3w5.app</div>
-      </div>
+      <div className={Style.section}></div>
 
       <div className={Style.section}>
-        <IconButton
+        {/* <IconButton
           icon={AccountSVG}
           onClick={() => {
             dispatch({
@@ -28,7 +26,7 @@ export default function AppBar(props: ComponentBaseProps) {
               },
             });
           }}
-        />
+        /> */}
       </div>
     </div>
   );

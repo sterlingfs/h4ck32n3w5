@@ -51,7 +51,7 @@ function App() {
 
   return (
     <div className="App">
-      <AppBar store={store} database={database} router={{ route, setRoute }} />
+      {/* <AppBar store={store} database={database} router={{ route, setRoute }} /> */}
 
       <Suspense fallback={<div>Loading...</div>}>
         <RouterOutlet
