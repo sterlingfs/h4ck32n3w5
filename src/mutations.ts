@@ -12,7 +12,7 @@ export type Mutations = {
     state: State,
     payload: Partial<State["storyPage"]>
   ): State;
-  [ActionType.setModal](state: State, payload: State["topStoryPage"]): State;
+  [ActionType.setModal](state: State, payload: State["app"]["modal"]): State;
   [ActionType.watchUid](state: State, payload: State["topStoryPage"]): State;
   [ActionType.logout](state: State, payload: State["topStoryPage"]): State;
   [ActionType.setState](state: State, payload: Partial<State>): State;
@@ -34,8 +34,8 @@ export const mutations: Mutations = {
     return { ...state, ...payload };
   },
 
-  [ActionType.setModal](state, payload) {
-    return { ...state, ...payload };
+  [ActionType.setModal](state, payload: Payload<ActionType.setModal>) {
+    return { ...state, app: { ...state.app, modal: payload } };
   },
 
   [ActionType.watchUid](state, payload) {

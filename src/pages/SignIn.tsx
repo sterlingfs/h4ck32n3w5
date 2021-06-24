@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import Style from "./SignIn.module.css";
-
+import { useState } from "react";
 import Dialog from "../components/dialog/Dialog";
 import TextInput from "../components/text-input/TextInput";
-
 import { ActionType } from "../enums/ActionType";
-import { State } from "../state";
-import { ComponentBaseProps } from "./types";
+import { InjectedComponentBaseProps } from "./types";
+import Style from "./SignIn.module.css";
 
-export type SignInProps = ComponentBaseProps;
+export type SignInProps = InjectedComponentBaseProps;
 
 export default function SignIn(props: SignInProps) {
   const { store } = props;

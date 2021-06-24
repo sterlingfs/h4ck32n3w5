@@ -8,9 +8,9 @@ import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { RouteName } from "../effects/use-router/types";
 import { HNStory } from "../types";
-import { ComponentBaseProps } from "./types";
+import { InjectedComponentBaseProps } from "./types";
 
-export type LatestProps = ComponentBaseProps;
+export type LatestProps = InjectedComponentBaseProps;
 
 const LATEST_STORY_LIST = "latestStoryList";
 

@@ -1,4 +1,6 @@
 import { AuthStatus } from "./enums/AuthStatus";
+import { ModalName } from "./enums/ModalName";
+import { ModalPosition } from "./enums/ModalPosition";
 import { NetworkStatus } from "./enums/NetworkStatus";
 import { HNUser, HNStory, CommentEntry } from "./types";
 
@@ -7,8 +9,8 @@ export type State = {
     init: boolean;
     topStoryIds: number[];
     modal: {
-      position: "open" | "closed";
-      name: string | null;
+      position: ModalPosition;
+      name: ModalName;
     };
   };
   auth: {
@@ -36,7 +38,7 @@ export const state: State = {
   app: {
     init: false,
     topStoryIds: [],
-    modal: { name: null, position: "closed" },
+    modal: { name: ModalName.unset, position: ModalPosition.closed },
   },
   auth: { uid: null, user: null, status: AuthStatus.unsubscribed },
   newStoryPage: {

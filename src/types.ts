@@ -20,6 +20,8 @@ export type HNStory = {
 
 export type HNComment = {
   by: string;
+  dead: boolean;
+  depth?: number;
   firstComment: HNComment;
   id: number;
   kids: number[];
@@ -27,7 +29,6 @@ export type HNComment = {
   text: string;
   time: number;
   type: "comment";
-  depth?: number;
 };
 
 export type HNUser = {

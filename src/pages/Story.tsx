@@ -7,13 +7,15 @@ import CommentItem from "../components/comment-item/CommentItem";
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { ActionType } from "../enums/ActionType";
-import { ComponentBaseProps } from "./types";
+import { InjectedComponentBaseProps } from "./types";
 import { CommentEntry, HNComment, HNStory } from "../types";
 import { NetworkStatus } from "../enums/NetworkStatus";
 import { Payload } from "../mutations";
 import { State } from "../state";
+import { ModalName } from "../enums/ModalName";
+import { ModalPosition } from "../enums/ModalPosition";
 
-export type StoryProps = ComponentBaseProps;
+export type StoryProps = InjectedComponentBaseProps;
 type P = Payload<ActionType.setStory>;
 
 const database = firebase.database();
@@ -116,7 +118,16 @@ export default function Story(props: StoryProps) {
       <div style={{ padding: "16px" }}>
         {comments &&
           comments.map(([comment, kids], i) => {
-            return <CommentItem key={i} comment={comment} kids={kids} />;
+            return (
+              <CommentItem
+                key={i}
+                comment={comment}
+                kids={kids}
+                shouldShowDead={() => {
+                  // Update zombieCache
+                }}
+              />
+            );
           })}
       </div>
     </div>

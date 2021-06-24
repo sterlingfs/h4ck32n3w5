@@ -1,67 +1,60 @@
 import React, { Suspense, useEffect, useState } from "react";
 import Style from "./Modal.module.css";
 
-import { ComponentBaseProps } from "./types";
+import { InjectedComponentBaseProps } from "./types";
 import { ActionType } from "../enums/ActionType";
+import { ModalName } from "../enums/ModalName";
+import { ModalPosition } from "../enums/ModalPosition";
+import { Payload } from "../mutations";
 
-export type ModalProps = ComponentBaseProps;
-
-// type LazyComponent =
-//   | React.LazyExoticComponent<(props: BaseProps) => JSX.Element>
-//   | undefined;
-
-// type LazyComponentCache = {
-//   [modalName: string]: LazyComponent;
-// };
+export type ModalProps = InjectedComponentBaseProps;
 
 export default function Modal(props: ModalProps) {
   const { state, dispatch } = props.store;
+  const [ContentView, setContentView] =
+    useState<React.LazyExoticComponent<any> | undefined>();
 
-  const [cache, setCache] = useState<any>({});
-
-  // Comp fetch
+  const modalState = state.app.modal;
+  const position = modalState.position;
 
   useEffect(() => {
-    const getLazyComponent = (name: string) => {
+    const getLazyComponent = (name: ModalName) => {
       switch (name) {
-        case "signin":
+        case ModalName.signin:
           return React.lazy(() => import("./SignIn"));
-        default:
+        case ModalName.confirmation:
+          return React.lazy(() => import("./Confirmation"));
+        case ModalName.unset: {
           return undefined;
+        }
+        default:
+          throw new Error("Case fallthrough. Component not found");
       }
     };
 
-    const name = state?.app.modal?.name;
-    const isCached = name && cache[name];
+    const comp = getLazyComponent(modalState.name);
+    setContentView(comp);
+  }, [modalState]);
 
-    if (!isCached && name) {
-      const comp = getLazyComponent(name);
-      comp && setCache({ [name]: comp });
-    }
-  }, [state, cache, setCache]);
+  const closeModalCallback = () => {
+    const payload: Payload<ActionType.setModal> = {
+      name: ModalName.unset,
+      position: ModalPosition.closed,
+    };
+    dispatch({ type: ActionType.setModal, payload });
+  };
 
-  const modal = state?.app.modal;
-  const position = modal?.position ?? "closed";
-  const RouterOutlet = modal?.name ? cache[modal?.name] : undefined;
+  const RouterOutlet = ContentView;
 
   return (
-    // <div className={styles(Style.Modal, Style.closed)}>
     <div className={[Style.Modal, Style[position]].join(" ")}>
+      <div className={Style.scrim} onClick={closeModalCallback}></div>
+
       {RouterOutlet && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterOutlet {...props} />
+        <Suspense fallback={<div></div>}>
+          {RouterOutlet && <RouterOutlet {...props} />}
         </Suspense>
       )}
-
-      <div
-        className={Style.scrim}
-        onClick={() =>
-          dispatch({
-            type: ActionType.setModal,
-            payload: { position: "closed" },
-          })
-        }
-      ></div>
     </div>
   );
 }

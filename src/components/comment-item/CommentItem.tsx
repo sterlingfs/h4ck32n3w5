@@ -1,5 +1,8 @@
 import React from "react";
 import Style from "./CommentItem.module.css";
+
+import Button from "../../components/button/Button";
+
 import { CommentEntry, HNComment } from "../../types";
 import { useEffect } from "react";
 
@@ -7,6 +10,7 @@ export type CommentItemProps = {
   comment: HNComment;
   kids: CommentEntry[];
   isOwner?: boolean;
+  shouldShowDead: () => void;
 };
 
 const colors = [
@@ -32,34 +36,54 @@ export default function CommentItem(props: CommentItemProps) {
     const depth = comment.depth ?? 0;
     if (childRef.current) {
       childRef.current.style.borderLeftColor = colors[depth] || colors[-1];
-      // childRef.current.style.backgroundColor = color;
     }
   });
 
-  return (
-    <div ref={rootRef} className={Style.CommentItem}>
-      <div className={Style.comment}>
-        <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
-          <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
-            {comment.by}
-          </a>
-        </div>
-
-        <div
-          className={Style.htmlComment}
-          dangerouslySetInnerHTML={{
-            __html: comment.text,
-          }}
-        />
+  // TODO lift subview component
+  const DefaultContent = () => (
+    <div className={Style.comment}>
+      <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
+        <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
+          {comment.by}
+        </a>
       </div>
 
-      {kids.length > 0 && (
-        <div ref={childRef} className={Style.children}>
-          {kids.map(([comment, kids], i) => (
-            <CommentItem key={i} comment={comment} kids={kids} />
+      <div
+        className={Style.htmlComment}
+        dangerouslySetInnerHTML={{
+          __html: comment.text,
+        }}
+      />
+
+      <div ref={childRef} className={Style.children}>
+        {kids.length > 0 &&
+          kids.map(([comment, kids], i) => (
+            <CommentItem
+              key={i}
+              comment={comment}
+              kids={kids}
+              shouldShowDead={props.shouldShowDead}
+            />
           ))}
-        </div>
-      )}
+      </div>
+    </div>
+  );
+
+  const DeadComment = () => (
+    <div className={Style.comment}>
+      <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
+        <span className={Style.deadEmoji}>💀</span>
+        <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
+          {comment.by}
+        </a>
+        <Button title={"View dead comment"} onClick={props.shouldShowDead} />
+      </div>
+    </div>
+  );
+
+  return (
+    <div ref={rootRef} className={Style.CommentItem}>
+      {comment.dead ? <DeadComment /> : <DefaultContent />}
     </div>
   );
 }

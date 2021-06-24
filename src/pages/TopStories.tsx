@@ -8,11 +8,11 @@ import StoryItem from "../components/story-item/StoryItem";
 import { RouteName } from "../effects/use-router/types";
 import { DBPath } from "../enums/DBPath";
 import { HNStory } from "../types";
-import { ComponentBaseProps } from "./types";
+import { InjectedComponentBaseProps } from "./types";
 import { ActionType } from "../enums/ActionType";
 import { Payload } from "../mutations";
 
-export type TopStoriesProps = ComponentBaseProps;
+export type TopStoriesProps = InjectedComponentBaseProps;
 
 export default function TopStories(props: TopStoriesProps) {
   const { state, dispatch } = props.store;
