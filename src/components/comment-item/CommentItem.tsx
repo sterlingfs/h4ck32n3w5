@@ -9,6 +9,20 @@ export type CommentItemProps = {
   isOwner?: boolean;
 };
 
+const colors = [
+  "#3E008E",
+  "#00888C",
+  "#3D8800",
+  "#830906",
+  "#4B137D",
+  "#962B5D",
+  "#AD7C45",
+  "#8FC166",
+  "#88D3AC",
+  "#AAC0E2",
+  "#DCCCF0",
+].reverse();
+
 export default function CommentItem(props: CommentItemProps) {
   const { comment, kids, isOwner } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
@@ -17,35 +31,30 @@ export default function CommentItem(props: CommentItemProps) {
   useEffect(() => {
     const depth = comment.depth ?? 0;
     if (childRef.current) {
-      const factor = 256 - 4 * depth - depth;
-      const color = `rgb(${factor},${factor},${factor * 1.02})`;
-      childRef.current.style.borderLeftColor = color;
-      childRef.current.style.borderLeft = "1px solid";
+      childRef.current.style.borderLeftColor = colors[depth] || colors[-1];
       // childRef.current.style.backgroundColor = color;
-    }
-
-    if (rootRef.current && depth === 0) {
-      rootRef.current.style.paddingRight = "16px";
     }
   });
 
   return (
     <div ref={rootRef} className={Style.CommentItem}>
-      <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
-        <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
-          {comment.by}
-        </a>
+      <div className={Style.comment}>
+        <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
+          <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
+            {comment.by}
+          </a>
+        </div>
+
+        <div
+          className={Style.htmlComment}
+          dangerouslySetInnerHTML={{
+            __html: comment.text,
+          }}
+        />
       </div>
 
-      <div
-        className={Style.htmlComment}
-        dangerouslySetInnerHTML={{
-          __html: comment.text,
-        }}
-      />
-
       {kids.length > 0 && (
-        <div ref={childRef} className={Style.comments}>
+        <div ref={childRef} className={Style.children}>
           {kids.map(([comment, kids], i) => (
             <CommentItem key={i} comment={comment} kids={kids} />
           ))}

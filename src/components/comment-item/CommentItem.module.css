@@ -1,6 +1,7 @@
 .CommentItem {
-  padding: 12px 0 12px 16px;
-  box-sizing: border-box;
+  padding: 0 0 0 0;
+  /* margin: 16px; */
+  /* box-sizing: border-box; */
 }
 
 .username {
@@ -9,6 +10,25 @@
 
 .username.isOwner {
   color: red;
+}
+
+.comment {
+  margin-bottom: 24px;
+}
+
+.children .comment {
+  /* padding-left: 16px; */
+  /* padding-bottom: 16px; */
+  padding: 0 16px;
+}
+
+.children {
+  margin: 24px 0;
+  border-left: 2px solid;
+}
+
+.children .children {
+  margin-left: 16px;
 }
 
 .htmlComment {
@@ -30,8 +50,4 @@
 .htmlComment code {
   white-space: break-spaces;
   word-break: break-all;
-}
-
-.comments {
-  margin: 24px 0;
 }

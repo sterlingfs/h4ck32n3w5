@@ -94,8 +94,6 @@ export default function Story(props: StoryProps) {
 
       const comments = await Promise.all(proms).then((p) => p.flat());
 
-      // console.log(comments);
-
       const payload: P = {
         status: NetworkStatus.resolved,
         story,
@@ -115,7 +113,7 @@ export default function Story(props: StoryProps) {
       {story && (
         <StoryItem rank={rank} story={story} shouldPushComments={() => {}} />
       )}
-      <div>
+      <div style={{ padding: "16px" }}>
         {comments &&
           comments.map(([comment, kids], i) => {
             return <CommentItem key={i} comment={comment} kids={kids} />;
