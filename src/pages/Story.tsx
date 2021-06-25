@@ -1,19 +1,16 @@
 import "firebase/database";
 
 import firebase from "firebase/app";
-import { useEffect } from "react";
+import { useEffect, useReducer } from "react";
 
 import CommentItem from "../components/comment-item/CommentItem";
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { ActionType } from "../enums/ActionType";
 import { InjectedComponentBaseProps } from "./types";
-import { CommentEntry, HNComment, HNStory } from "../types";
+import { CommentEntry, FilterRecord, HNComment, HNStory } from "../types";
 import { NetworkStatus } from "../enums/NetworkStatus";
 import { Payload } from "../mutations";
-import { State } from "../state";
-import { ModalName } from "../enums/ModalName";
-import { ModalPosition } from "../enums/ModalPosition";
 
 export type StoryProps = InjectedComponentBaseProps;
 type P = Payload<ActionType.setStory>;
@@ -28,6 +25,14 @@ export default function Story(props: StoryProps) {
   const rank = story?.id
     ? props.store.state.app.topStoryIds.indexOf(story.id) + 1
     : null;
+
+  const [filterRecord, emitFilter] = useReducer(
+    (record: FilterRecord, current: FilterRecord) => ({
+      ...record,
+      ...current,
+    }),
+    {}
+  );
 
   useEffect(() => {
     const payload: P = {
@@ -123,8 +128,9 @@ export default function Story(props: StoryProps) {
                 key={i}
                 comment={comment}
                 kids={kids}
+                filter={filterRecord[comment.id]}
                 shouldShowDead={() => {
-                  // Update zombieCache
+                  emitFilter({ [comment.id]: { showDead: true } });
                 }}
               />
             );

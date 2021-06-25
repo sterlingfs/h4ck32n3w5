@@ -1,7 +1,8 @@
-.CommentItem {
+.Comment {
   padding: 0 0 0 0;
   /* margin: 16px; */
   /* box-sizing: border-box; */
+  margin-bottom: 24px;
 }
 
 .username {
@@ -12,11 +13,19 @@
   color: red;
 }
 
-.comment {
-  margin-bottom: 24px;
+.headerRow {
+  display: flex;
+  justify-content: space-between;
 }
 
-.children .comment {
+.dead .Comment {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  align-items: center;
+  gap: 12px;
+}
+
+.children .Comment {
   padding-left: 16px;
 }
 

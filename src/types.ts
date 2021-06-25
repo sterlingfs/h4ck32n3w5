@@ -20,7 +20,7 @@ export type HNStory = {
 
 export type HNComment = {
   by: string;
-  dead: boolean;
+  dead?: boolean;
   depth?: number;
   firstComment: HNComment;
   id: number;
@@ -45,3 +45,7 @@ export type StateMutation<State, Action> = {
 };
 
 export type CommentEntry = [HNComment, CommentEntry[] | []];
+
+export type CommentId = string;
+export type Filter = { showDead?: boolean; collapse?: boolean };
+export type FilterRecord = Record<CommentId, Filter>;
