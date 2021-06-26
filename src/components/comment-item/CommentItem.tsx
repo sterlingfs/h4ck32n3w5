@@ -36,17 +36,16 @@ export default function CommentItem(props: CommentItemProps) {
     }
   });
 
-  const filter = getFilter(comment.id);
-  const zombie = comment.dead === true && filter?.showDead === true;
-  const extended =
-    filter?.collapsed === false || filter?.collapsed === undefined || zombie;
-
+  const extended = getFilter(comment.id)?.collapsed !== true;
   const toggleTitle = extended ? ButtonTitle.collapse : ButtonTitle.extend;
+  const rootClassName = `${Style.CommentItem} ${
+    comment.dead ? Style.dead : ""
+  }`;
 
   return (
-    <div ref={rootRef} className={`${Style.Comment}`}>
+    <div ref={rootRef} className={rootClassName}>
       <div className={Style.headerRow}>
-        <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
+        <div className={`${Style.username} ${isOwner ? Style.isOwner : ""}`}>
           {comment.dead && <span className={Style.deadEmoji}>💀</span>}
           <a href={`${PATH}?id=${comment.by}`}>{comment.by}</a>
         </div>
@@ -66,9 +65,9 @@ export default function CommentItem(props: CommentItemProps) {
             }}
           />
 
-          <div ref={childRef} className={Style.children}>
-            {kids.length > 0 &&
-              kids.map(([comment, kids], i) => (
+          {kids.length > 0 && (
+            <div ref={childRef} className={Style.children}>
+              {kids.map(([comment, kids], i) => (
                 <CommentItem
                   key={i}
                   comment={comment}
@@ -77,7 +76,8 @@ export default function CommentItem(props: CommentItemProps) {
                   toggleCollapse={toggleCollapse}
                 />
               ))}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>

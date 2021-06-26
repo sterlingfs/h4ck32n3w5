@@ -7,11 +7,11 @@ import CommentItem from "../components/comment-item/CommentItem";
 import Layout from "../components/Layout.module.css";
 import StoryItem from "../components/story-item/StoryItem";
 import { ActionType } from "../enums/ActionType";
-import { InjectedComponentBaseProps } from "./types";
-import { CommentFilterRecord as CFR, HNStory } from "../types";
 import { NetworkStatus } from "../enums/NetworkStatus";
-import { Payload } from "../mutations";
 import { recursiveFetch } from "../functions/recursiveFetch";
+import { Payload } from "../mutations";
+import { CommentFilterRecord as CFR, HNStory } from "../types";
+import { InjectedComponentBaseProps } from "./types";
 
 // import localforage from "localforage";
 
@@ -45,12 +45,29 @@ type P = Payload<ActionType.setStory>;
 const database = firebase.database();
 
 const getToggleCollapseCallback =
-  (emitFilter: React.Dispatch<CFR>, filterRecord: CFR) => (commentId: number) =>
+  (emitFilter: React.Dispatch<CFR>, filterRecord: CFR) =>
+  (commentId: number) => {
     emitFilter({
       [commentId]: {
         collapsed: filterRecord[commentId]?.collapsed ? false : true,
       },
     });
+  };
+
+type CE = StoryProps["store"]["state"]["storyPage"]["comments"];
+type GetFilterTree = (record: CFR, commentEntries: CE) => CFR;
+const getFilterTree: GetFilterTree = (filterRecord, commentEntries) => {
+  return commentEntries
+    .map(([comment, childEntries]) => {
+      const collapsed = comment.dead ?? false;
+      const newEntry: CFR = { [comment.id]: { collapsed } };
+      const newRecord: CFR = { ...filterRecord, ...newEntry };
+      return childEntries.length > 0
+        ? getFilterTree(newRecord, childEntries)
+        : newRecord;
+    })
+    .reduce((a, c) => ({ ...a, ...c }), {});
+};
 
 export default function Story(props: StoryProps) {
   const { story, comments } = props.store.state.storyPage;
@@ -68,6 +85,10 @@ export default function Story(props: StoryProps) {
     }),
     {}
   );
+
+  useEffect(() => {
+    emitFilterRecord(getFilterTree({}, comments));
+  }, [comments]);
 
   useEffect(() => {
     const dispatchStory = (payload: P) => {
@@ -107,7 +128,7 @@ export default function Story(props: StoryProps) {
       {story && (
         <StoryItem rank={rank} story={story} shouldPushComments={() => {}} />
       )}
-      <div style={{ padding: "16px" }}>
+      <div>
         {comments &&
           comments.map(([comment, kids], i) => {
             return (

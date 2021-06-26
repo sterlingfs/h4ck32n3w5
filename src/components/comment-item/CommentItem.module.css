@@ -1,8 +1,16 @@
-.Comment {
-  padding: 0 0 0 0;
-  /* margin: 16px; */
+.CommentItem {
   /* box-sizing: border-box; */
-  margin-bottom: 24px;
+  /* margin: 16px; */
+  padding: 16px;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-auto-flow: row;
+  grid-gap: 16px;
+}
+
+.CommentItem.dead {
+  opacity: 66%;
 }
 
 .username {
@@ -18,20 +26,23 @@
   justify-content: space-between;
 }
 
-.dead .Comment {
-  display: grid;
-  grid-template-columns: repeat(3, max-content);
-  align-items: center;
-  gap: 12px;
+.children .CommentItem {
+  padding-left: 16px;
+  padding-right: 0;
+  padding-bottom: 0;
 }
 
-.children .Comment {
-  padding-left: 16px;
+.content {
+  display: grid;
+  grid-auto-flow: row;
+  gap: 16px;
 }
 
 .children {
-  margin: 24px 0;
   border-left: 2px solid;
+  display: grid;
+  grid-auto-flow: row;
+  gap: 16px;
 }
 
 .children .children {
