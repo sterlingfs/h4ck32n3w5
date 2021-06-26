@@ -10,7 +10,7 @@
 }
 
 .CommentItem.dead {
-  opacity: 66%;
+  opacity: 0.66;
 }
 
 .username {

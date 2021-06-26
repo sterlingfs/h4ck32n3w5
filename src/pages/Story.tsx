@@ -86,9 +86,9 @@ export default function Story(props: StoryProps) {
     {}
   );
 
-  useEffect(() => {
-    emitFilterRecord(getFilterTree({}, comments));
-  }, [comments]);
+  // useEffect(() => {
+  //   emitFilterRecord(getFilterTree({}, comments));
+  // }, [comments]);
 
   useEffect(() => {
     const dispatchStory = (payload: P) => {
