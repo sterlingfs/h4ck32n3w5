@@ -46,6 +46,6 @@ export type StateMutation<State, Action> = {
 
 export type CommentEntry = [HNComment, CommentEntry[] | []];
 
+export type CommentFilter = { showDead?: boolean; collapsed?: boolean };
 export type CommentId = string;
-export type Filter = { showDead?: boolean; collapse?: boolean };
-export type FilterRecord = Record<CommentId, Filter>;
+export type CommentFilterRecord = Record<CommentId, CommentFilter>;

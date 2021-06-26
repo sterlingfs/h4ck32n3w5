@@ -3,21 +3,28 @@ import Style from "./CommentItem.module.css";
 
 import Button from "../../components/button/Button";
 
-import { CommentEntry, Filter, HNComment } from "../../types";
+import { CommentEntry, CommentFilter, HNComment } from "../../types";
 import { useEffect } from "react";
+import { Colors } from "../../enums/Color";
 
 export type CommentItemProps = {
   comment: HNComment;
   kids: CommentEntry[];
   isOwner?: boolean;
-  filter?: Filter;
-
-  // TODO update this callback to handle toggle show/hide
-  shouldShowDead: () => void;
+  getFilter: (commentId: number) => CommentFilter;
+  toggleCollapse: (storyId: number) => void;
 };
 
+enum ButtonTitle {
+  collapse = "collapse",
+  extend = "extend",
+}
+
+const colors = Object.keys(Colors).reverse();
+const PATH = "https://news.ycombinator.com/user";
+
 export default function CommentItem(props: CommentItemProps) {
-  const { comment, kids, isOwner, filter } = props;
+  const { comment, kids, isOwner, getFilter, toggleCollapse } = props;
 
   const rootRef = React.useRef<HTMLDivElement>(null);
   const childRef = React.useRef<HTMLDivElement>(null);
@@ -29,40 +36,28 @@ export default function CommentItem(props: CommentItemProps) {
     }
   });
 
-  const shouldShowDead = comment.dead === true && filter?.showDead === true;
-  const shouldHideDead = comment.dead === true && filter?.showDead !== true;
-  const collapsed = filter?.collapse === true;
+  const filter = getFilter(comment.id);
+  const zombie = comment.dead === true && filter?.showDead === true;
+  const extended =
+    filter?.collapsed === false || filter?.collapsed === undefined || zombie;
 
-  const viewToggleTitle = () => {
-    if (shouldHideDead) {
-      return "expand";
-    } else if (collapsed) {
-      return "expand";
-    } else {
-      return "collapse";
-    }
-  };
-
-  // console.log("filter", filter);
-  // console.log("collapse", collapse);
-
-  // console.log("hide dead", showDead);
-  // console.log("show dead", hideDead);
+  const toggleTitle = extended ? ButtonTitle.collapse : ButtonTitle.extend;
 
   return (
     <div ref={rootRef} className={`${Style.Comment}`}>
       <div className={Style.headerRow}>
         <div className={`${Style.username} ${isOwner && Style.isOwner}`}>
           {comment.dead && <span className={Style.deadEmoji}>💀</span>}
-          <a href={`https://news.ycombinator.com/user?id=${comment.by}`}>
-            {comment.by}
-          </a>
+          <a href={`${PATH}?id=${comment.by}`}>{comment.by}</a>
         </div>
 
-        <Button title={viewToggleTitle()} onClick={props.shouldShowDead} />
+        <Button
+          title={toggleTitle}
+          onClick={() => props.toggleCollapse(comment.id)}
+        />
       </div>
 
-      {collapsed === false && shouldHideDead !== true && (
+      {extended && (
         <div className={Style.content}>
           <div
             className={Style.htmlComment}
@@ -78,8 +73,8 @@ export default function CommentItem(props: CommentItemProps) {
                   key={i}
                   comment={comment}
                   kids={kids}
-                  filter={filter}
-                  shouldShowDead={props.shouldShowDead}
+                  getFilter={getFilter}
+                  toggleCollapse={toggleCollapse}
                 />
               ))}
           </div>
@@ -88,17 +83,3 @@ export default function CommentItem(props: CommentItemProps) {
     </div>
   );
 }
-
-const colors = [
-  "#3E008E",
-  "#00888C",
-  "#3D8800",
-  "#830906",
-  "#4B137D",
-  "#962B5D",
-  "#AD7C45",
-  "#8FC166",
-  "#88D3AC",
-  "#AAC0E2",
-  "#DCCCF0",
-].reverse();
