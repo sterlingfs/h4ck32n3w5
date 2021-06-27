@@ -12,6 +12,7 @@ import { recursiveFetch } from "../functions/recursiveFetch";
 import { Payload } from "../mutations";
 import { CommentFilterRecord as CFR, HNStory } from "../types";
 import { InjectedComponentBaseProps } from "./types";
+import { Database, getComment } from "../functions/getComment";
 
 // import localforage from "localforage";
 
@@ -54,20 +55,25 @@ const getToggleCollapseCallback =
     });
   };
 
-type CE = StoryProps["store"]["state"]["storyPage"]["comments"];
-type GetFilterTree = (record: CFR, commentEntries: CE) => CFR;
-const getFilterTree: GetFilterTree = (filterRecord, commentEntries) => {
-  return commentEntries
-    .map(([comment, childEntries]) => {
-      const collapsed = comment.dead ?? false;
-      const newEntry: CFR = { [comment.id]: { collapsed } };
-      const newRecord: CFR = { ...filterRecord, ...newEntry };
-      return childEntries.length > 0
-        ? getFilterTree(newRecord, childEntries)
-        : newRecord;
-    })
-    .reduce((a, c) => ({ ...a, ...c }), {});
-};
+// type CE = StoryProps["store"]["state"]["storyPage"]["comments"];
+// type GetFilterTree = (record: CFR, commentEntries: CE) => CFR;
+// const getFilterTree: GetFilterTree = (filterRecord, commentEntries) => {
+//   return commentEntries
+//     .map(([comment, childEntries]) => {
+//       const collapsed = comment.dead ?? false;
+//       const newEntry: CFR = { [comment.id]: { collapsed } };
+//       const newRecord: CFR = { ...filterRecord, ...newEntry };
+//       return childEntries.length > 0
+//         ? getFilterTree(newRecord, childEntries)
+//         : newRecord;
+//     })
+//     .reduce((a, c) => ({ ...a, ...c }), {});
+// };
+
+/**
+ * How to limit the fetch
+ * depth && per comment
+ */
 
 export default function Story(props: StoryProps) {
   const { story, comments } = props.store.state.storyPage;
@@ -86,10 +92,13 @@ export default function Story(props: StoryProps) {
     {}
   );
 
+  // FIXME use the variable for the depth to also set the init filter record
+
   // useEffect(() => {
   //   emitFilterRecord(getFilterTree({}, comments));
   // }, [comments]);
 
+  const expanded = props.store.state.storyPage.expanded;
   useEffect(() => {
     const dispatchStory = (payload: P) => {
       dispatch({ type: ActionType.setStory, payload });
@@ -103,22 +112,42 @@ export default function Story(props: StoryProps) {
 
     const ref = database.ref(`/v0/item/${storyId}`);
     const fetchNodeTree = async (commentId: number) =>
-      await recursiveFetch([], commentId, 0, database);
+      await recursiveFetch([], commentId, 0, database, {
+        depthLimit: 1,
+        expanded: {},
+      });
 
     ref.on("value", async (storySnap) => {
       const story = storySnap.val() as HNStory;
-      const proms = story.kids.map(fetchNodeTree);
-      const comments = await Promise.all(proms).then((p) => p.flat());
 
-      dispatchStory({
-        status: NetworkStatus.resolved,
-        story,
-        comments,
-      });
+      if (true) {
+        const proms = story.kids.map(fetchNodeTree);
+        const comments = await Promise.all(proms).then((p) => p.flat());
+        dispatchStory({
+          status: NetworkStatus.resolved,
+          story,
+          comments,
+        });
+      } else {
+        // const getCommentWithDatabase = (d: Database) => (id: number) =>
+        //   getComment(id, d);
+        // const proms = story.kids.map(getCommentWithDatabase(database));
+        // Promise.all(proms).then((comments) => {
+        //   console.log(
+        //     "ffff",
+        //     comments.map((snap) => snap.val())
+        //   );
+        //   dispatchStory({
+        //     comments: comments.map((snap) => [snap.val(), []]),
+        //     status: NetworkStatus.resolved,
+        //     story,
+        //   });
+        // });
+      }
     });
 
     return () => ref.off();
-  }, [storyId, dispatch]);
+  }, [storyId, expanded, dispatch]);
 
   const getFilterGetter = (filterRecord: CFR) => (commentId: number) =>
     filterRecord[commentId];

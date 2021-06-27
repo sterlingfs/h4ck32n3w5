@@ -22,6 +22,7 @@ export type HNComment = {
   by: string;
   dead?: boolean;
   depth?: number;
+  extended: boolean;
   firstComment: HNComment;
   id: number;
   kids: number[];
